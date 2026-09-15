@@ -1,0 +1,5426 @@
+ZVSE2
+
+
+!?FU(OnBattleReplay);
+!!SN:W^Target_Saver3^/0;
+!!SN:W^Target_Saver4^/0;
+!!SN:W^Ghoul_Stack^/-1;
+!!SN:W^Grif_ret^/0;
+!!SN:W^Void_Teleport^/0;
+!!SN:W^Cer_attacking_stacking^/-1;
+!!SN:W^Dem_attacking_stacking^/-1;
+!!SN:W^Lit_attacking_stacking^/-1;
+!!SN:W^Blood_Attacking_Stack^/-1;
+!!SN:W^Dwf_Attacking_Stack^/-1;
+!!SN:W^Wyv_Attacking_Stack^/-1;
+!!SN:W^Aby_Attacking_Stack^/-1;
+!!SN:W^Amma_attacking_stacking^/-1;
+!!SN:W^Fired_Attacking_Stack^/-1;
+!!SN:W^Slayer_Add^/0;
+!!SN:W^Orc_additional^/0;
+!!SN:W^Sereph_check^/0;
+!!SN:W^Sasqua_ret^/0;
+!!SN:W^Seraph_A_1^/0;
+!!SN:W^Spell_Weaver_1^/0;
+!!SN:W^Select_force^/0;
+!!SN:W^Select_force2^/0;
+!!SN:W^hell_activate^/0;
+!!SN:W^Act_Again_Roc^/0;
+
+!!DO(reset_Var_TUM)/0/41/1:P;
+
+!?FU(OnBattleRound)&1000/v997=0;
+!!SN:W^Target_Saver3^/0;
+!!SN:W^Target_Saver4^/0;
+!!SN:W^Ghoul_Stack^/-1;
+!!SN:W^Grif_ret^/0;
+!!SN:W^Void_Teleport^/0;
+!!SN:W^Cer_attacking_stacking^/-1;
+!!SN:W^Dem_attacking_stacking^/-1;
+!!SN:W^Lit_attacking_stacking^/-1;
+!!SN:W^Dwf_Attacking_Stack^/-1;
+!!SN:W^Blood_Attacking_Stack^/-1;
+!!SN:W^Wyv_Attacking_Stack^/-1;
+!!SN:W^Aby_Attacking_Stack^/-1;
+!!SN:W^Amma_attacking_stacking^/-1;
+!!SN:W^Fired_Attacking_Stack^/-1;
+!!SN:W^Act_Again_Roc^/0;
+
+!!SN:W^Slayer_Add^/0;
+!!SN:W^Orc_additional^/0;
+!!SN:W^Sereph_check^/0;
+!!SN:W^Sasqua_ret^/0;
+!!SN:W^Seraph_A_1^/0;
+!!SN:W^Spell_Weaver_1^/0;
+!!SN:W^Select_force^/0;
+!!SN:W^Select_force2^/0;
+!!SN:W^hell_activate^/0;
+
+!!DO(reset_Var_TUM)/0/41/1:P;
+
+!?FU(reset_Var_TUM);
+!!SN:W^Urox_recover%X16^/0;
+!!SN:W^Urox_Shield_%X16^/1;
+!!SN:W^Water_shield_%X16^/0;
+!!SN:W^Thane_Attacked_%X16^/0;
+!!SN:W^Stone_Damage_%X16^/0;
+!!SN:W^Air_Converted_%X16^/0;
+!!SN:W^Water_Converted_%X16^/0;
+!!SN:W^Avenger_Check_%X16^/-1;
+!!SN:W^Avenger_Check2_%X16^/0;
+!!SN:W^Thund_Damage%X16^/0;
+!!SN:W^Water_Cure_%X16^/0;
+!!SN:W^Blood_Target_%X16^/0;
+!!SN:W^FRune_Damage%X16^/0;
+!!SN:W^Cyclops_Check%X16^/0;
+!!SN:W^Blood_Damage_%X16^/0;
+!!SN:W^Time_pend_%X16^/0;
+!!DO(Revenge_Clear2)/0/41/1:Px16;
+!!DO(Demon_Clear2)/0/41/1:Px16;
+!!DO(Oracle_reseta)/0/186/1:P;
+
+
+!?FU(Demon_Clear2);
+!!SN:W^HDemon_Check_%X1_%X16^/0;
+
+****************************************************************************************************
+Zeuss Chain-Cast that comes with Stack Expierence doesnt damage own troops
+script by Perry R
+
+!?FU(OnStackToStackDamage);
+*!IF:L^Att:%X1 Def:%X2 finalDmgConst:%X3 finalDmg:%X4 basicDmg:%X5 dmgBonus:%X6 isDistant:%X7 distanceArg:%X8 isTheoretical:%X9^;
+!!BMx1:T?y10 P?y11;
+!!BMx2:T?y20 P?y21;
+
+!!if&y10=198;
+!!FU(CalcDistanceBetweenHexes2):Py11/y21/?y4;
+!!FU&y4>4:E;
+!!UN:R5/2/18;
+!!VRx4:*2;
+!!en;
+
+!!if&y10=203;
+!!BMx1:B?y3 N?y4 L?y5 H?y6 T?y80;
+!!VRy8:Sy6-y5;
+!!VRy9:Sy3*y6*100;
+!!VRy4:-1;
+!!VRy10:Sy4*y6+y8;
+!!FU&y10=0:E;
+!!VRy11:Sy9:y10;
+!!VRy11&y11>400:S400;
+!!VRx4:*y11:100;
+!!en;
+
+!!if&y10=239;
+
+!!SN:W^Revenge_Horse%X1_%X2^/?y4;
+!!FU&y4=0:E;
+!!VRx4:*3:2;
+!!en;
+
+!!if&y10=256;
+!!FU(CalcDistanceBetweenHexes2):Py11/y21/?y4;
+!!VRy13:Sy4*2;
+!!VRy31:S100+y13;
+!!VRx4:*y31:100;
+!!en;
+
+
+!!if&y10=311;
+
+!!BMx2:F?y83;
+!!VRy83:&16;
+!!VRx4&y83>0:*3;
+!!VRx4&y83>0::2;
+
+!!en;
+
+
+!?FU(OnKeyPressed_Battle)&i^key^=71;
+!!BG:N?y1;
+!!BMy1:T?y10 I?y30;
+!!FU&y10<>212:E;
+
+!!CM:D?y11;
+
+!!FU|y11<0/y11>186:E;
+
+
+
+!!BU&y11>=0/y11<=186:Ey11/?y5;
+
+!!VRy12:S-1;
+!!BMy5&y5>=0/y5<=41:I?y40;
+!!BMy5&y5>=0/y5<=41:T?y45;
+!!BMy5&y5>=0/y5<=41/y30<>y40/y45<>145/y45<>146/y45<>146/y45<>148/y45<>149:G-87/3/d;
+!!BMy5&y5>=0/y5<=41/y30<>y40/y45<>145/y45<>146/y45<>146/y45<>148/y45<>149:G-86/0/d;
+!!SN&y5>=0/y5<=41/y30<>y40/y45<>145/y45<>146/y45<>146/y45<>148/y45<>149:W^Unit_Motion_A%Y5^/1;
+
+!!re i/0/5;
+!!FU(Find_Near2):Py11/i/?y12;
+  !!if&y12>=0/y12<=186;
+
+  !!BU&y12>=0/y12<=186:Ey12/?y13;
+  !!BMy13&y13>=0/y13<=41:I?y40;
+  !!BMy13&y13>=0/y13<=41:T?y45;
+  !!BMy13&y13>=0/y13<=41/y30<>y40/y45<>145/y45<>146/y45<>146/y45<>148/y45<>149:G-87/3/d;
+  !!BMy13&y13>=0/y13<=41/y30<>y40/y45<>145/y45<>146/y45<>146/y45<>148/y45<>149:G-86/0/d;
+  !!SN&y13>=0/y13<=41/y30<>y40/y45<>145/y45<>146/y45<>146/y45<>148/y45<>149:W^Unit_Motion_A%Y13^/1;
+
+    !!if&y13>=0/y13<=186;
+
+      !!re j/0/5;
+      !!FU(Find_Near2):Py12/j/?y22;
+      !!BU&y22>=0/y22<=186:Ey22/?y13;
+      !!BMy13&y13>=0/y13<=41:I?y40;
+      !!BMy13&y13>=0/y13<=41:T?y45;
+      !!BMy13&y13>=0/y13<=41/y30<>y40/y45<>145/y45<>146/y45<>146/y45<>148/y45<>149:G-87/3/d;
+      !!BMy13&y13>=0/y13<=41/y30<>y40/y45<>145/y45<>146/y45<>146/y45<>148/y45<>149:G-86/0/d;
+      !!SN&y13>=0/y13<=41/y30<>y40/y45<>145/y45<>146/y45<>146/y45<>148/y45<>149:W^Unit_Motion_A%Y13^/1;
+
+        !!if&y22>=0/y22<=186;
+          !!re k/0/5;
+          !!FU(Find_Near2):Py22/k/?y32;
+          !!BU&y32>=0/y32<=186:Ey32/?y13;
+          !!BMy13&y13>=0/y13<=41:I?y40;
+          !!BMy13&y13>=0/y13<=41:T?y45;
+          !!BMy13&y13>=0/y13<=41/y30<>y40/y45<>145/y45<>146/y45<>146/y45<>148/y45<>149:G-87/3/d;
+          !!BMy13&y13>=0/y13<=41/y30<>y40/y45<>145/y45<>146/y45<>146/y45<>148/y45<>149:G-86/0/d;
+          !!SN&y13>=0/y13<=41/y30<>y40/y45<>145/y45<>146/y45<>146/y45<>148/y45<>149:W^Unit_Motion_A%Y13^/1;
+          !!en;
+        !!en;
+      !!en;
+    !!en;
+  !!en;
+!!en;
+
+
+
+!?MM0;
+!!CM:D?y11;
+
+!!FU|y11<0/y11>186:E;
+
+!!BG:N?y1;
+!!BMy1:T?y10;
+
+!!if&y10=212;
+
+!!BMy1:I?y30;
+!!DO(Reset_Motion)/0/41/1:Py30;
+
+!!CM:D?y11;
+!!CM:F?y55;
+!!VRy55:&1;
+!!FU&y55>0:E;
+
+
+!!BU&y11>=0/y11<=186:Ey11/?y5;
+
+!!VRy12:S-1;
+!!BMy5&y5>=0/y5<=41:I?y40;
+!!BMy5&y5>=0/y5<=41:T?y45;
+!!BMy5&y5>=0/y5<=41/y30<>y40/y45<>145/y45<>146/y45<>146/y45<>148/y45<>149:G-87/3/d;
+!!BMy5&y5>=0/y5<=41/y30<>y40/y45<>145/y45<>146/y45<>146/y45<>148/y45<>149:G-86/0/d;
+!!SN&y5>=0/y5<=41/y30<>y40/y45<>145/y45<>146/y45<>146/y45<>148/y45<>149:W^Unit_Motion_A%Y5^/1;
+
+  !!re i/0/5;
+  !!FU(Find_Near2):Py11/i/?y12;
+  !!BU&y12>=0/y12<=186:Ey12/?y13;
+  !!BMy13&y13>=0/y13<=41:I?y40;
+  !!BMy13&y13>=0/y13<=41:T?y45;
+  !!BMy13&y13>=0/y13<=41/y30<>y40/y45<>145/y45<>146/y45<>146/y45<>148/y45<>149:G-87/3/d;
+  !!BMy13&y13>=0/y13<=41/y30<>y40/y45<>145/y45<>146/y45<>146/y45<>148/y45<>149:G-86/0/d;
+  !!SN&y13>=0/y13<=41/y30<>y40/y45<>145/y45<>146/y45<>146/y45<>148/y45<>149:W^Unit_Motion_A%Y13^/1;
+
+    !!if&y12>=0;
+      !!re j/0/5;
+      !!FU(Find_Near2):Py12/j/?y22;
+      !!BU&y22>=0/y22<=186:Ey22/?y13;
+      !!BMy13&y13>=0/y13<=41:I?y40;
+      !!BMy13&y13>=0/y13<=41:T?y45;
+      !!BMy13&y13>=0/y13<=41/y30<>y40/y45<>145/y45<>146/y45<>146/y45<>148/y45<>149:G-87/3/d;
+      !!BMy13&y13>=0/y13<=41/y30<>y40/y45<>145/y45<>146/y45<>146/y45<>148/y45<>149:G-86/0/d;
+      !!SN&y13>=0/y13<=41/y30<>y40/y45<>145/y45<>146/y45<>146/y45<>148/y45<>149:W^Unit_Motion_A%Y13^/1;
+
+        !!if&y22>=0;
+          !!re k/0/5;
+          !!FU(Find_Near2):Py22/k/?y32;
+          !!BU&y32>=0/y32<=186:Ey32/?y13;
+          !!BMy13&y13>=0/y13<=41:I?y40;
+          !!BMy13&y13>=0/y13<=41:T?y45;
+          !!BMy13&y13>=0/y13<=41/y30<>y40/y45<>145/y45<>146/y45<>146/y45<>148/y45<>149:G-87/3/d;
+          !!BMy13&y13>=0/y13<=41/y30<>y40/y45<>145/y45<>146/y45<>146/y45<>148/y45<>149:G-86/0/d;
+          !!SN&y13>=0/y13<=41/y30<>y40/y45<>145/y45<>146/y45<>146/y45<>148/y45<>149:W^Unit_Motion_A%Y13^/1;
+          !!en;
+        !!en;
+      !!en;
+    !!en;
+  !!en;
+!!en;
+
+
+!!if&y10=215;
+!!BMy1:I?y30;
+!!DO(Reset_Motion)/0/41/1:Py30;
+
+!!re i/0/5;
+!!CM:D?y33;
+!!VRy22:S1;
+!!FU(Find_Near2):Py33/i/?y12;
+!!BU&y12>=0/y12<=186:Ey12/?y13;
+!!BMy13&y13>=0/y13<=41:I?y40;
+!!BMy13&y13>=0/y13<=41:T?y45;
+
+!!BMy13&y13>=0/y13<=41/y30<>y40/y45<>145/y45<>146/y45<>146/y45<>148/y45<>149:G-87/3/d;
+!!BMy13&y13>=0/y13<=41/y30<>y40/y45<>145/y45<>146/y45<>146/y45<>148/y45<>149:G-86/0/d;
+!!SN&y13>=0/y13<=41/y30<>y40/y45<>145/y45<>146/y45<>146/y45<>148/y45<>149:W^Unit_Motion_A%Y13^/1;
+
+!!en;
+
+
+!?FU(OnAfterBattleAction);
+!!BG:N?y1;
+!!BMy1:T?y10 I?y30;
+!!if&y10=215;
+!!DO(Reset_Motion)/0/41/1:Py30;
+!!en;
+
+!!if&y10=212;
+!!DO(Reset_Motion)/0/41/1:Py30;
+!!en;
+
+!?FU(Reset_Motion);
+!!BMx16:N?y1;
+!!FU&y1=0:E;
+!!BMx16:T?y2;
+!!FU&y2>=145/y2<=149:E;
+!!BMx16:I?y10;
+!!FU&y10=x1:E;
+!!SN:W^Unit_Motion_A%X16^/?y88;
+!!FU&y88=0:E;
+!!SN:W^Unit_Motion_A%X16^/0;
+
+!!BMx16:G-87/1/d;
+!!BMx16:G-86/0/d;
+
+
+
+
+
+**198 
+!?MF1;
+
+!!UN:C42149568/4/?y10;                  [Get Physical Damage type]
+!!if|y10=4455011; [Only run when melee or shooting damage]
+!!BG:N?y1 D?y12;
+!!MF:N?y2;
+!!BMy1:T?y3 P?y11;
+!!FU&y3<>198:E;
+
+!!FU(CalcDistanceBetweenHexes2):Py11/y12/?y4;
+
+!!FU&y4>4:E;
+
+!!BA:Q?f;
+!!SN:T^TUM_unit.198_1^/?z1; 518
+!!BU&1000/f=0:Mz1;
+
+!!VRz3:S^Cathsp4.def^;
+!!FU(PlayCustomAnimation2):P0/3/y12/100/0/0/1; [Function to play custom animation By Hawaiing]
+
+
+!!en;
+
+
+
+!?FU(CalcDistanceBetweenHexes2);      [by wessonsm]
+!#VA(hex1:x) (hex2:x) (distance:x);
+
+!!VR(x1:y):S(hex1) %17;
+!!VR(y1:y):S(hex1) :17;
+!!VR(x2:y):S(hex2) %17;
+!!VR(y2:y):S(hex2) :17;
+!!VR(distanceY:y):S(y1) -(y2);
+!!VR(distanceY)&(distanceY)<0: *-1;
+!!VR(x1):*2;
+!!VR(y1):&1;
+!!VR(x2):*2;
+!!VR(y2):&1;
+!!VR(distanceX:y):S(x1) -(y1) -(x2) +(y2);
+!!VR(distanceX)&(distanceX)<0:*-1;
+!!VR(distanceX):-(distanceY);
+!!VR(distance):S(distanceX);
+!!VR(distance)&(distance)<0:S0;
+!!VR(distanceY):*2;
+!!VR(distance):+(distanceY) :2;
+
+**199
+
+!?BG0;
+!!BG:A?y1;
+!!FU&y1<>6:E;
+!!BG:E?y2 N?y3;
+!!FU&y2<0:E;
+!!BMy2:T?y4;
+!!FU&y4<>199:E;
+!!BMy3:F?y8;
+
+!!VRy8:&65536;        
+!!FU&y8>0:E;          
+
+!!SN:W^Grif_ret^/1;
+!!SN:W^Grif_ret_y2^/y2;
+!!SN:W^Grif_ret_y3^/y3;
+
+!?FU(OnBattleStackObtainsTurn)&1000;
+!!SN:W^Grif_ret^/?y1;
+!!FU&y1=0:E;
+!!SN:W^Grif_ret^/0;
+
+!!SN:W^Grif_ret_y2^/?y2;
+!!SN:W^Grif_ret_y3^/?y3;
+
+!!BMy2:N?y4;
+!!BMy3:N?y5;
+!!FU|y4=0/y5=0:E;
+
+!!UN:C6919200/4/?y30;
+
+!!VRy12:Sy2*1352+21708+y30;  [получить структуру стека]
+!!VRy13:Sy3*1352+21708+y30;  [получить структуру стека]
+!!SN:E4461360/2/y12/y13/2; 
+
+**200
+!?BG0;     
+
+!!BG:A?y1;
+!!FU&y1<>6:E;           
+!!BG:N?y1;            
+!!BMy1:T?y2;                       
+!!FU&y2<>200:E;
+!!BG:E?y3;                          
+!!FU&y3=-1:E;                                                 
+!!BMy3:T?y11;
+!!MA:Ly11/?y12;   
+!!if&y12=6;                
+  
+!!SN:W^Slayer_Add^/1;
+!!SN:W^Slayer_Add_y1^/y1;
+!!SN:W^Slayer_Add_y3^/y3;
+
+!!en;
+
+!?FU(OnBattleActionEnd);
+
+!!SN:W^Slayer_Add^/?y1;
+!!FU&y1=0:E;
+!!SN:W^Slayer_Add^/0;
+!!SN:W^Slayer_Add_y1^/?y1;
+!!SN:W^Slayer_Add_y3^/?y3;
+
+
+
+
+!!UN:C6919200/4/?y30;
+
+!!VRy12:Sy1*1352+21708+y30;  [получить структуру стека]
+!!VRy13:Sy3*1352+21708+y30;  [получить структуру стека]
+!!SN:E4461360/2/y12/y13/2; 
+
+**201
+
+!?FU(OnCombatRound)&v997>=0;
+!!SN:W^ACM_twice_acting stackh^/-1;      [reset act twice counter and battle stack each new battle round]
+
+
+!?FU(OnBeforeBattleAction)&i^battle_round^>=0;
+!!SN:W^ACM_twice_acting stackh^/-1;
+!!BG:A?y1 N?y2;                         [Get action type and stack number]
+!!FU&y1<>2:E; exit for wrong condition
+
+!!BMy2:T?y3;                       [get type and side]
+!!if|y3=201/y3=312/y3=313/y3=314;                   [if any commander]
+  !!SN:W^ACM_twice_acting stackh^/y2;    [set and save stack that should act twice]
+!!en;
+
+
+!?FU(OnBattleActionEnd);
+!!SN:W^ACM_twice_acting stackh^/?y1;
+!!if&y1>=0/y1<=41;                      [if a valid battle stack]
+  !!BMy1:Fd~(MON_FLAG_ACTED);      [set act twice flag for stack]
+!!en;
+
+
+!?FU(OnBeforeBattleStackTurn);
+!!SN:W^ACM_twice_acting stackh^/?y1; 
+!!FU&y1=-1:E;                           [exit if no valid stack]
+!!BMy1:T?y2 N?y3;                       [get type and number]
+!!FU|y2=-1/y3<=0:E;                       [exit if not valid]
+!!SN:W^ACM_twice_acting stackh^/x1;      [set stack that should act twice]
+
+
+
+
+**202
+
+!?BF;
+!!DO(Seraph_Ignore_Morale)/0/41/1:P;
+
+!?FU(Seraph_Ignore_Morale);
+!!BMx16:T?y1 N?y2;
+!!FU&y1<>202:E;
+!!FU&y2<=0:E;
+!!BMx16:F?y3;
+!!VRy3:|131072;                         [No Morale flag]
+!!BMx16:Fy3;
+
+
+!?BG0;
+
+!!FU:E;
+!!SN:W^Sereph_check^/?y1;
+!FU&y1=1:E;
+
+!!BG:N?y1 A?y88 N?y31;
+!!FU&y88<>6:E;
+!!BG:E?y3;                     [Attacking Stack]
+
+!!BMy1:T?y2;
+!!FU&y2<>202:E;
+!!FU&y1=y3:E;
+!!BMy3:P?y10 N?y41 L?y42 H?y43;
+
+!!VRy50:S0;
+!!VRy15:S-1;
+!!VRy16:S-1;
+[:find_posit2]
+!!VRy50:+1;
+!!VRy51:S0T5;
+
+!!FU(TwoHex_Find2):Py10/?y88;
+!!VRy8&y88=0:Sy10+1;
+!!VRy8&y88=1:Sy10-1;
+
+!!VRy18:S-1;
+!!FU(Find_Near2)&y88=-1:Py10/y51/?y18;
+!!FU(Find_Near2)&y88=0/y51<>4:Py8/y51/?y18;
+!!FU(Find_Near2)&y88=1/y51<>4:Py10/y51/?y18;
+
+
+!!BU&y18>=0:Ey18/?y15;
+!!BU&y18>=0:Oy18/?y16;
+
+
+!!FU(Find_Near2)&y88=0/y51<>1/y15>=0/y16<>0:Py10/y51/?y18;
+!!FU(Find_Near2)&y88=1/y51<>1/y15>=0/y16<>0:Py8/y51/?y18;
+
+!!BU&y18>=0:Ey18/?y15;
+!!BU&y18>=0:Oy18/?y16;
+
+!!FU&y50=100:E;                         [Exit if no valid Target can be found]
+!!SN|y15>=0/y16<>0:G[find_posit2]; [Loop]
+
+!!BMy31:N?y4 I?y5;
+!!FU&y4=0:E;
+!!VRy4:*2;
+
+!!VRz3:S^Meffect175.def^;
+!!FU(PlayCustomAnimation2):P0/3/y18/100/1/0/1; [Function to play custom animation By Hawaiing]
+!!BU:S12/y4/y18/y5/-1/0;
+!!BU:Ey18/?y1;
+!!FU&y1<0:E;
+!!BMy1:G-90/1/d;
+!!BMy1:F?y80;
+!!VRy80:|335544320;
+!!BMy1:Fy80;
+
+!!SN:W^Sereph_check^/1;
+!!SN:W^Sereph_y1^/y1;
+!!SN:W^Sereph_y3^/y3;
+!!SN:W^Sereph_y10^/y10;
+
+!!SN:W^Sereph_y71^/-1;
+!!VRy50:S0;
+!!VRy15:S-1;
+!!VRy16:S-1;
+[:find_posit2]
+!!VRy50:+1;
+!!VRy51:S0T5;
+
+!!FU(TwoHex_Find2):Py10/?y88;
+!!VRy8&y88=0:Sy10+1;
+!!VRy8&y88=1:Sy10-1;
+
+!!VRy18:S-1;
+!!FU(Find_Near2)&y88=-1:Py10/y51/?y18;
+!!FU(Find_Near2)&y88=0/y51<>4:Py8/y51/?y18;
+!!FU(Find_Near2)&y88=1/y51<>4:Py10/y51/?y18;
+
+
+!!BU&y18>=0:Ey18/?y15;
+!!BU&y18>=0:Oy18/?y16;
+
+
+!!FU(Find_Near2)&y88=0/y51<>1/y15>=0/y16<>0:Py10/y51/?y18;
+!!FU(Find_Near2)&y88=1/y51<>1/y15>=0/y16<>0:Py8/y51/?y18;
+
+!!BU&y18>=0:Ey18/?y15;
+!!BU&y18>=0:Oy18/?y16;
+
+!!SN&y15>=0/y50<100:G[find_posit2];
+!!SN&y16<>0/y50<100:G[find_posit2]; [Loop]
+!!VRy71&y50>=100:S-1;
+
+!!if&y50<100;
+!!BMy31:N?y4 I?y5;
+!!FU&y4=0:E;
+!!VRy4:*2;
+
+!!VRz3:S^Meffect175.def^;
+!!FU(PlayCustomAnimation2):P0/3/y18/100/1/0/1; [Function to play custom animation By Hawaiing]
+!!BU:S12/y4/y18/y5/-1/0;
+!!BU:Ey18/?y71;
+
+!!FU&y71<0:E;
+!!BMy71:G-90/1/d;
+!!BMy71:F?y80;
+!!VRy80:|335544320;
+!!BMy71:Fy80;
+!!en;
+
+!!SN:W^Sereph_y71^/y71;
+
+
+!!SN:W^Sereph_check^/?y1;
+!!FU&y1=0:E;
+!!SN:W^Sereph_check^/0;
+!!SN:W^Sereph_y1^/?y1;
+!!SN:W^Sereph_y3^/?y3;
+!!SN:W^Sereph_y71^/?y51;
+!!BU:R;
+
+
+!!UN:C6919200/4/?y11;                            [комбат мэнеджер]
+!!VRy12:Sy1*1352+21708+y11;  [получить структуру стека]
+!!VRy32&y51>=0:Sy51*1352+21708+y11;  [получить структуру стека]
+!!VRy13:Sy3*1352+21708+y11;  [получить структуру стека]
+!!SN:E4461360/2/y12/y13/2; 
+
+!!BMy3:N?y88;
+
+
+!!SN&y51>=0/y88>0:E4461360/2/y32/y13/2; 
+
+
+
+!!VRy23:Sy12+234;
+!!UN:Cy23/1/1;
+!!BMy1:F?y24;
+!!VRy24:|272629760;
+!!BMy1:N0 Fy24;
+!!BMy1:G-78/0/d;
+
+!!VRy23&y51>=0:Sy32+234;
+!!UN&y51>=0:Cy23/1/1;
+!!BMy51&y51>=0:F?y24;
+!!VRy24&y51>=0:|272629760;
+!!BMy51&y51>=0:N0 Fy24;
+!!BMy51&y51>=0:G-78/0/d;
+!!SN:E4621680/2/y11/51/1;
+!!SN:E4797616/2/y11/0/1;
+
+!?BG0;
+
+!!BG:A?y1 N?y11;
+!!FU&y1<>10:E;
+!!BMy11:T?y12 N?y20;
+!!FU&y12<>202:E;
+!!BG:S?y1 Q?y2;
+!!VRy21:Sy20;
+!!VRy22:S0;
+
+!!FU(Summoning_Rework1):P13/y2/y21/?y18/y22;
+!!BG&y18=2:A0;
+!!FU&y18=2:E;
+!!SN:W^ACM_Com_abilityCounterw_%Y11^/?y12;
+
+!!BG:A12;
+!!BMy11:Ed-1;
+!!SN&y12=0:W^ACM_twice_acting stackw^/y11;
+!!SN&y12=0:W^Arch_angel_acted^/y11;
+
+
+
+
+!?BG0&1000;
+!!BA:Q?y1;
+!!FU&y1=1:E;                            [Exit in Quick Combat]
+
+!!BG:A?y1;
+!!BG:N?y10;
+!!BG:D?y5;
+!!BG:S?y2;
+!!BMy10:N?y11;
+!!SN:W^Seraph_A_1^/1;
+!!SN:W^Seraph_A_y1^/y1;
+!!SN:W^Seraph_A_y2^/y2;
+!!SN:W^Seraph_A_y5^/y5;
+!!SN:W^Seraph_A_y10^/y10;
+
+!?FU(OnAfterBattleAction)&1000;
+
+!!SN:W^Seraph_A_1^/?y1;
+!!FU&y1=0:E;
+!!SN:W^Seraph_A_1^/0;
+!!SN:W^Seraph_A_y1^/?y1;
+!!SN:W^Seraph_A_y2^/?y2;
+!!SN:W^Seraph_A_y5^/?y5;
+!!SN:W^Seraph_A_y10^/?y10;
+
+
+!!UN:C6919200/4/?y30;                             [대대장]
+!!BMy10:I?y33;
+!!VRy31:Sy10;
+!!VRy31&y10>=21:Sy10-21;
+
+!!if&y1=1;
+!!FU&y2<>38:E;
+
+!!DO(seraph_clear)/0/20/1&y10<21:Py5;
+!!DO(seraph_clear)/21/41/1&y10>20:Py5;
+!!SN:E4607760/2/y30/y33/y31;
+!!en;
+
+!!if&y1=10;
+!!BMy10:T?y3;
+!!FU&y3<>13/y3<>150:E;
+
+!!DO(seraph_clear)/0/20/1&y10<21:Py5;
+!!DO(seraph_clear)/21/41/1&y10>20:Py5;
+
+!!en;
+
+!?FU(seraph_clear);
+!!BMx16:T?y1 N?y11;
+!!FU&y1<>202:E;
+
+
+!!BMx16:C38/x1/2/y11/1;
+!!BMx16:C48/x1/2/y11/1;
+
+
+
+**203
+!?MF1;
+!!UN:C42149568/4/?y10;                  [Get Physical Damage type]
+!!FU&y10<>4462398/y10<>4456676:E;
+!!BG:N?y1;
+!!MF:N?y2 F?y22;
+!!SN:W^Dwf_attacking_stacking^/?y50;
+!!VRy1&y2=y1/y50>=0/y50<=41:Sy50;
+!!SN:W^Dwf_attacking_stacking^/y2;
+
+!!BMy1:B?y3 N?y4 L?y5 H?y6 T?y80;
+!!FU&y80<>203:E;
+!!FU&y4=0:E;
+
+!!VRy8:Sy6-y5;
+
+!!VRy9:Sy3*y6*100;
+
+!!VRy4:-1;
+!!VRy10:Sy4*y6+y8;
+!!FU&y10=0:E;
+
+!!VRy11:Sy9:y10;
+!!VRy11&y11>400:S400;
+!!VRy12:Sy22*y11:100;
+
+
+!!VRy20:Sy11;
+!!VRy20:-100;
+!!SN:T^TUM_unit.203_1^/?z1/^damage^/y20;
+!!BA:Q?f;
+!!BU&1000/y11>0/f=0:Mz1;
+
+
+**204
+!?BG0;
+!!BG:A?y1;
+!!FU&y1<>1/y1<>10:E;
+!!BG:S?y2;
+
+!!if|y2=27/y2=28/y2=29/y2=30/y2=31/y2=32/y2=33/y2=34/y2=36/y2=37/y2=38/y2=41/y2=43/y2=46/y2=48;
+!!DO(Buff_Pegasus)/0/41/1:Py2;
+!!en;
+
+!!if|y2=49/y2=50/y2=51/y2=53/y2=55/y2=56/y2=57/y2=58/y2=64;
+!!DO(Buff_Pegasus)/0/41/1:Py2;
+!!en;
+
+!?FU(Buff_Pegasus);
+!!BMx16:T?y1 N?y3;
+!!FU&y1<>204:E;
+!!FU&y3=0:E;
+
+!!BMx16:P?y2;
+
+!!BMx16:Cx1/y2/2/3/1;[apply damage to surrounding creatures if same side]
+
+
+**205
+
+!?FU(OnBattleActionEnd)&1000;
+!!BG:A?y1 N?y11;
+!!FU&y1<>6:E;
+!!BG:E?y2;
+!!BMy2&y2>=0:P?y10;
+!!BG&y2<0:D?y10;
+!!BMy11:N?y21 T?y22;
+!!FU&y21<1:E;
+!!FU&y22<>205/y22<>302:E;
+
+
+!!VRy50:S0;
+!!VRy52:S0;
+!!VRy53:S0;
+
+[:find_target]
+!!VRy50:+1;
+
+!!VRy51:S0T5;
+!!VRy9:S0T1;
+
+!!FU(TwoHex_Find2):Py10/?y88;
+!!VRy8&y88=0:Sy10+1;
+!!VRy8&y88=1:Sy10-1;
+
+!!VRy18:S-1;
+!!FU(Find_Near2)&y88=-1:Py10/y51/?y18;
+!!FU(Find_Near2)&y9=0/y88>-1:Py8/y51/?y18;
+!!FU(Find_Near2)&y9=1/y88>-1:Py10/y51/?y18;
+
+!!BU&y18>=0/y18<=186:Oy18/?y35;
+!!VRy35:&4;
+
+!!BMy11&y35=0/y18>=0/y18<=186:Q0/y18/0;
+
+!!BU&y18>=0/y18<=186:Oy18/?y5;
+!!VRy5:&4;
+!!VRy52&y5>0/y35=0:+1;
+!!VRy53&y5>0/y52=1:+1;
+
+!!FU&y50>150:E;                         [Exit if no valid Target can be found]
+!!VRy53:S0;
+!!SN&y52<1/y22=205:G[find_target];
+!!SN&y52<1/y22=302:G[find_target];
+
+!?CM4;
+!!CM:F?y1;
+!!FU&y1<>512:E;
+!!CM:D?y10;
+!!FU|y10<1/y10>185:E;
+!!BU:Ey10/?y33;
+!!FU&y33>=0:E;
+!!BG:N?y1;
+!!FU&y1<0:E;
+!!BMy1:T?y2 P?y20;
+!!FU&y2<>205/y2<>302:E;
+!!BU:Oy10/?y11;
+!!VRy11:&4;
+!!FU&y11=0:E;
+!!BU:Oy10/?y11;
+!!VRy11:&2;
+!!FU&y11>0:E;
+!!CM:R0;
+
+!!VRz3:S^Meffect242.def^;
+!!FU(PlayCustomAnimation2):P0/3/y20/100/1/0/1; [Function to play custom animation By Hawaiing]
+
+!!VRz3:S^Meffect242.def^;
+!!FU(PlayCustomAnimation2):P0/3/y10/100/1/0/1; [Function to play custom animation By Hawaiing]
+
+!!BMy1:Py10;
+
+!!UN:C6919200/4/?y2;
+!!SN:E4797616/2/y2/0/1;
+
+
+
+**206
+
+!?FU(OnBattleRound)&v997>0;
+!!DO(Find_Unicon)/0/41/1:P;
+
+!?FU(Find_Unicon);
+!!BMx16:T?y3;
+!!FU&y3<>206:E;
+!!BMx16:N?y11;
+!!FU&y11=0:E;
+
+!!BMx16:P?y9;
+!!FU(TwoHex_Find2):Py9/?y88;
+!!VRy19&y88=0:Sy9+1;
+!!VRy19&y88=1:Sy9-1;
+!!VRz3:S^Meffect190.def^;
+!!FU(PlayCustomAnimation2):P0/3/y9/100/1/0/1; [Function to play custom animation By Hawaiing]
+
+!!DO(Buff_Unicon)/0/5/1&y88=0:Px16/y9;
+!!DO(Buff_Unicon)/0/2/1&y88=0:Px16/y19;
+!!DO(Buff_Unicon)/0/5/1&y88=1:Px16/y19;
+!!DO(Buff_Unicon)/0/2/1&y88=1:Px16/y9;
+
+!!SN:T^TUM_unit.206_1^/?z1;
+!!BA:Q?f;
+!!BU&1000/f=0:Mz1;
+
+
+!?FU(Buff_Unicon);
+!!FU(Find_Near2):Px2/x16/?y3;
+!!BMx1:I?y30;
+!!BMx1:N?y20;
+!!BU&y3>=0/y3<=186:Ey3/?y8;             [-2 if there is alive stack at that position]
+!!BMy8&y8>=0/y8<=41/x1<>y8:I?y40;       [apply damage to surrounding creatures]
+!!BMy8&y8>=0/y8<=41/x1<>y8/y40=y30:M27/3/2;[apply damage to surrounding creatures if same side]
+!!BMy8&y8>=0/y8<=41/x1<>y8/y40=y30:M49/3/2;[apply damage to surrounding creatures if same side]
+!!BMy8&y8>=0/y8<=41/x1<>y8/y40=y30:M53/3/2;[apply damage to surrounding creatures if same side]
+
+
+**208
+
+!?MF1&1000;
+!!BA:Q?y1;
+!!FU&y1=1:E;                            [Exit in Quick Combat]
+
+!!UN:C42149568/4/?y10;                  [Get Physical Damage type]
+!!if|y10=4462398/y10=4455011/y10=4456676;[Only run when melee or shooting damage or strikes all enemies around damage type]
+  !!BG:A?y1;                            [Aktion in y1]
+  !!if&y1=6|y1=7;                       [Attack or Shoot]
+    !!BG:N?y1;                          [Attacking Stack]
+    !!MF:N?y4 F?y50;                    [damage receiving stack and damage applied]
+    !!if&y4>=0/y4<=41;                  [if any valid battlestack]
+      !!BMy4:I?y7 P?y20 T?y81;                [Creature Type and Side index as for heroes (0:left, 1:right)]
+
+
+       !!FU(TwoHex_Find2):Py20/?y88;
+       !!VRy21&y88=0:Sy20+1;
+        !!VRy21&y88=1:Sy20-1;
+
+
+      !!FU&y81=208:E;
+      !!if&y88=-1;
+       !!re i/0/5;                       [loop target stack surrounding]
+        !!FU(Find_Near2):Py20/i/?y30; [Pass position and return first neighbouring hex field]
+        !!if&y30>=0/y30<=186;
+          !!BU:Ey30/?y8;                [If no alive monster is at that position, a value of -1 will be retur
+          !!if&y8>=0/y8<=41;            [if a valid creature ]
+            !!BMy8:I?y11 T?y9;          [get side and creature flag]
+            !!if&y11=y7;[if any commander and same team]ned]
+              !!if&y9=208;
+                !!BA:Q?f;                 [get quick combat status]
+               !!BMy8:Ky50;              [Apply damage to commander stack]
+               !!MF:F0;                  [apply 1 damage to attacked unit. for some reason the battle log says always 1 damage]
+               !!MF:E0;                  [apply 1 damage to attacked unit. for some reason the battle log says always 1 damage] 
+
+                !!UN:N3/-2/y81/1;
+               !!SN:T^TUM_unit.208_1^/?z1/^damage^/y50/^target^/z-2;
+                !!BU&1000/f=0:Mz1;
+
+                !!VRz4:S^CRUSDFND.wav^;
+                !!SN:Pz4;
+              !!en;
+            !!en;
+          !!en;
+        !!en;  
+      !!en;
+      !!en;
+
+
+    !!if&y88>-1;
+       !!re i/0/10;                       [loop target stack surrounding]
+
+        !!FU(Find_Near2)&i<=5:Py20/i/?y30; [Pass position and return first neighbouring hex field]
+        !!VRy53:Si-5;
+        !!FU(Find_Near2)&i>5:Py21/y53/?y30; [Pass position and return first neighbouring hex field]
+        !!if&y30>=0/y30<=186;
+          !!BU:Ey30/?y8;                [If no alive monster is at that position, a value of -1 will be retur
+          !!if&y8>=0/y8<=41;            [if a valid creature ]
+            !!BMy8:I?y11 T?y9;          [get side and creature flag]
+            !!if&y11=y7;[if any commander and same team]ned]
+              !!if&y9=208;
+                !!BA:Q?f;                 [get quick combat status]
+               !!BMy8:Ky50;              [Apply damage to commander stack]
+               !!MF:F0;                  [apply 1 damage to attacked unit. for some reason the battle log says always 1 damage]
+               !!MF:E0;                  [apply 1 damage to attacked unit. for some reason the battle log says always 1 damage] 
+
+                !!UN:N3/-2/y81/1;
+               !!SN:T^LotS_unit.208_1^/?z1/^damage^/y50/^target^/z-2;
+                !!BU&1000/f=0:Mz1;
+
+                !!VRz4:S^CRUSDFND.wav^;
+                !!SN:Pz4;
+              !!en;
+            !!en;
+          !!en;
+        !!en;  
+      !!en;
+      !!en;
+
+    !!en;
+  !!en;
+!!en;
+
+
+!?MF1;
+!!FU:E;
+!!UN:C42149568/4/?y10;                  [Get Physical Damage type]
+!!if|y10=4462398/y10=4455011/y10=4456676:; [Only run when melee or shooting damage]
+
+!!MF:N?y1;
+!!BMy1:T?y11;
+!!FU&y11<>208:E;
+
+
+!!MF:F?y3;
+
+!!SN:W^Sapphire_%Y1^/?y2;
+!!SN:W^Sapphire_%Y1^/d1;
+
+!!VRz4:S^CRUSDFND.wav^;
+!!SN&y2>0:Pz4;
+!!BMy1:V54;
+
+!!if&y2<>0;
+!!VRy4:Sy3:5;
+!!VRy6:Sy4*y2;
+!!VRy5:Sy3-y6;
+!!VRy5&y5<0:S0;
+!!IF:L^%Y2 %Y3 %Y4 %Y5 %Y6^;
+
+!!MF:Fy5;
+!!MF&y5=0:E0;
+
+!!en;
+
+
+!!VRy21:Sy2*20;
+!!VRy21&y21>100:S100;
+!!VRy12:Sy2+1;
+!!VRy31:Sy12*20;
+!!VRy31&y31>100:S100;
+
+!!UN:N3/-2/y81/1;
+!!SN&y2=0:T^TUM_unit.208_1^/?z1/^damage^/y31;
+!!SN&y2>0:T^TUM_unit.208_2^/?z1/^damage1^/y21/^damage^/y31;
+!!SN&y2>3:T^TUM_unit.208_3^/?z1/^damage1^/y21;
+!!BA:Q?f;
+!!BU&1000/f=0:Mz1;
+
+
+!!en:;
+
+!?FU(OnBattleRound);
+!!DO(Sapphire_Reset2)/0/41/1:P;
+
+!?FU(Sapphire_Reset2);
+!!SN:W^Sapphire_%X16^/0;
+
+**209
+
+!?BG0;
+!!BG:A?y1;
+!!FU&y1<>6:E;
+!!BG:E?y2 N?y3;
+!!FU&y2<0:E;
+!!BMy2:T?y4;
+!!FU&y4<>209:E;
+!!BMy3:F?y8;
+!!VRy8:&65536;
+!!FU&y8=0:E;
+!!BMy2:R?y11;
+!!FU&y11=0:E;
+
+!!FU&y8=0:E;          
+
+!!SN:W^Sasqua_ret^/1;
+!!SN:W^Sasqua_ret_y2^/y2;
+!!SN:W^Sasqua_ret_y3^/y3;
+
+!?FU(OnBattleStackObtainsTurn)&1000;
+!!SN:W^Sasqua_ret^/?y1;
+!!FU&y1=0:E;
+!!SN:W^Sasqua_ret^/0;
+
+!!SN:W^Sasqua_ret_y2^/?y2;
+!!SN:W^Sasqua_ret_y3^/?y3;
+
+!!BMy2:N?y4;
+!!BMy3:N?y5;
+!!FU|y4=0/y5=0:E;
+!!BMy2:Rd-1;
+
+!!UN:C6919200/4/?y30;
+
+!!VRy12:Sy2*1352+21708+y30;  [получить структуру стека]
+!!VRy13:Sy3*1352+21708+y30;  [получить структуру стека]
+!!SN:E4461360/2/y12/y13/2; 
+
+
+**210
+
+
+!?MF1;
+!!UN:C42149568/4/?y10;                  [Get Physical Damage type]
+!!if|y10=4462398/y10=4455011/y10=4456676:; [Only run when melee or shooting damage]
+!!BG:N?y2;
+!!MF:N?y14;
+!!FU&y2=y14:E;
+!!BMy2:N?y11 T?y12;
+!!FU&y12<>210:E;
+!!MF:F?y11;
+!!VRy11::2;
+!!SN:W^Water_shield_%Y2^/dy11;
+
+!!SN:W^Water_shield_%Y2^/?y13;
+
+!!SN:T^TUM_unit.210_1^/?z1/^damage^/y11/^damage2^/y13; 520
+!!BA:Q?f;
+!!BU&1000/f=0:Mz1;
+
+!!BMy2:P?y3;
+!!VRz3:S^Meffect263.def^;
+!!FU(PlayCustomAnimation2):P0/3/y3/100/0/0/1; [Function to play custom animation By Hawaiing]
+
+
+!?MF1;
+!!UN:C42149568/4/?y10;                  [Get Physical Damage type]
+!!if|y10=4462398/y10=4455011/y10=4456676:; [Only run when melee or shooting damage]
+
+!!MF:N?y1;
+!!SN:W^Water_shield_%Y1^/?y2;
+!!FU&y2=0:E;
+
+!!MF:F?y3;
+
+!!MF&y2>=y3:E0;
+!!MF&y2>=y3:F0;
+!!VRy12&y2>=y3:Sy2-y3;
+!!SN&y2>=y3:W^Water_shield_%Y1^/y12;
+
+!!VRy13&y2<y3:Sy3-y2;
+!!MF&y2<y3:Fy13;
+!!SN&y2<y3:W^Water_shield_%Y1^/0;
+
+!!VRz4:S^CRUSDFND.wav^;
+!!SN:Pz4;
+!!BMy1:V84;
+
+!!SN&y2>=y3:T^TUM_unit.210_2^/?z1/^damage^/y3/^damage2^/y12;
+!!SN&y2<y3:T^TUM_unit.210_3^/?z1/^damage^/y2;
+!!BA:Q?f;
+!!BU&1000/f=0:Mz1;
+
+!!en:;
+
+
+**212
+
+!?MF1;                                  [*Physical Combat *]
+
+!!UN:C42149568/4/?y10;                  [Get Physical Damage type]
+!!if|y10=4455011; [Only run when melee or shooting damage]
+
+!!BG:N?y1;                              [Attacking Stack]
+!!BMy1:T?y2;
+!!FU&y2<>212:E;
+
+!!MF:N?y4;                              [damage receiving stack]
+
+!!BG:D?y11;
+
+!!SN:W^Magog_Activated^/?y33;
+!!SN:W^Magog_Target^/?y34;
+!!VRy11&y33=1:Sy34;
+
+!!UN:C6919200/4/?y33;   
+!!VRz3:S^Lightning.def^;
+!!VRz4:S^LIGHTBLT.wav^;
+
+
+!!BMy1:I?y30;
+
+!!BU&y11>=0/y11<=186:Ey11/?y5;
+
+!!if&y5>=0/y5<=41;
+!!BMy5&y5>=0/y5<=41:I?y40;
+!!VRy52:Sy1*1352+21708+y33;  [получить структуру стека]
+!!VRy53:Sy5*1352+21708+y33;  [получить структуру стека]
+!!SN:E4468352/2/y52/0;
+!!SN:E4471904/2/y52/y53/v1/1/0/0/0; 
+!!en;
+
+!BMy5&y5>=0/y5<=41/y30<>y40:Kv1;
+
+!!SN&y5>=0/y5<=41/y30<>y40:Pz4;
+!!SN&y5>=0/y5<=41/y30<>y40:W^Oracle_Hex_temp%Y11^/1;
+!!SN&y5>=0/y5<=41/y30<>y40:W^Oracle_Hex_temp2%Y5^/1;
+!!FU(PlayCustomAnimation2)&y5>=0/y5<=41/y30<>y40:P0/3/y11/100/0/0/1; [Function to play custom animation By Hawaiing]
+
+
+!!re i/0/5;
+!!FU(Find_Near2):Py11/i/?y12;
+
+!!BU&y12>=0/y12<=186:Ey12/?y5;
+
+  !!if&y5>=0/y5<=41;
+  !!BMy5&y5>=0/y5<=41:I?y40;
+  !!VRy52:Sy1*1352+21708+y33;  [получить структуру стека]
+  !!VRy53:Sy5*1352+21708+y33;  [получить структуру стека]
+  !!SN:E4468352/2/y52/0;
+  !!SN:E4471904/2/y52/y53/v1/1/0/0/0; 
+  !!en;
+
+!!SN:W^Oracle_Hex_temp%Y12^/?y80;
+!!SN:W^Oracle_Hex_temp2%Y5^/?y81;
+
+  !!if&y80=0/y81=0;
+  !!SN&y5>=0/y5<=41/y30<>y40:W^Oracle_Hex_temp2%Y5^/1;
+  !!SN:W^Oracle_Hex_temp%Y12^/1;
+  !!BMy5&y5>=0/y5<=41/y30<>y40:Kv1;
+  !!VRy55:Sv1;
+  !!SN&y5>=0/y5<=41/y30<>y40:Pz4;
+  !!FU(PlayCustomAnimation2)&y5>=0/y5<=41/y30<>y40:P0/3/y12/100/0/0/1; [Function to play custom animation By Hawaiing]
+  !!BMy5&y5>=0/y5<=41/y30<>y40:T?y81;
+  !!UN:N3/-2/y81/1;
+  !!SN&y5>=0/y5<=41/y30<>y40:T^TUM_unit.212_1^/?z1/^target^/z-2/^damage^/y55;
+  !!BA:Q?f;
+  !!BU&y5>=0/y5<=41/y30<>y40/1000/f=0:Mz1;
+  !!en;
+
+
+  !!if&y12>=0;
+    !!re j/0/5;
+    !!FU(Find_Near2):Py12/j/?y13;
+
+    !!BU&y13>=0/y13<=186:Ey13/?y5;
+
+      !!if&y5>=0/y5<=41;
+      !!BMy5&y5>=0/y5<=41:I?y40;
+      !!VRy52:Sy1*1352+21708+y33;  [получить структуру стека]
+      !!VRy53:Sy5*1352+21708+y33;  [получить структуру стека]
+      !!SN:E4468352/2/y52/0;
+      !!SN:E4471904/2/y52/y53/v1/1/0/0/0; 
+      !!en;
+
+      !!SN:W^Oracle_Hex_temp%Y13^/?y80;
+      !!SN:W^Oracle_Hex_temp2%Y5^/?y81;
+
+        !!if&y80=0/y81=0;
+        !!SN:W^Oracle_Hex_temp%Y13^/1;
+        !!SN&y5>=0/y5<=41/y30<>y40:W^Oracle_Hex_temp2%Y5^/1;
+        !!BMy5&y5>=0/y5<=41/y30<>y40:Kv1;
+        !!VRy55:Sv1;
+        !!SN&y5>=0/y5<=41/y30<>y40:Pz4;
+        !!FU(PlayCustomAnimation2)&y5>=0/y5<=41/y30<>y40:P0/3/y13/100/0/0/1; [Function to play custom animation By Hawaiing]
+        !!BMy5&y5>=0/y5<=41/y30<>y40:T?y81;
+        !!UN:N3/-2/y81/1;
+        !!SN&y5>=0/y5<=41/y30<>y40:T^TUM_unit.212_1^/?z1/^target^/z-2/^damage^/y55;
+        !!BA:Q?f;
+        !!BU&y5>=0/y5<=41/y30<>y40/1000/f=0:Mz1;
+        !!en;
+
+      !!if&y13>=0;
+        !!re k/0/5;
+        !!FU(Find_Near2):Py13/k/?y14;
+
+        !!BU&y14>=0/y14<=186:Ey14/?y5;
+
+          !!if&y5>=0/y5<=41;
+          !!BMy5&y5>=0/y5<=41:I?y40;
+          !!VRy52:Sy1*1352+21708+y33;  [получить структуру стека]
+          !!VRy53:Sy5*1352+21708+y33;  [получить структуру стека]
+          !!SN:E4468352/2/y52/0;
+          !!SN:E4471904/2/y52/y53/v1/1/0/0/0; 
+          !!en;
+
+        !!SN:W^Oracle_Hex_temp%Y14^/?y80;
+        !!SN:W^Oracle_Hex_temp2%Y5^/?y81;
+
+          !!if&y80=0/y81=0;
+          !!SN:W^Oracle_Hex_temp%Y14^/1;
+          !!SN&y5>=0/y5<=41/y30<>y40:W^Oracle_Hex_temp2%Y5^/1;
+          !!BMy5&y5>=0/y5<=41/y30<>y40:Kv1;
+          !!VRy55:Sv1;
+          !!SN&y5>=0/y5<=41/y30<>y40:Pz4;
+          !!FU(PlayCustomAnimation2)&y5>=0/y5<=41/y30<>y40:P0/3/y14/100/0/0/1; [Function to play custom animation By Hawaiing]
+          !!BMy5&y5>=0/y5<=41/y30<>y40:T?y81;
+          !!UN:N3/-2/y81/1;
+          !!SN&y5>=0/y5<=41/y30<>y40:T^TUM_unit.212_1^/?z1/^target^/z-2/^damage^/y55;
+          !!BA:Q?f;
+          !!BU&y5>=0/y5<=41/y30<>y40/1000/f=0:Mz1;
+          !!en;
+        !!en;
+
+      !!en;
+
+    !!en;
+
+  !!en;
+!!en;
+
+
+!!DO(Oracle_reseta)/0/186/1:P;
+
+
+
+!?FU(Attack_Surround2a);
+!!BMx1:P?y1 I?y20;
+!!BMx2:P?y2 I?y30;                      [get target position and Side]
+!!BU:Ex4/?y10;
+
+!!FU(Find_Near2):Px4/x16/?y3;
+!!FU|y3<0/y3>186:E;
+
+!!SN:W^Oracle_Hex_temp%Y3^/?y80;
+!!FU&y80=1:E;
+!!SN:W^Oracle_Hex_temp%Y3^/1;
+
+!!BU:Ey3/?y99;
+!IF&y99>=0:L^%Y99^;
+
+!!BMy99&y99>=0:D?y31 N?y32;
+!!if&y32>0/y99>=0;
+
+!!UN:C6919200/4/?y33;   
+!!VRy12:Sx1*1352+21708+y33;  [получить структуру стека]
+!!VRy13:Sy99*1352+21708+y33;  [получить структуру стека]
+!!SN:E4468352/2/y12/0;
+!!SN:E4471904/2/y12/y13/v1/0/0/0/0; 
+!!VRy4:Sv1;
+
+
+!!BMy99&y99>=0/y99<=41/y99<>y10:I?y40;       [apply damage to surrounding creatures]
+!!BMy99&y99>=0/y99<=41/y99<>y10/y40=y30:Ky4;[apply damage to surrounding creatures if same side]
+
+!!VRz3:S^Lightning.def^;
+!!FU(PlayCustomAnimation2)&y99>=0/y99<=41/y99<>x2/y40=y30:P0/3/y3/100/0/0/1; [Function to play custom animation By Hawaiing]
+
+!!VRz4:S^LIGHTBLT.wav^;
+!!SN&y99>=0/y99<=41/y99<>x2/y40=y30:Pz4;
+
+!!BMy99:T?y81;
+!!UN:N3/-2/y81/1;
+!!SN&y99>=0/y99<=41/y99<>x2/y40=y30:T^TUM_unit.212_1^/?z1/^target^/z-2/^damage^/y4;
+!!BA:Q?f;
+!!BU&y99>=0/y99<=41/y99<>x2/y40=y30/1000/f=0:Mz1;
+!!en;
+
+
+!!if&x3=1;
+!!DO(Attack_Surround2a)/0/5/1:Px1/x2/0/y3;
+!!en;
+
+
+
+!?FU(Oracle_reseta);
+!!SN:W^Oracle_Hex_temp%X16^/0;
+!!SN:W^Oracle_Hex_temp2%X16^/0;
+
+
+**214
+
+!?MF1;                                  [*Physical Combat *]
+
+!!UN:C42149568/4/?y10;                  [Get Physical Damage type]
+!!if|y10=4455011; [Only run when melee or shooting damage]
+
+!!BG:N?y1;                              [Attacking Stack]
+!!BMy1:T?y2;
+!!FU&y2<>214:E;
+
+!!MF:N?y4;                              [damage receiving stack]
+
+!!BG:D?y11;
+!!SN:W^Magog_Activated^/?y33;
+!!SN:W^Magog_Target^/?y34;
+!!VRy11&y33=1:Sy34;
+
+!!VRy12:S-1;
+!!VRy13:S-1;
+!!VRy14:S-1;
+!!VRy15:S-1;
+!!VRy16:S-1;
+!!VRy17:S-1;
+
+!!FU(Find_Near2):Py11/0/?y2;
+
+!!FU(Find_Near2):Py11/1/?y3;
+
+!!FU(Find_Near2):Py11/2/?y44; 
+
+!!FU(Find_Near2):Py11/3/?y5;
+
+!!FU(Find_Near2):Py11/4/?y6;
+
+!!FU(Find_Near2):Py11/5/?y7;
+
+!!MF:F?y21;
+
+
+!BMy4:Ky21;
+!!VRz3:S^Infernoa.def^;
+
+
+!!BMy4:T?y81;
+!!UN:N3/-2/y81/1;
+!!SN:T^TUM_unit.214_1^/?z1/^target^/z-2/^damage^/y21;
+!!BA:Q?f;
+!BU&1000/f=0:Mz1;
+
+!!FU(PlayCustomAnimation2):P0/3/y11/100/1/0/1; [Function to play custom animation By Hawaiing]
+
+!!DO(Attack_Surround2b)/0/5/1:Py1/y4/y21/y11;
+
+!!DO(Attack_Surround2b)/0/5/1&y2>=0:Py1/y4/y21/y2;
+!!DO(Attack_Surround2b)/0/5/1&y3>=0:Py1/y4/y21/y3;
+!!DO(Attack_Surround2b)/0/5/1&y44>=0:Py1/y4/y21/y44;
+!!DO(Attack_Surround2b)/0/5/1&y5>=0:Py1/y4/y21/y5;
+!!DO(Attack_Surround2b)/0/5/1&y6>=0:Py1/y4/y21/y6;
+!!DO(Attack_Surround2b)/0/5/1&y7>=0:Py1/y4/y21/y7;
+
+
+!!DO(Oracle_reseta)/0/186/1:P;
+
+!?FU(Attack_Surround2b);
+!!BMx1:P?y1 I?y20;
+!!BMx2:P?y2 I?y30;                      [get target position and Side]
+!!BU:Ex4/?y10;
+
+!!FU(Find_Near2):Px4/x16/?y3;
+!!FU|y3<0/y3>186:E;
+
+!!SN:W^Oracle_Hex_temp%Y3^/?y80;
+!!FU&y80=1:E;
+!!SN:W^Oracle_Hex_temp%Y3^/1;
+
+!!BU:Ey3/?y99;
+!!FU&y99<0:E;
+
+!!BMy99:D?y31 N?y32;
+!!FU&y32=0:E;
+
+!!UN:C6919200/4/?y33;   
+!!VRy12:Sx1*1352+21708+y33;  [получить структуру стека]
+!!VRy13:Sy99*1352+21708+y33;  [получить структуру стека]
+!!SN:E4468352/2/y12/0;
+!!SN:E4471904/2/y12/y13/v1/0/0/0/0; 
+!!VRy4:Sv1;
+
+
+!!BMy99&y99>=0/y99<=41/y99<>y10:I?y40;       [apply damage to surrounding creatures]
+!!BMy99&y99>=0/y99<=41/y99<>y10/y40=y30:Ky4;[apply damage to surrounding creatures if same side]
+
+!!BMy99:T?y81;
+!!UN:N3/-2/y81/1;
+!!SN&y99>=0/y99<=41/y99<>x2/y40=y30:T^TUM_unit.214_1^/?z1/^target^/z-2/^damage^/y4;
+!!BA:Q?f;
+!!BU&y99>=0/y99<=41/y99<>x2/y40=y30/1000/f=0:Mz1;
+
+
+
+**215
+
+!?MF1;                                  [*Physical Combat *]
+
+!!UN:C42149568/4/?y10;                  [Get Physical Damage type]
+!!if|y10=4462398/y10=4455011/y10=4456676; [Only run when melee or shooting damage]
+
+!!BG:N?y1 D?y33;                              [Attacking Stack]
+
+!!MF:N?y4;                              [damage receiving stack]
+!!SN:W^Cer_attacking_stacking^/?y50;
+!!VRy1&y4=y1/y50>=0/y50<=41:Sy50;
+!!SN:W^Cer_attacking_stacking^/y4;
+!!BMy4:I?y31;
+
+!!BMy1:T?y2;
+!!FU&y2<>215:E;
+!!BMy1:I?y5;                            [Side index as for heroes (0:left, 1:right)]
+!!FU&y31=y5:E;
+!!MF:F?y21;
+!!MF:E0;
+
+
+!!DO(Attack_Surround_Cer)/0/5/1:Py1/y4/y33; y1 attk y4 target receiv y21 damage
+!!BMy4:Ky21;
+
+
+
+
+!?FU(Attack_Surround_Cer);
+!!BMx1:P?y1 I?y20 T?y82;
+!!BMx2:P?y2 I?y30;                      [get target position and Side]
+
+!!FU(Find_Near2):Px3/x16/?y3;
+!!FU|y3<0/y3>186:E;
+
+!!BU:Ey3/?y99;
+!!FU&y99<0:E;
+
+!!BMy99:I?y80;
+!!BMx1:I?y70;
+!!FU&y80=y70:E;
+!!FU&x2=y99:E;
+
+
+!!UN:C6919200/4/?y30;  
+!!VRy12:Sx1*1352+21708+y30;  [получить структуру стека]
+!!VRy13:Sy99*1352+21708+y30;  [получить структуру стека]
+!!SN:E4468352/2/y12/0;
+!!SN:E4471904/2/y12/y13/v1/0/0/0/0; 
+!!BMy99:Kv1;
+
+
+
+
+**216
+
+
+!?BG0;
+!!BG:A?y1;
+!!FU&y1<>6:E;
+!!BG:N?y1;                              [Attacking Stack]
+!!BMy1:T?y2;
+!!FU&y2<>216:E;
+!!BG:E?y3;
+!!FU&y1=y3:E;
+!!SN:W^HDemon_Check_%Y1_%Y3^/?y4;
+
+!!VRy4:Sd1;
+!!BMy3:T?y81;
+
+!!UN:N3/-2/y81/1;
+!!SN:T^TUM_unit.216_1^/?z1/^damage^/y4/^target^/z-2;
+!!BA:Q?f;
+!!BU&1000/f=0:Mz1;
+
+
+!!SN:W^HDemon_Check_%Y1_%Y3^/y4;
+!!SN:W^Avenger_Start^/1;
+!!SN:W^Avenger_Start_y1^/y1;
+!!SN:W^Avenger_Start_y3^/y3;
+
+
+!?FU(OnBattleStackObtainsTurn)&1000;
+!!SN:W^Avenger_Start^/?y1;
+!!FU&y1=0:E;
+!!SN:W^Avenger_Start^/0;
+
+!!SN:W^Avenger_Start_y1^/?y1;
+!!SN:W^Avenger_Start_y3^/?y3;
+
+!!SN:W^HDemon_Check_%Y1_%Y3^/?y4;
+!!FU&y4<2:E;
+
+!!DO(Avenger_Attack3)/2/y4/1:Py1/y3;
+
+!?FU(Avenger_Attack3);
+!!BMx1:N?y1;
+!!BMx2:N?y2;
+!!FU|y1=0/y2=0:E;
+!!UN:C6919200/4/?y11;                            [комбат мэнеджер]
+!!VRy12:Sx1*1352+21708+y11;  [получить структуру стека]
+!!VRy13:Sx2*1352+21708+y11;  [получить структуру стека]
+!!SN:E4461360/2/y12/y13/2; 
+
+
+
+
+
+!?MF1;
+!!FU:E;
+!!UN:C42149568/4/?y10;                  [Get Physical Damage type]
+!!if|y10=4462398/y10=4455011/y10=4456676:; [Only run when melee or shooting damage]
+!!BG:N?y1;
+!!MF:N?y2;
+
+!!SN:W^Dem_attacking_stacking^/?y50;
+!!VRy1&y2=y1/y50>=0/y50<=41:Sy50;
+!!SN:W^Dem_attacking_stacking^/y2;
+!!BMy2:I?y31;
+
+!!BMy1:I?y32;
+!!FU&y32=y31:E;
+
+!!BMy1:T?y3;
+!!FU&y3<>216:E;
+
+
+
+!!MF:N?y2;
+!!BMy2:M25/5/0;
+
+
+
+!!BMy2:P?y9;
+
+!!SN:W^notrealattack^/?y77;
+
+!!VRz3:S^Meffect187.def^;
+!!FU(PlayCustomAnimation2)&y77=0:P0/3/y9/100/1/0/1; [Function to play custom animation By Hawaiing]
+
+!!MF:F?y10;
+!!VRy20:Sy10;
+
+
+!!SN:W^Blood_Target_%Y2^/dy20;
+!!SN:W^Blood_Target_%Y2^/?y21;
+
+
+!!BMy1:T?y80;
+!!BMy2:T?y81;
+
+
+!!UN:N3/-3/y80/1;
+!!UN:N3/-2/y81/1;
+!!SN:T^TUM_unit.216_1^/?z1/^target^/z-3/^target2^/z-2/^damage^/y20/^damage2^/y21;
+!!BA:Q?f;
+!!BU&1000/f=0:Mz1;
+
+!!en:;
+
+
+!?FU(OnBattleActionEnd)&1000;
+!!FU:E;
+!!BG:N?y1 A?y99;
+!!FU|y99=1/y99=4/y99=5/y99=8/y99=3:E;
+!!BMy1:T?y3 P?y10;
+!!BMy1:N?y5;
+!!FU&y5=0:E;
+!!SN:W^Blood_Target_%Y1^/?y11;
+!!FU&y11=0:E;
+!!SN:W^Blood_Target_%Y1^/0;
+!!BMy1:G25/?y33/?y34;
+!!FU&y33=0:E;
+!!BMy1&y11>0:Ky11;
+
+
+!!UN:N3/-2/y3/1;
+!!SN:T^TUM_unit.216_2^/?z1/^damage^/y11/^target^/z-2;
+!!BU&1000/f=0:Mz1;
+!!FU(WOG_CleanUpSpells2):P25/y1;
+
+!!VRz3:S^Cathsp4.def^;
+!!FU(PlayCustomAnimation2):P0/3/y10/100/1/0/1; [Function to play custom animation By Hawaiing]
+
+!!BU:R;
+
+
+!?FU(OnBattleActionEnd)&1000;
+!!FU:E;
+!!BG:N?y1 A?y99;
+!!FU|y99<>3:E;
+!!BMy1:T?y3 P?y10;
+!!BMy1:N?y5;
+!!FU&y5=0:E;
+!!SN:W^Blood_Target_%Y1^/?y11;
+!!FU&y11=0:E;
+!!SN:W^Blood_Target_%Y1^/0;
+!!FU(WOG_CleanUpSpells2):P25/y1;
+
+
+!?FU(WOG_CleanUpSpells2);
+!#VA(spellId:x);
+
+  !!BMx2:N?n T?t;
+  !!if&n/t<>(NO_MON);
+      !!BMx2:Z?(stack:y);
+      !!SN:E4473392/(CALLCONV_THISCALL)/(stack)/(spellId);
+  !!en;
+
+
+
+**218
+
+
+
+!?MF1;
+!!UN:C42149568/4/?y10;                  [Get Physical Damage type]
+!!if|y10=4462398/y10=4455011/y10=4456676:; [Only run when melee or shooting damage]
+!!MF:N?y1;
+!!BMy1:G13/?y2/?y3;
+!!FU&y2<1:E;
+!!SN:W^FRune_Damage%Y1^/?y11;
+!!BMy1:N?y33;
+!!BMy1:P?y9;
+
+
+!!FU(TwoHex_Find2):Py9/?y88;
+!!VRy19&y88=0:Sy9+1;
+!!VRy19&y88=1:Sy9-1;
+!!VRz3:S^Meffect264.def^;
+!!FU(PlayCustomAnimation2):P0/3/y9/100/1/0/1; [Function to play custom animation By Hawaiing]
+
+!!DO(FRune_Attack2)/0/5/1&y88=-1:Py9/y11/y1;
+!!DO(FRune_Attack2)/0/5/1&y88=0:Py9/y11/y1;
+!!DO(FRune_Attack2)/0/2/1&y88=0:Py19/y11/y1;
+!!DO(FRune_Attack2)/0/5/1&y88=1:Py19/y11/y1;
+!!DO(FRune_Attack2)/0/2/1&y88=1:Py9/y11/y1;
+
+!!BMy1&y33<>0:Ky11;
+
+!!SN:T^TUM_unit.218_2^/?z1/^damage^/y11;
+!!BA:Q?f;
+!!BU&1000/f=0:Mz1;
+
+!!BU:R;
+!!en;
+
+
+!?FU(FRune_Attack2);
+!!BMx3:I?y20;
+!!FU(Find_Near2):Px1/x16/?y2;
+!!FU|y2<0/y2>186:E;
+!!BU:Ey2/?y99;
+!!FU&y99<0:E;
+!!BMy99:N?y31;
+!!FU&y31=0:E;
+
+
+!!BMy99&y99>=0/y99<=41/y99<>x3:I?y40;       [apply damage to surrounding creatures]
+!BMy99&y99>=0/y99<=41/y99<>x3/y40=y20:M13/1/0;
+!!SN&y99>=0/y99<=41/y99<>x3/y40=y20:W^FRune_Damage%Y2^/x2;
+!!BMy99&y99>=0/y99<=41/y99<>x3/y40=y20:Kx2;[apply damage to surrounding creatures if same side]
+
+
+
+
+!?MF1;
+!!UN:C42149568/4/?y10;                  [Get Physical Damage type]
+!!FU&y10<>4462398/y10<>4456676:E;
+
+!!BG:N?y2;
+!!MF:N?y33;
+!!FU&y2=y33:E;
+!!BMy2:T?y3 N?y11;
+
+!!FU&y3<>218:E;
+
+!!BG:E?y4;
+!!FU&y4<0:E;
+!!BMy4:G13/?y22/?y23;
+!!FU&y22>0:E;
+
+!!BMy4:M13/2/0;
+
+!!VRy11:*25;
+!!SN:W^FRune_Damage%Y4^/y11;
+!!BG:D?y5;
+
+!!VRz3:S^Meffect059.def^;
+!!FU(PlayCustomAnimation2):P0/3/y5/100/1/0/1; [Function to play custom animation By Hawaiing]
+
+
+!!BMy4:T?y81;
+
+!!UN:N3/-2/y81/1;
+!!SN:T^TUM_unit.218_1^/?z1/^damage^/y11/^target^/z-2;
+!!BA:Q?f;
+!!BU&1000/f=0:Mz1;
+
+
+
+
+
+**219
+
+!?BG0&1000;
+
+!!BG:A?y1;
+!!FU&y1<>6:E;
+
+!!BG:N?y1 S?y56 E?y45;
+
+!!BMy1:T?y2 I?y29 P?y81;
+!!FU&y2<>219:E;
+
+!!VRy50:S0;
+
+!!BMy1:G-100/8/d;
+[:find_target]
+!!VRy50:+1;
+!!VRy10&y29=0:S21R20;
+!!VRy10&y29=1:S0R20;
+!!BMy10:P?y5;
+!!BMy10:N?y6;
+!!BMy10:T?y7;
+!!BMy10:G62/?y66/?y77;
+!!BMy10:G70/?y67/?y77;
+!!BMy10:G74/?y68/?y77;
+!!FU&y50=100:E;                         [Exit if no valid Target can be found]
+!!SN|y6=0/y7=145/y7=146/y7=147/y7=148/y7=149/y66>0/y67>0/y68>0:G[find_target]; [Loop]
+
+!!VRy60:S0;
+
+[:find_posit4]
+!!VRy60:+1;
+!!VRy51:S0T5;
+
+!!FU(TwoHex_Find2):Py5/?y88;
+!!VRy8&y88=0:Sy5+1;
+!!VRy8&y88=1:Sy5-1;
+
+!!VRy18:S-1;
+!!FU(Find_Near2)&y88=-1:Py5/y51/?y18;
+!!FU(Find_Near2)&y88=0/y51<>4:Py8/y51/?y18;
+!!FU(Find_Near2)&y88=1/y51<>4:Py5/y51/?y18;
+
+
+!!BU&y18>=0:Ey18/?y15;
+!!BU&y18>=0:Oy18/?y16;
+
+
+!!FU(Find_Near2)&y88=0/y51<>1/y15>=0/y16<>0:Py5/y51/?y18;
+!!FU(Find_Near2)&y88=1/y51<>1/y15>=0/y16<>0:Py8/y51/?y18;
+
+!!BU&y18>=0:Ey18/?y15;
+!!BU&y18>=0:Oy18/?y16;
+
+!!SN&y60=100:G[find_target];                         [Exit if no valid Target can be found]
+!!SN|y15>=0/y16<>0/y18<0:G[find_posit4]; [Loop]
+
+!!VRy50:S0;
+
+
+
+
+!!UN:C6919200/4/?y30;
+
+
+!!VRz4:S^devlext1.wav^;
+!!SN:Pz4;
+
+!!VRz3:S^DevilEffect.def^;
+!!VRz3&y1>=21:S^DevilEffec2.def^;
+!!FU(PlayCustomAnimation2):P0/3/y18/100/1/0/1; [Function to play custom animation By Hawaiing]
+
+
+
+!!VRy12:Sy1*1352+21708+y30;  [получить структуру стека]
+!!VRy13:Sy10*1352+21708+y30;  [получить структуру стека]
+!!SN:E4468352/2/y12/0;
+!!SN:E4471904/2/y12/y13/v1/0/0/0/0; 
+!!BMy10:Kv1;
+!!SN:T^TUM_unit.219_1^/?z1/^damage^/v1; 219
+!!BU&1000/f=0:Mz1;
+
+
+
+[:find_target]
+!!VRy50:+1;
+!!VRy11&y29=0:S21R20;
+!!VRy11&y29=1:S0R20;
+!!BMy11:P?y5;
+!!BMy11:N?y6;
+!!BMy11:T?y7;
+!!BMy11:G62/?y66/?y77;
+!!BMy11:G70/?y67/?y77;
+!!BMy11:G74/?y68/?y77;
+!!FU&y50=100:E;                         [Exit if no valid Target can be found]
+!!SN|y6=0/y7=145/y7=146/y7=147/y7=148/y7=149/y66>0/y67>0/y68>0:G[find_target]; [Loop]
+
+!!VRy60:S0;
+
+[:find_posit4]
+!!VRy60:+1;
+!!VRy51:S0T5;
+
+!!FU(TwoHex_Find2):Py5/?y88;
+!!VRy8&y88=0:Sy5+1;
+!!VRy8&y88=1:Sy5-1;
+
+!!VRy19:S-1;
+!!FU(Find_Near2)&y88=-1:Py5/y51/?y19;
+!!FU(Find_Near2)&y88=0/y51<>4:Py8/y51/?y19;
+!!FU(Find_Near2)&y88=1/y51<>4:Py5/y51/?y19;
+
+
+!!BU&y19>=0:Ey19/?y15;
+!!BU&y19>=0:Oy19/?y16;
+
+
+!!FU(Find_Near2)&y88=0/y51<>1/y15>=0/y16<>0:Py5/y51/?y19;
+!!FU(Find_Near2)&y88=1/y51<>1/y15>=0/y16<>0:Py8/y51/?y19;
+
+!!BU&y19>=0:Ey19/?y15;
+!!BU&y19>=0:Oy19/?y16;
+
+!!SN&y60=100:G[find_target];                         [Exit if no valid Target can be found]
+!!SN|y15>=0/y16<>0/y19<0:G[find_posit4]; [Loop]
+
+!!VRz4:S^devlext1.wav^;
+!!SN:Pz4;
+
+!!VRz3:S^DevilEffect.def^;
+!!VRz3&y1>=21:S^DevilEffec2.def^;
+!!FU(PlayCustomAnimation2):P0/3/y19/100/1/0/1; [Function to play custom animation By Hawaiing]
+
+
+
+!!VRy12:Sy1*1352+21708+y30;  [получить структуру стека]
+!!VRy13:Sy11*1352+21708+y30;  [получить структуру стека]
+!!SN:E4468352/2/y12/0;
+!!SN:E4471904/2/y12/y13/v1/0/0/0/0; 
+!!BMy11:Kv1;
+!!SN:T^TUM_unit.219_1^/?z1/^damage^/v1; 219
+!!BU&1000/f=0:Mz1;
+
+
+
+!!BMy45:N?y46;
+
+!!if&y46=0;
+[:find_target]
+!!VRy50:+1;
+!!VRy11&y29=0:S21R20;
+!!VRy11&y29=1:S0R20;
+!!BMy11:P?y5;
+!!BMy11:N?y6;
+!!BMy11:T?y7;
+!!BMy11:G62/?y66/?y77;
+!!BMy11:G70/?y67/?y77;
+!!BMy11:G74/?y68/?y77;
+!!FU&y50=100:E;                         [Exit if no valid Target can be found]
+!!SN|y6=0/y7=145/y7=146/y7=147/y7=148/y7=149/y66>0/y67>0/y68>0:G[find_target]; [Loop]
+
+!!VRy60:S0;
+
+[:find_posit4]
+!!VRy60:+1;
+!!VRy51:S0T5;
+
+!!FU(TwoHex_Find2):Py5/?y88;
+!!VRy8&y88=0:Sy5+1;
+!!VRy8&y88=1:Sy5-1;
+
+!!VRy19:S-1;
+!!FU(Find_Near2)&y88=-1:Py5/y51/?y19;
+!!FU(Find_Near2)&y88=0/y51<>4:Py8/y51/?y19;
+!!FU(Find_Near2)&y88=1/y51<>4:Py5/y51/?y19;
+
+
+!!BU&y19>=0:Ey19/?y15;
+!!BU&y19>=0:Oy19/?y16;
+
+
+!!FU(Find_Near2)&y88=0/y51<>1/y15>=0/y16<>0:Py5/y51/?y19;
+!!FU(Find_Near2)&y88=1/y51<>1/y15>=0/y16<>0:Py8/y51/?y19;
+
+!!BU&y19>=0:Ey19/?y15;
+!!BU&y19>=0:Oy19/?y16;
+
+!!SN&y60=100:G[find_target];                         [Exit if no valid Target can be found]
+!!SN|y15>=0/y16<>0/y19<0:G[find_posit4]; [Loop]
+
+
+!!VRz4:S^devlext1.wav^;
+!!SN:Pz4;
+
+!!VRz3:S^DevilEffect.def^;
+!!VRz3&y1>=21:S^DevilEffec2.def^;
+!!FU(PlayCustomAnimation2):P0/3/y19/100/1/0/1; [Function to play custom animation By Hawaiing]
+
+
+
+!!VRy12:Sy1*1352+21708+y30;  [получить структуру стека]
+!!VRy13:Sy11*1352+21708+y30;  [получить структуру стека]
+!!SN:E4468352/2/y12/0;
+!!SN:E4471904/2/y12/y13/v1/0/0/0/0; 
+!!BMy11:Kv1;
+!!SN:T^TUM_unit.219_1^/?z1/^damage^/v1; 219
+!!BU&1000/f=0:Mz1;
+!!BU:R;
+
+!!SN:E4479536/2/y12/y56/1;
+!!BG:A12;
+
+
+!!en;
+!!BMy1:G-100/4/d;
+
+!?BG0&1000;
+!!BG:A?y1;
+!!FU&y1<>7:E;
+
+!!BG:N?y10;
+
+!!BG:E?y1;
+!!FU&y1<0:E;
+!!BMy1:T?y2;
+!!BMy10:T?y3;
+!!FU&y3=149:E;
+
+!!FU&y2<>219:E;
+
+!!SN:W^Chaotic_Check^/1;
+!!SN:W^Chaotic_y1^/y1;
+!!SN:W^Chaotic_y10^/y10;
+
+!?FU(OnBattleStackObtainsTurn)&1000;
+!!SN:W^Chaotic_Check^/?y1;
+!!FU&y1=0:E;
+!!SN:W^Chaotic_Check^/0;
+!!SN:W^Chaotic_y1^/?y1;
+!!SN:W^Chaotic_y10^/?y10;
+
+!!BMy1:P?y66 N?y64;
+!!BMy10:P?y5 N?y65;
+!!FU|y64=0/y65=0:E;
+
+!!VRy50:S0;
+
+[:find_posit4]
+!!VRy50:+1;
+!!VRy51:S0T5;
+
+!!FU(TwoHex_Find2):Py5/?y88;
+!!VRy8&y88=0:Sy5+1;
+!!VRy8&y88=1:Sy5-1;
+
+!!VRy18:S-1;
+!!FU(Find_Near2)&y88=-1:Py5/y51/?y18;
+!!FU(Find_Near2)&y88=0/y51<>4:Py8/y51/?y18;
+!!FU(Find_Near2)&y88=1/y51<>4:Py5/y51/?y18;
+
+
+!!BU&y18>=0:Ey18/?y15;
+!!BU&y18>=0:Oy18/?y16;
+
+
+!!FU(Find_Near2)&y88=0/y51<>1/y15>=0/y16<>0:Py5/y51/?y18;
+!!FU(Find_Near2)&y88=1/y51<>1/y15>=0/y16<>0:Py8/y51/?y18;
+
+!!BU&y18>=0:Ey18/?y15;
+!!BU&y18>=0:Oy18/?y16;
+
+!!FU&y50=100:E;                         [Exit if no valid Target can be found]
+!!SN|y15>=0/y16<>0:G[find_posit4]; [Loop]
+
+
+!!VRz4:S^devlext1.wav^;
+!!SN:Pz4;
+
+
+!!BMy1:G-100/8/d;
+!!VRz3:S^DevilEffect.def^;
+!!FU(PlayCustomAnimation2):P0/3/y18/100/1/0/1; [Function to play custom animation By Hawaiing]
+
+
+
+!!UN:C6919200/4/?y30;
+
+!!VRy12:Sy1*1352+21708+y30;  [получить структуру стека]
+!!VRy13:Sy10*1352+21708+y30;  [получить структуру стека]
+!!SN:E4468352/2/y12/0;
+!!SN:E4471904/2/y12/y13/v1/0/0/0/0; 
+!!BMy1:G-100/4/d;
+!!BMy10:Kv1;
+
+!!BU:R;
+
+
+**221
+
+!?BG0;
+!!BG:A?y1;
+!!FU&y1<>2/y1<>6:E;
+!!BG:N?y10;
+!!BMy10:T?y11 P?y13;
+!!SN:W^Ghoul_Stack^/-1;
+!!FU&y11<>221:E;
+
+!!BG&y1=2:D?y2;
+!!BG&y1=6:S?y2;
+!!FU|y2<0/y2>186:E;
+!!BU:Dy2/?y3;
+!!FU&y3<0:E;
+!!SN:W^Ghoul_Stack^/y3;
+
+!?FU(OnBattleStackObtainsTurn);
+
+!!SN:W^Ghoul_Stack^/?y3;
+!!FU&y3<0:E;
+!!BG:N?y10;
+!!BMy10:T?y11 P?y13;
+!!FU&y11<>221:E;
+
+!!BG:D?y2;
+!!FU|y2<0/y2>186:E;
+!!SN:W^Ghoul_Stack^/?y3;
+!!FU&y3<0:E;
+
+!!BMy3:F?y33;
+!!VRy33:&-1073741824;
+!!FU&y33<>0:E;
+
+!!BMy3:F?y33;
+!!VRy33:|-1073741824;
+!!BMy3:Fy33;
+
+
+!!BMy10:N?y23 B?y24 L?y25 H?y26 T?y88;
+!!BMy3:B?y34 H?y35;
+!!VRy41:Sy34*y35:2;
+
+!!VRy12:Sy41 %y26;
+!!VRy15:Sy25;
+!!VRy15:Sy15-y12;
+!!VRy16:Sy15;
+!!VRy11:Sy41:y26;                        [Number of possible Revives]
+
+!!if&y12>=y25;
+!!VRy16:*-1;
+!!VRy17:Sy26;
+!!VRy17:-y16;
+!!VRy16:Sy17;
+!!VRy11:+1;                             [Add 1 creature for correct rest life]
+!!en;
+
+!!VRy6:Sy23+y11;                         [Total Number after attack]
+!!VRy16&y6>y24:S0;                       [Fix for Commander, Set lost life to zero if could heal more than 1 stack above maximum]
+!!VRy6&y6>=y24:Sy24;                      [Set Number Cannot be more than before fight]
+
+!!VRz3:S^Meffect234.def^;
+!!FU(PlayCustomAnimation2):P0/3/y2/100/1/0/1; [Function to play custom animation By Hawaiing]
+
+
+!!VRz1:S^DRAINLIF.WAV^;
+!!SN:Pz1; Play the sound of a new building
+!!BMy10:V74;
+
+!!VRy33:Sy24-y23;
+!!BMy3:T?y81;
+
+!!UN:N3/-2/y81/1;
+!!SN&y23=y24:T^TUM_unit.221_1^/?z1/^damage^/y41/^target^/z-2;
+!!SN&y23<>y24:T^TUM_unit.221_2^/?z1/^damage^/y41/^damage2^/y33/^target^/z-2;
+!!BA:Q?f;
+!!BU&1000/f=0:Mz1;
+
+!!BMy10:Ny6 Ly16 M43/3/3 M53/3/3;                       [Set Number and apply rest life]
+
+
+**222
+
+!?BG0;
+!!BG:A?y1;
+!!FU&y1<>1:E;
+!!BG:S?y2;
+!!if|y2=42/y2=45/y2=47/y2=54/y2=59/y2=60/y2=61/y2=62;
+!!DO(Cantor_Dam2)/0/41/1:P;
+!!en;
+
+!?FU(Cantor_Dam2);
+!!BMx16:T?y1;
+!!FU&y1<>222:E;
+!!BMx16:U1/?y2 U2/?y3 P?y50;
+!!VRy2:+2;
+!!VRy3:+2;
+!!BMx16:U1/y2 U2/y3;
+
+!!VRz1:S^BLESS.WAV^;
+!!SN:Pz1; Play the sound of a new building
+!!VRz3:S^Meffect249.def^;
+!!FU(PlayCustomAnimation2):P0/3/y50/100/0/0/1; [Function to play custom animation By Hawaiing]
+
+
+
+!!SN:T^TUM_unit.222_1^/?z1;
+!!BA:Q?f;
+!!BU&1000/f=0:Mz1;
+
+
+**223
+!?MF1;
+!!UN:C42149568/4/?y10;                  [Get Physical Damage type]
+!!FU&y10<>4462398/y10<>4456676/y10<>4455011:E;
+!!BG:N?y1 D?y7 E?y33;
+!!MF:N?y22;
+!!FU&y1<>y22:E;
+!!BMy1:F?y2 I?y4 P?y5;
+
+
+!!SN:W^Sphinx2_Exist^/0 W^Sphinx2_Position^/0;
+
+!!DO(Line_Check2)/1/32/1&y5>=0/y5<=16:Py4;
+!!DO(Line_Check2)/1/49/1&y5>=17/y5<=33:Py4;
+!!DO(Line_Check2)/18/66/1&y5>=34/y5<=50:Py4;
+!!DO(Line_Check2)/35/83/1&y5>=51/y5<=67:Py4;
+!!DO(Line_Check2)/52/100/1&y5>=68/y5<=84:Py4;
+!!DO(Line_Check2)/69/117/1&y5>=85/y5<=101:Py4;
+!!DO(Line_Check2)/86/134/1&y5>=102/y5<=118:Py4;
+!!DO(Line_Check2)/103/151/1&y5>=119/y5<=135:Py4;
+!!DO(Line_Check2)/120/168/1&y5>=136/y5<=152:Py4;
+!!DO(Line_Check2)/137/185/1&y5>=153/y5<=169:Py4;
+!!DO(Line_Check2)/154/185/1&y5>=170/y5<=188:Py4;
+
+!!SN:W^Sphinx2_Exist^/?y11 W^Sphinx2_Position^/?y12;
+!!FU&y11=0:E;
+
+!!VRz3:S^Meffect030.def^;
+!!FU(PlayCustomAnimation2):P0/3/y12/100/1/0/1; [Function to play custom animation By Hawaiing]
+
+!!FU(TwoHex_Find2):Py5/?y88;
+!!VRy5&y88=1:-1;
+
+!!VRz3:S^Meffect046.def^;
+!!VRz3&y88>=0:S^Meffect045.def^;
+!!FU(PlayCustomAnimation2):P0/3/y7/100/1/0/1; [Function to play custom animation By Hawaiing]
+
+!!MF:E0;
+
+!!BMy33:T?y81;
+
+!!UN:N3/-2/y81/1;
+!!SN:T^TUM_unit.223_1^/?z1/^target^/z-2;
+!!BA:Q?f;
+!!BU&1000/f=0:Mz1;
+
+
+!?FU(Line_Check2);
+!!BU:Ex16/?y2;
+!!FU&y2<0:E;
+!!BMy2:I?y3 T?y4;
+!!FU&y3<>x1:E;
+!!FU&y4<>223:E;
+!!SN:W^Sphinx2_Exist^/1 W^Sphinx2_Position^/x16;
+
+**224
+
+
+!?MF1;
+!!UN:C42149568/4/?y10;                  [Get Physical Damage type]
+!!FU&y10<>4462398/y10<>4456676:E;
+!!BG:N?y31;
+!!MF:N?y1;
+!!FU&y31=y1:E;
+!!BMy31:T?y32;
+!!FU&y32<>224:E;
+
+!!BMy1:P?y2 B?y3 H?y4 N?y5 T?y6 L?y7 F?y8 O?y9 U1/?y31 U2/?y32 I?y41 H?y85;
+!!VRy8:&4194304;                       [just look summoned bit]
+!!FU&y8>0:E;                           [Exit if cloned or summoned]
+!!FU&y9<0:E;                           [Exit if cloned or summoned]
+!!VRy10:Sy4-y7;
+!!VRy50:Sy3*y4;
+
+!!VRy5:-1;
+!!VRy11:Sy4*y5;
+!!VRy11:+y10;
+!!MF:F?y12;
+!!FU&y12<y11:E;
+
+!!VRz3:S^Meffect164.def^;
+!!FU(PlayCustomAnimation):P0/3/y2/100/1/0/1; [Function to play custom animation By Hawaiing]
+
+!!UN:C6919200/4/?y21;
+!!VRy22:Sy1*1352+21708+y21;
+!!VRy23:Sy22+234;
+!!UN:Cy23/1/1;
+!!BMy1:F?y24;
+!!VRy24:|268435456;
+!!BMy1:N0 Fy24;
+!!SN:E4621680/2/y21/51/1;
+!!SN:E4797616/2/y21/0/1;
+
+
+
+!!VRy42&y41=1:S0;
+!!VRy42&y41=0:S1;
+
+
+!!FU(TwoHex_Find):Py2/?y88;
+!!VRy2&y88=0:Sy2+1;
+!!VRy2&y88=1:Sy2-1;
+
+!!BU:Sy6/y3/y2/y42/-1/1;
+
+!!BU:Ey2/?y4;
+!!BMy4&y4>=0/y4<=41:F?y5;
+!!VRy5:|262144;
+!!VRy5:|4194304;
+!!VRy5:|1073741824;
+!!BMy4&y4>=0/y4<=41:Fy5 Hy85 U1/y31 U2/y32;
+!!BMy4&y4>=0/y4<=41:G-73/4/d;
+
+
+!!UN:N3/-2/y6/1;
+!!SN:T^TUM_unit.224_1^/?z1/^target^/z-2;
+!!BA:Q?f;
+!!BU&1000/f=0:Mz1;
+
+**227
+
+!?BG0&1000;
+!!BG:A?y1;
+!!FU&y1<>7:E;
+
+!!BG:N?y10;
+
+!!BG:E?y1;
+!!FU&y1<0:E;
+!!BMy1:T?y2;
+!!BMy10:T?y3;
+!!FU&y3=149:E;
+
+!!FU&y2<>227:E;
+
+!!BMy1:R?y33;
+!!FU&y33=0:E;
+
+!!SN:W^Chaotic2_Check^/1;
+!!SN:W^Chaotic2_y1^/y1;
+!!SN:W^Chaotic2_y10^/y10;
+
+!?FU(OnBattleStackObtainsTurn)&1000;
+!!SN:W^Chaotic2_Check^/?y1;
+!!FU&y1=0:E;
+!!SN:W^Chaotic2_Check^/0;
+!!SN:W^Chaotic2_y1^/?y1;
+!!SN:W^Chaotic2_y10^/?y10;
+
+!!BMy1:P?y66 N?y64;
+!!BMy10:P?y5 N?y65;
+!!FU|y64=0/y65=0:E;
+
+!!VRy50:S0;
+
+[:find_posit4]
+!!VRy50:+1;
+!!VRy51:S0T5;
+
+!!FU(TwoHex_Find2):Py5/?y88;
+!!VRy8&y88=0:Sy5+1;
+!!VRy8&y88=1:Sy5-1;
+
+!!VRy18:S-1;
+!!FU(Find_Near2)&y88=-1:Py5/y51/?y18;
+!!FU(Find_Near2)&y88=0:Py8/y51/?y18;
+!!FU(Find_Near2)&y88=1:Py5/y51/?y18;
+
+!!BU&y18>=0:Ey18/?y15;
+!!BU&y18>=0:Oy18/?y16;
+
+
+!!FU(Find_Near2)&y88=0/y51<>1/y15>=0/y16<>0:Py5/y51/?y18;
+!!FU(Find_Near2)&y88=1/y51<>1/y15>=0/y16<>0:Py8/y51/?y18;
+
+!!BU&y18>=0:Ey18/?y15;
+!!BU&y18>=0:Oy18/?y16;
+
+
+!!BMy1:P?y32;
+
+!!BU&y18>=0:Ey18/?y15;
+!!BU&y18>=0:Oy18/?y16;
+
+!!UN:C6919200/4/?y30;
+
+!!VRy12:Sy1*1352+21708+y30;  [получить структуру стека]
+!!SN:E4479536/2/y12/y18/1;
+
+
+!!BMy1:P?y33;
+!!if&y33=y18;
+
+!!VRy13:Sy10*1352+21708+y30;  [получить структуру стека]
+!!SN:E4461360/2/y12/y13/2; 
+
+!!SN:E4479536/2/y12/y32/1;
+
+!!BMy1:R?y33;
+!!VRy33:-1;
+!!BMy1:Ry33;
+
+
+!!FU:E;
+!!en;
+
+
+!!FU&y50=50:E;                         [Exit if no valid Target can be found]
+!!SN|y15>=0/y16<>0/y33=y32:G[find_posit4]; [Loop]
+
+**228
+!?BG0;     
+
+!!BG:A?y1;
+!!FU&y1<>6:E;           
+!!BG:N?y1;            
+!!BMy1:T?y2;                       
+!!FU&y2<>228:E;
+!!BG:E?y3;                          
+!!FU&y3=-1:E;                                                 
+!!BMy3:G70/?y11/?y12;        
+!!if&y11>0;                
+              
+
+
+!!BMy3:M60/2/3;                 
+
+!!BMy3:T?y81;
+!!UN:N3/-2/y81/1;
+!!SN:T^TUM_unit.228_1^/?z1/^target^/z-2;
+!!BA:Q?f;
+!!BU&1000/f=0:Mz1;
+!!en;
+
+
+**230
+
+!?MF1;
+!!UN:C42149568/4/?y10;                  [Get Physical Damage type]
+!!FU&y10<>4462398/y10<>4456676:E;
+!!BG:N?y1;                              [Attacking Stack]
+!!BMy1:T?y2;
+!!FU&y2<>230:E;
+!!MF:N?y4;                              [damage receiving stack]
+!!BMy4:R0;
+
+!!BMy4:T?y81;
+
+!!UN:N3/-2/y81/1;
+!!SN:T^TUM_unit.230_1^/?z1/^target^/z-2;
+!!BA:Q?f;
+!!BU&1000/f=0:Mz1;
+
+**231
+
+!?MF1;
+!!UN:C42149568/4/?y10;                  [Get Physical Damage type]
+!!FU&y10<>4462398/y10<>4456676:E;
+
+!!BG:N?y2;
+
+!!MF:N?y4;                              [damage receiving stack]
+!!SN:W^Aby_attacking_stacking^/?y50;
+!!VRy2&y2=y4/y50>=0/y50<=41:Sy50;
+!!SN:W^Aby_attacking_stacking^/y4;
+
+!!BMy2:T?y3 N?y11 I?y40;
+
+!!FU&y3<>231:E;
+
+!!BMy4:P?y10;
+!!MF:F?y30;
+!!SN:W^Thane_Attacked_%Y4^/1;
+
+!!VRz3:S^Meffect260.def^;
+!!FU(PlayCustomAnimation2):P0/3/y10/100/0/0/1;
+
+!!DO(Chain_Attack_1)/0/11/1:Py10/y30/y40/y3/y2;
+
+!!DO(Reset_Thane2)/0/41/1:P;
+
+!?FU(Reset_Thane2);
+!!SN:W^Thane_Attacked_%X16^/0;
+
+!?FU(Chain_Attack_1);
+
+!!FU(TwoHex_Find2):Px1/?y88;
+!!VRy8&y88=0:Sx1+1;
+!!VRy8&y88=1:Sx1-1;
+
+!!if&x16<=5;
+
+!!FU(Find_Near2)&y88=-1:Px1/x16/?y18;
+!!FU(Find_Near2)&y88=0:Px1/x16/?y18;
+!!FU(Find_Near2)&y88=1:Py8/x16/?y18;
+!!en;
+
+!!if&x16>=6;
+!!VRy20:Sx16-6;
+!!FU(Find_Near2)&y88=-1:Px1/y20/?y18;
+!!FU(Find_Near2)&y88=0:Py8/y20/?y18;
+!!FU(Find_Near2)&y88=1:Px1/y20/?y18;
+!!en;
+
+!!BU&y18>=0:Ey18/?y15;
+!!BU&y18>=0:Oy18/?y16;
+
+!!SN:W^Thane_Attacked_%Y15^/?y17;
+
+!!if&y15>=0/y17=0;
+!!BMy15:N?y1 T?y2 P?y3 I?y40;
+
+!!if&y2<>149;
+  
+!!FU&y40=x3:E;
+!!VRz3:S^Meffect260.def^;
+
+!!FU(PlayCustomAnimation2)&y40<>x3:P0/3/y3/100/0/0/1; [Function to play custom animation By Hawaiing]
+!!SN:W^Thane_Attacked_%Y15^/1;
+
+
+!!UN:C6919200/4/?y30;
+
+!!VRy12:Sx5*1352+21708+y30;  [получить структуру стека]
+!!VRy13:Sy15*1352+21708+y30;  [получить структуру стека]
+!!SN:E4468352/2/y12/0;
+!!SN:E4471904/2/y12/y13/v1/0/0/0/0; 
+
+!!BMy15&y40<>x3:Kv1; 
+!!UN:N3/-2/y2/1;
+!!SN:T^TUM_unit.231_1^/?z1/^damage^/v1/^target^/z-2;
+!!BU&1000/f=0/y40<>x3:Mz1;
+!!DO(Chain_Attack_1)/0/11/1:Py3/y31/x3/x4/x5;
+
+!!en;
+!!en;
+
+
+
+**232 Goblin
+!?FU(OnBattleRound)&v997=0;
+!!DO(Reset_Goblin)/0/41/1:P;
+!!DO(Increase_Goblin)/0/41/1:P;
+
+!?FU(Reset_Goblin);
+!!SN:W^Goblin_Number_0_%X16^/0;
+!!SN:W^Goblin_Number_1_%X16^/0;
+
+!?FU(Increase_Goblin);
+!!BMx16:T?y1;
+!!FU&y1<>232:E;
+!!BMx16:N?y2;
+!!BMx16:O?y3 I?y4;
+!!SN:W^Goblin_Number_%Y4_%Y3^/y2;
+!!VRy2:*150;
+!!VRy2::100;
+!!BMx16:Ny2;
+
+!?FU(OnAfterBattleUniversal)&1000;
+!!BH0:N?y1;
+!!DO(Decrease_Goblin)/0/6/1:Py1/0;
+
+!!BH1:N?y1;
+!!FU&y1<0:E;
+!!DO(Decrease_Goblin)/0/6/1:Py1/1;
+
+!?FU(Decrease_Goblin);
+!!HEx1:C0/x16/?y1/?y2;
+!!FU&y1<>232:E;
+!!SN:W^Goblin_Number_%X2_%X16^/?y3;
+!!HEx1&y2>=y3:C0/x16/d/y3;
+
+
+
+
+**233 Wolf
+
+
+
+!?FU(OnBattleRound)&v997>=0/1000;
+!!FU:E;
+!!DO(Wolf_Attack)/0/41/1:P;
+
+!?FU(Wolf_Attack);
+!!FU:E;
+!!BMx16:T?y1;
+!!FU&y1<>233:E;
+!!BG:N?y30;
+!!SN:W^Stack_current^/y30;
+!!BG:Nx16;
+!!BG:N?y30;
+
+!!BMx16:P?y9;
+
+!!FU(TwoHex_Find2):Py9/?y88;
+!!VRy19&y88=0:Sy9+1;
+!!VRy19&y88=1:Sy9-1;
+
+
+!!DO(Wolf_Attack2)/0/5/1&y88=0:Py9/x16;
+!!DO(Wolf_Attack2)/0/2/1&y88=0:Py19/x16;
+!!DO(Wolf_Attack2)/0/5/1&y88=1:Py19/x16;
+!!DO(Wolf_Attack2)/0/2/1&y88=1:Py9/x16;
+!!SN:W^Stack_current^/?y30;
+!!BG:Ny30;
+
+
+!?FU(Wolf_Attack2);
+!!FU:E;
+!!BMx2:I?y20;
+
+!!FU(Find_Near2):Px1/x16/?y2;
+!!FU|y2<0/y2>186:E;
+!!BU:Ey2/?y99;
+!!FU&y99<0:E;
+!!BMy99:N?y31;
+!!FU&y31=0:E;
+
+!!FU&y99<0:E;
+!!FU&y99=x2:E;
+!!BMy99:I?y40;
+!!FU&y40=y20:E;
+
+
+!!UN:C6919200/4/?y30;
+
+!!VRy12:Sx2*1352+21708+y30;  [получить структуру стека]
+!!VRy13:Sy99*1352+21708+y30;  [получить структуру стека]
+!!SN:E4461360/2/y12/y13/2; 
+
+
+
+
+**234 Orc
+!?BG0;
+!!BG:A?y1;
+!!FU&y1<>6:E;
+!!BG:N?y11;
+!!BMy11:T?y12;
+!!FU&y12<>234/y12<>271:E;
+!!BG:E?y1;
+!!BMy1:N?y3;
+!!FU&y3=0:E;
+
+!!UN:C6919200/4/?y30;                            [комбат мэнеджер]
+!!VRy12:Sy11*1352+21708+y30;  [получить структуру стека]
+!!VRy13:Sy1*1352+21708+y30;  [получить структуру стека]
+!!SN:E4453920/2/y12/y13;
+
+!!SN:W^Orc_additional^/1;
+!!SN:W^Orc_additional_y1^/y1;
+!!SN:W^Orc_additional_y12^/y12;
+!!SN:W^Orc_additional_y13^/y13;
+
+!?FU(OnAfterBattleAction);
+!!SN:W^Orc_additional^/?y1;
+!!FU&y1=0:E;
+!!SN:W^Orc_additional^/0;
+!!SN:W^Orc_additional_y1^/?y1;
+!!SN:W^Orc_additional_y12^/?y12;
+!!SN:W^Orc_additional_y13^/?y13;
+
+!!BMy1:N?y3;
+!!FU&y3=0:E;
+
+!!SN:E4461360/2/y12/y13/2; 
+
+**236
+!?MF1;
+
+!!UN:C42149568/4/?y10;                  [Get Physical Damage type]
+!!if|y10=4462398/y10=4455011/y10=4456676; [Only run when melee or shooting damage]
+
+!!BG:A?y33;
+!!FU&y33<>6:E;
+
+!!BG:N?y1;
+
+!!MF:N?y2;                              [damage receiving stack]
+!!SN:W^Lit_attacking_stacking^/?y50;
+!!VRy1&y2=y1/y50>=0/y50<=41:Sy50;
+!!SN:W^Lit_attacking_stacking^/y2;
+
+!!BMy1:I?y41;
+!!BHy41:N?y42;
+!!VRy21:S0;
+!!HEy42&y42>=0:A2/220/?y30/?y21;
+!!BMy1:T?y3;
+!!FU&y3<>236/y21=0:E;
+
+!!BMy2:P?y4;
+!!FU&y1=y2:E;
+
+!!SS19:P?v3236;
+!!SS19:E1/?v3237;
+!!SS19:P0;
+!!SS19:E1/0;
+
+!!SN:W^Chain_Titan3^/1;
+!!SN:W^Chain_Titan_y1^/y1;
+!!SN:W^Chain_Titan_Damage3^/0;
+!!SN:W^Chain_Titan_Stack3^/y2;
+!!BMy1:C19/y4/1/1/1;
+!!SN:W^Chain_Titan3^/0;
+
+!!SS19:Pv3236;
+!!SS19:E1/v3237;
+!!en;
+
+
+!?MR2&1000;
+!!SN:W^Chain_Titan3^/?y1;
+!!FU&y1=0:E;
+
+!!BG:N?y1;  [Get attacking stack number]
+!!MR:N?y4;  [Get defending stack number]
+!!BMy1:I?y5; [Get attacking stack side]
+!!BMy4:I?y6; [Get defending stack side]
+!!BMy4:G62/?y66/?y77;
+!!BMy4:G70/?y67/?y77;
+!!BMy4:G74/?y68/?y77;
+
+
+!!MR&y5=y6:F100;
+!!MR&y5<>y6:F0;
+!!MR|y66>0/y67>0/y68>0:F100;
+
+!?MR1&1000;
+!!SN:W^Chain_Titan3^/?y1;
+!!FU&y1=0:E;
+
+!!SN:W^Chain_Titan_y1^/?y1;
+!!SN:W^Chain_Titan_Damage3^/?y11;
+!!SN:W^Chain_Titan_Stack3^/?y2;
+!!SN:W^Chain_Titan_Damage3^/d1;
+
+!!MR:N?y99;
+
+
+
+
+!!UN:C6919200/4/?y30;  
+!!VRy12:Sy1*1352+21708+y30;  [получить структуру стека]
+!!VRy13:Sy99*1352+21708+y30;  [получить структуру стека]
+!!SN:E4468352/2/y12/0;
+!!SN:E4471904/2/y12/y13/v1/0/0/0/0; 
+!!VRy33:Sv1;
+!!VRy33&y11>0::2;
+!!VRy33&y11>1::2;
+!!VRy33&y11>2::2;
+!!VRy33&y11>3::2;
+
+
+
+
+!!MR&y99=y2:F0;
+!!MR&y99<>y2:Fy33;
+!!MR&y11=0:F0;
+
+!!BMy99:T?y81;
+!!UN:N3/-2/y81/1;
+!!SN:T^TUM_unit.236_1^/?z1/^damage^/y33/^target^/z-2;
+!!BU&1000/f=0/y99<>y2:Mz1;
+
+
+
+
+
+
+**237
+
+!?FU(OnBattleActionEnd);
+!!BG:N?y1;
+!!DO(Cyclops_checking)/0/41/1:Py1;
+
+!?FU(Cyclops_checking);
+!!SN:W^Cyclops_Check%X16^/?y1;
+!!FU&y1=1:E;
+!!BMx16:T?y1 N?y2 P?y11 I?y14;
+!!FU&y1<>237:E;
+!!FU&y2=0:E;
+
+!!BMx1:T?y3 N?y4 P?y12 I?y15;
+!!FU&y14=y15:E;
+
+!!FU(CalcDistanceBetweenHexes2):Py11/y12/?y5;
+!!FU&y5>10:E;
+
+!!SN:W^Cyclops_Check%X16^/1;
+!!FU&y3>=145/y3=149:E;
+!!FU&y4=0:E;
+!!FU(BattleStack_Shoot):Px16/x1;
+
+
+
+!?FU(OnBattleRound)&v997=0;
+!!FU:E;
+!!DO(Sea_Snakea_1)/0/41/1:P;
+
+
+!?FU(Sea_Snakea_1);
+!!FU:E;
+!!BMx16:T?y1;
+!!FU&y1<>237:E;
+!!BMx16:P?y20 N?y21;
+!!FU&y21<1:E;
+!!BH:M?y25;
+!!re i/0/5;
+!!FU(Find_Near2):Py20/i/?y30;
+!!BMx16:Q0/y30/0;
+!!en;
+!!BU:R;
+!!BH:My25;
+
+
+**238
+
+!?MF1&1000;
+
+!!UN:C42149568/4/?y10;                  [Get Physical Damage type]
+!!if|y10=4462398/y10=4455011/y10=4456676; [Only run when melee or shooting damage]
+
+!!BA:Q?f;
+!!FU&f=1:E;
+
+!!BG:N?y1;
+!!MF:N?y2;
+!!FU&y1=y2:E;
+!!BMy2:T?y3 P?y10;
+!!FU&y3<>238:E;
+!!MF:F?y1;
+!!SN:W^Stone_Damage_%Y2^/dy1;
+!!MF:F0;
+!!MF:E0;
+
+!!VRz4:S^CRUSDFND.wav^;
+!!SN:Pz4;
+
+!!BMy2:V85;
+
+!!SN:W^Stone_Damage_%Y2^/?y11;
+!!SN:T^TUM_unit.238_1^/?z1/^damage^/y1/^damage1^/y11;
+!!BU&1000/f=0:Mz1;
+
+
+!?FU(OnBattleActionEnd)&1000;
+!!BG:N?y1 A?y99;
+!!FU|y99=1/y99=4/y99=5/y99=8/y99=3:E;
+!!BMy1:T?y3 P?y10;
+!!FU&y3<>238:E;
+!!SN:W^Stone_Damage_%Y1^/?y11;
+!!FU&y11=0:E;
+!!SN:W^Stone_Damage_%Y1^/0;
+!!BMy1&y11>0:Ky11;
+
+!!SN:T^TUM_unit.238_2^/?z1/^damage^/y11;
+!!BU&1000/f=0:Mz1;
+
+!!VRz3:S^Cathsp4.def^;
+!!FU(PlayCustomAnimation2):P0/3/y10/100/1/0/1; [Function to play custom animation By Hawaiing]
+
+!!BU:R;
+
+!?FU(OnBattleActionEnd)&1000;
+!!BG:N?y1 A?y99;
+!!FU|y99<>3:E;
+!!BMy1:T?y3 P?y10;
+!!FU&y3<>238:E;
+!!SN:W^Stone_Damage_%Y1^/?y11;
+!!FU&y11=0:E;
+!!SN:W^Stone_Damage_%Y1^/0;
+!!VRy15:Sy11:2;
+!!BMy1&y11>0:Ky15;
+
+!!SN:T^TUM_unit.238_3^/?z1/^damage^/y11/^damage2^/y15;
+!!BU&1000/f=0:Mz1;
+
+!!VRz3:S^Cathsp4.def^;
+!!FU(PlayCustomAnimation2):P0/3/y10/100/1/0/1; [Function to play custom animation By Hawaiing]
+!!BU:R;
+
+**239
+
+!?MF1;
+!!FU:E;
+
+!!UN:C42149568/4/?y10;                  [Get Physical Damage type]
+!!if|y10=4462398/y10=4455011/y10=4456676; [Only run when melee or shooting damage]
+
+!!MF:N?y1;
+!!BMy1:T?y2;
+!!FU&y2<>239:E;
+!!BG:N?y3;
+!!FU&y1=y3:E;
+!!DO(Revenge_Clear2)/0/41/1:Py1;
+!!SN:W^Revenge_Horse%Y1_%Y3^/1;
+
+!!BMy3:P?y9;
+!!VRz3:S^Meffect230.def^;
+!!FU(PlayCustomAnimation2):P0/3/y9/100/1/0/1; [Function to play custom animation By Hawaiing]
+
+
+!!BMy3:T?y81;
+
+!!UN:N3/-2/y81/1;
+!!SN:T^TUM_unit.239_1^/?z1/^target^/z-2;
+!!BA:Q?f;
+!!BU&1000/f=0:Mz1;
+
+!!en:;
+
+!?MF1;
+!!FU:E;
+!!UN:C42149568/4/?y10;                  [Get Physical Damage type]
+!!if|y10=4462398/y10=4455011/y10=4456676; [Only run when melee or shooting damage]
+
+!!BG:N?y1;
+!!BMy1:T?y2;
+!!FU&y2<>239:E;
+
+!!MF:N?y3;
+!!FU&y1=y3:E;
+
+!!SN:W^Revenge_Horse%Y1_%Y3^/?y4;
+!!FU&y4=0:E;
+
+!!BMy3:P?y9;
+!!VRz3:S^Cathsp3.def^;
+!!FU(PlayCustomAnimation2):P0/3/y9/100/1/0/1; [Function to play custom animation By Hawaiing]
+
+!!MF:D?y11;
+!!VRy11:*3;
+!!VRy11::2;
+
+!!BMy3:T?y81;
+
+!!UN:N3/-2/y81/1;
+!!SN:T^TUM_unit.239_2^/?z1/^target^/z-2;
+!!BA:Q?f;
+!!BU&1000/f=0:Mz1;
+
+!?FU(Revenge_Clear2);
+!!SN:W^Revenge_Horse%X1_%X16^/0;
+
+**241
+
+!?MF1;
+!!UN:C42149568/4/?y10;                  [Get Physical Damage type]
+!!if|y10=4462398/y10=4455011/y10=4456676; [Only run when melee or shooting damage]
+
+!!MF:N?y1;
+!!BMy1:T?y2;
+!!FU&y2<>241:E;
+
+!!VRy3:S0T99;
+!!FU&y3<50:E;
+!!BG:N?y11;
+
+!!BMy1:F?y11;
+!!VRy11:&67108864;
+!!FU&y11=0:E;
+
+!!BMy1:N?y2;
+!!FU&y2=0:E;
+
+
+!!BMy1:V1;
+!!BMy1:F?y2;
+!!VRy2:&-67108865;
+!!VRy2:&-134217729;
+!!BMy1:Fy2;
+
+!!SN:T^TUM_unit.241_1^/?z1;
+!!BA:Q?f;
+!!BU&1000/f=0:Mz1;
+
+
+
+
+
+!?MF1;
+!!FU:E;
+!!UN:C42149568/4/?y10;                  [Get Physical Damage type]
+!!if|y10=4462398/y10=4455011/y10=4456676; [Only run when melee or shooting damage]
+
+!!BG:N?y1;                            [Attacking Stack]
+!!MF:N?y4;                            [damage receiving stack]
+!!SN:W^Blood_Attacking_Stack^/?y50;
+!!VRy1&y4=y1/y50>=0/y50<=41:Sy50;     [If Attacking Stack gleich Damage Recieving Stack it means Retaliation]
+!!SN:W^Blood_Attacking_Stack^/y4;
+!!BMy4:T?y5 P?y9;
+!!FU&y5<>241:E;
+!!MF:F?y6;
+!!VRy6:*3;
+!!VRy6::10;
+!!SN:W^Blood_Damage_%Y4^/dy6;
+!!SN:W^Blood_Damage_%Y4^/?y7;
+
+!!SN:T^TUM_unit.241_1^/?z1/^damage^/y6/^damage2^/y7;
+!!BA:Q?f;
+!!BU&1000/f=0:Mz1;
+
+
+
+!!VRz3:S^Meffect230.def^;
+!!FU(PlayCustomAnimation2):P0/3/y9/100/1/0/1; [Function to play custom animation By Hawaiing]
+
+!?MF1;
+!!FU:E;
+!!UN:C42149568/4/?y10;                  [Get Physical Damage type]
+!!if|y10=4462398/y10=4455011/y10=4456676; [Only run when melee or shooting damage]
+
+!!BG:N?y1;
+!!MF:N?y4;
+!!FU&y1=y4:E;
+!!BMy1:T?y2;
+!!FU&y2<>241:E;
+!!SN:W^Blood_Damage_%Y1^/?y3;
+!!FU&y3=0:E;
+!!SN:W^Blood_Damage_%Y1^/0;
+!!MF:Fdy3;
+!!BMy4:T?y81;
+
+!!UN:N3/-2/y81/1;
+!!SN:T^TUM_unit.241_2^/?z1/^damage^/y3/^target^/z-2;
+!!BA:Q?f;
+!!BU&1000/f=0:Mz1;
+
+
+!!BMy4:P?y9;
+!!VRz3:S^Meffect245.def^;
+!!FU(PlayCustomAnimation2):P0/3/y9/100/1/0/1; [Function to play custom animation By Hawaiing]
+
+**242
+
+!?MF1;
+!!UN:C42149568/4/?y10;                  [Get Physical Damage type]
+!!if|y10=4462398/y10=4455011/y10=4456676; [Only run when melee or shooting damage]
+
+!!BG:N?y98 E?y99;
+
+!!MF:N?y1;
+
+
+!!SN:W^Fired_Attacking_Stack^/?y50;
+!!VRy98&y1=y98/y50>=0/y50<=41:Sy50;     [If Attacking Stack gleich Damage Recieving Stack it means Retaliation]
+!!VRy98&y1=y98/y99<>y1:Sy99;     [If Attacking Stack gleich Damage Recieving Stack it means Retaliation]
+!!SN:W^Fired_Attacking_Stack^/y1;
+
+!!FU&y98<0:E;
+!!BMy98:T?y99 N?y6;
+
+!!FU&y99<>242/y99<>245:E;
+
+!!BMy98:I?y4;
+!!BMy1:P?y5;
+!BG:D?y5;
+
+!!DO(Fireball_reset)/0/41/1:P;
+
+!!VRz4:S^FIREWALL.wav^;
+!!SN:Pz4;
+
+!!DO(Line_Attack2)/1/15/1&y5>=0/y5<=16:Py4/y98/y1;
+!!DO(Line_Attack2)/18/32/1&y5>=17/y5<=33:Py4/y98/y1;
+!!DO(Line_Attack2)/35/49/1&y5>=34/y5<=50:Py4/y98/y1;
+!!DO(Line_Attack2)/52/66/1&y5>=51/y5<=67:Py4/y98/y1;
+!!DO(Line_Attack2)/69/83/1&y5>=68/y5<=84:Py4/y98/y1;
+!!DO(Line_Attack2)/86/100/1&y5>=85/y5<=101:Py4/y98/y1;
+!!DO(Line_Attack2)/103/117/1&y5>=102/y5<=118:Py4/y98/y1;
+!!DO(Line_Attack2)/120/134/1&y5>=119/y5<=135:Py4/y98/y1;
+!!DO(Line_Attack2)/137/151/1&y5>=136/y5<=152:Py4/y98/y1;
+!!DO(Line_Attack2)/154/168/1&y5>=153/y5<=169:Py4/y98/y1;
+!!DO(Line_Attack2)/171/185/1&y5>=170/y5<=188:Py4/y98/y1;
+
+!!DO(Fireball_reset)/0/41/1:P;
+
+!?FU(Fireball_reset);
+!!SN:W^Firewall_attacked_%X16^/0;
+
+!?FU(Line_Attack2);
+
+!!VRy10:Sx16%17;
+!!VRz3:S^firewall.def^;
+!!FU(PlayCustomAnimation2)&y10=9:P0/3/x16/100/0/0/1; [Function to play custom animation By Hawaiing]
+
+
+!!BU:Ex16/?y2;
+!!FU&y2<0:E;
+!!BMy2:I?y3;
+!!FU&y3=x1:E;
+!!FU&x3=y2:E;
+
+!!SN:W^Firewall_attacked_%Y2^/?y36;
+!!FU&y36=1:E;
+!!SN:W^Firewall_attacked_%Y2^/1;
+
+
+!!UN:C6919200/4/?y30;  
+!!VRy12:Sx2*1352+21708+y30;  [получить структуру стека]
+!!VRy13:Sy2*1352+21708+y30;  [получить структуру стека]
+!!SN:E4468352/2/y12/0;
+!!SN:E4471904/2/y12/y13/v1/0/0/0/0; 
+
+!!BMy2:Kv1;
+
+!!BMy2:T?y81;
+
+!!UN:N3/-2/y81/1;
+!!SN:T^TUM_unit.242_1^/?z1/^damage^/v1/^target^/z-2;
+!!BA:Q?f;
+!!BU&1000/f=0:Mz1;
+
+
+**244 Gorgon
+
+!?MF1;
+!!UN:C42149568/4/?y10;                  [Get Physical Damage type]
+!!if|y10=4462398/y10=4455011/y10=4456676; [Only run when melee or shooting damage]
+
+!!BG:N?y98;
+!!BMy98:T?y99 I?y88;
+!!FU&y99<>244:E;
+!!MF:N?y1;
+!!FU&y1=y98:E;
+
+
+!!BMy1:P?y2 B?y3 H?y4 N?y5 T?y6 L?y7 F?y8 O?y9;
+
+!!VRy8:&4194304;                       [just look summoned bit]
+!!FU&y8>0:E;                           [Exit if cloned or summoned]
+
+!!VRy10:Sy4-y7;
+
+!!VRy50:Sy3*y4;
+
+!!VRy50::5;
+
+
+!!VRy5:-1;
+!!VRy11:Sy4*y5;
+!!VRy11:+y10;
+
+!!MF:F?y12;
+
+!!VRy14:S0;
+!!VRy14&y12<y11:S1;
+
+!!VRy11:-y12;
+!!FU&y11>y50:E;
+
+!!BMy1&y14=1:Ky50;
+
+!!VRz3:S^Meffect004.def^;
+!!FU(PlayCustomAnimation2):P0/3/y2/100/1/0/1; [Function to play custom animation By Hawaiing]
+
+!!BMy1:T?y81;
+
+!!UN:N3/-2/y81/1;
+!!SN:T^TUM_unit.244_1^/?z1/^target^/z-2;
+!!BA:Q?f;
+!!BU&1000/f=0:Mz1;
+
+
+
+**243 Wyvern
+** 307
+
+!?MF1;
+!!UN:C42149568/4/?y10;                  [Get Physical Damage type]
+!!if|y10=4462398/y10=4455011/y10=4456676; [Only run when melee or shooting damage]
+
+
+!!BG:N?y98;
+
+!!MF:N?y4;                            [damage receiving stack]
+!!SN:W^Wyv_Attacking_Stack^/?y50;
+!!VRy98&y4=y98/y50>=0/y50<=41:Sy50;     [If Attacking Stack gleich Damage Recieving Stack it means Retaliation]
+!!SN:W^Wyv_Attacking_Stack^/y4;
+
+!!BMy98:T?y99;
+!!FU&y99<>243/y99<>307:E;
+!!MF:N?y1;
+!!BMy1:P?y2;
+
+!!BMy1:B?y3 H?y4 N?y5 T?y6 L?y7 F?y8 O?y9;
+!!VRy8:&4194304;                       [just look summoned bit]
+!!FU&y8>0:E;                           [Exit if cloned or summoned]
+!!FU&y9<0:E;                           [Exit if cloned or summoned]
+!!VRy10:Sy4-y7;
+!!VRy50:Sy3*y4;
+
+!!VRy5:-1;
+!!VRy11:Sy4*y5;
+!!VRy11:+y10;
+!!MF:F?y12;
+!!FU&y12<y11:E;
+
+!!VRy13:Sy4*y3;
+!!VRy13::5;
+!!VRy13&y13>y3:Sy3;
+!!VRy13&y13<1:S1;
+
+!!UN:C6919200/4/?y21;
+!!VRy22:Sy1*1352+21708+y21;
+!!VRy23:Sy22+234;
+!!UN:Cy23/1/1;
+!!BMy1:F?y24;
+!!VRy24:|268435456;
+!!BMy1:N0 Fy24;
+!!SN:E4621680/2/y21/51/1;
+!!SN:E4797616/2/y21/0/1;
+
+!!BMy1:B?y30 H?y31;
+!!VRy30:*y31:2;
+
+
+!!BMy1:T?y81;
+
+!!UN:N3/-2/y81/1;
+!!SN&y99=243:T^TUM_unit.243_1^/?z1/^damage^/y50/^target^/z-2;
+!!BA:Q?f;
+!!BU&1000/f=0/y99=243:Mz1;
+
+!!FU&y99<>307:E;
+
+!!BMy98:N?y23 B?y24 L?y25 H?y26 T?y88 P?y55;
+
+!!FU&y23=0:E;
+!!FU&y23=y24/y25=0:E;
+
+!!VRy12:Sy30 %y26;
+!!VRy15:Sy25;
+!!VRy15:Sy15-y12;
+!!VRy16:Sy15;
+!!VRy11:Sy30:y26;                        [Number of possible Revives]
+
+!!if&y12>=y25;
+!!VRy16:*-1;
+!!VRy17:Sy26;
+!!VRy17:-y16;
+!!VRy16:Sy17;
+!!VRy11:+1;                             [Add 1 creature for correct rest life]
+!!en;
+
+!!VRy6:Sy23+y11;                         [Total Number after attack]
+!!VRy16&y6>y24:S0;                       [Fix for Commander, Set lost life to zero if could heal more than 1 stack above maximum]
+!!VRy6&y6>=y24:Sy24;                      [Set Number Cannot be more than before fight]
+!!VRy16&y16=y26:Sy26-1;
+!!VRy33:Sy6-y23;
+
+!!BMy98:Ny6 Ly16;                       [Set Number and apply rest life]
+
+!!VRz1:S^DRAINLIF.WAV^;
+!!SN:Pz1; Play the sound of a new building
+!!BMy98:V74;
+!!SN&y6>y23:T^TUM_unit.307_1^/?z1/^damage^/y30/^target^/z-2/^damage2^/y33;
+!!SN&y6<=y23:T^TUM_unit.307_2^/?z1/^damage^/y30/^target^/z-2;
+!!BA:Q?f;
+!!BU&1000/f=0:Mz1;
+
+
+**246
+
+!?BG0;
+!!BG:A?y1 N?y2 E?y3;
+!!FU&y1<>6:E;
+!!FU&y3<0:E;
+!!BMy2:T?y4;
+!!FU&y4<>246:E;
+
+!!SN:W^Buff_Fairy_Act^/0;
+!!DO(Buff_Fairy2)/27/64/1:Py2/y3;
+
+!!SN:W^Buff_Fairy_Act^/?y10;
+
+!!FU&y10=0:E;
+!!SN:W^Buff_Fairy_Act^/0;
+
+!!BMy3:P?y9;
+!!VRz3:S^Frysp5.def^;
+!!FU(PlayCustomAnimation2):P0/3/y9/100/1/0/1; [Function to play custom animation By Hawaiing]
+
+
+
+!?FU(Buff_Fairy2);
+!!FU|x16=35/x16=37/x16=38/x16=39/x16=40/x16=42/x16=45/x16=47/x16=50:E;
+!!FU|x16=52/x16=54/x16=57/x16=59/x16=60/x16=61/x16=62/x16=63:E;
+!!BMx2:Gx16/?y1/?y2;
+!!FU&y1=0:E;
+!!BMx1&y1>0:Mx16/y1/y2;
+
+!!UN:N1/-3/x16/1;
+
+!!BMx2:T?y81;
+!!UN:N3/-2/y81/1;
+
+
+!!SN&y1>0:T^TUM_unit.246_1^/?z1/^target2^/z-3/^target^/z-2;
+!!BU&1000/f=0/y1>0:Mz1;
+
+!!SN&y1>0:W^Buff_Fairy_Act^/1;
+
+** 247 Air ele
+
+!?CM4;
+
+!!SN:W^Converting_a^/?y1;
+!!FU&y1=0:E;
+!!CM:R0;
+
+!?FU(OnBattleRound)&1000;
+!!FU:E;
+!!BA:Q?f;
+!!FU&f=1:E;
+!!DO(Remove_Shooting_Ability)/0/41/1&v997=0:P;
+!!DO(Converting_Unit)/0/41/1:Pv997;
+!!DO(Converting_Unit2)/0/41/1:Pv997;
+
+!?FU(Converting_Unit);
+!!VRy88:S0T100;
+!!FU&x1=0/y88<50:E;
+!!FU&x1>0/y88<80:E;
+!!BMx16:T?y1;
+!!FU&y1<>247:E;
+
+!!BMx16:T?y2 P?y99;
+!!BMx16:I?y30;
+!!BHy30:N?y31;
+!!HEy31&y31>=0:O?y32;
+!!OW&y31>=0:Iy32/?y33;
+!!FU&y33=0/y31>=0:E;
+
+!!FU&y2<>247:E;
+!!SN:W^Air_Converted_%X16^/?y33;
+!!SN:W^Converting_a^/1;
+!!if&y33=0;
+
+
+!!VRz3:S^Meffect263.def^;
+!!FU(PlayCustomAnimation2):P0/3/y99/100/1/0/1; [Function to play custom animation By Hawaiing]
+
+
+!!SN:W^Air_Converted_%X16^/1;
+
+!!BMx16:G-13/?y1/d; 0 - 스택 번호
+!!SN:E5622208/2/^CR297.def^;
+!!BMx16:G-13/v1/d; 0 - 스택 번호
+!!UN:Cy1/4/?y3;
+!!VRy3:+4;
+!!UN:Cy3/4/?y4;
+!!SN:Ey4/2/y1;
+
+!!SN:T^TUM_unit.247_3^/?z13; [Set text to show]
+
+!!UN:G1/247/0/z13;
+!!UN:G1/247/1/z13;
+
+!!BMx16:F?y44;
+!!VRy44:&-5;
+!!VRy44:|2;
+!!BMx16:Fy44;
+
+!!en;
+
+!!if&y33=1;
+
+!!VRz3:S^Meffect263.def^;
+!!FU(PlayCustomAnimation2):P0/3/y99/100/1/0/1; [Function to play custom animation By Hawaiing]
+
+
+!!SN:W^Air_Converted_%X16^/0;
+
+!!BMx16:G-13/?y1/d; 0 - 스택 번호
+!!SN:E5622208/2/^CR247.def^;
+!!BMx16:G-13/v1/d; 0 - 스택 번호
+!!UN:Cy1/4/?y3;
+!!VRy3:+4;
+!!UN:Cy3/4/?y4;
+!!SN:Ey4/2/y1;
+
+!!SN:T^TUM_unit.247_4^/?z13; [Set text to show]
+
+!!UN:G1/247/0/z13;
+!!UN:G1/247/1/z13;
+
+!!BMx16:F?y44;
+!!VRy44:&-3;
+!!VRy44:|4;
+!!BMx16:Fy44;
+
+
+!!en;
+
+!!SN:W^Converting_a^/0;
+!!BU:R;
+
+!?FU(Converting_Unit2);
+!!VRy88:S0T100;
+!!FU&x1=0/y88<50:E;
+!!FU&x1>0/y88<80:E;
+!!BMx16:T?y1;
+!!FU&y1<>248:E;
+
+
+!!BMx16:T?y2 P?y99;
+!!BMx16:I?y30;
+!!BHy30:N?y31;
+!!HEy31&y31>=0:O?y32;
+!!OW&y31>=0:Iy32/?y33;
+!!FU&y33=0/y31>=0:E;
+
+!!FU&y2<>248:E;
+!!SN:W^Water_Converted_%X16^/?y33;
+!!SN:W^Converting_a^/1;
+!!if&y33=0;
+
+
+!!VRz3:S^Meffect263.def^;
+!!FU(PlayCustomAnimation2):P0/3/y99/100/1/0/1; [Function to play custom animation By Hawaiing]
+
+
+!!SN:W^Water_Converted_%X16^/1;
+
+!!BMx16:G-13/?y1/d; 0 - 스택 번호
+!!SN:E5622208/2/^CR298.def^;
+!!BMx16:G-13/v1/d; 0 - 스택 번호
+!!UN:Cy1/4/?y3;
+!!VRy3:+4;
+!!UN:Cy3/4/?y4;
+!!SN:Ey4/2/y1;
+
+!!SN:T^TUM_unit.248_4^/?z14; [Set text to show]
+
+!!UN:G1/248/0/z14;
+!!UN:G1/248/1/z14;
+
+!!BMx16:F?y44;
+!!VRy44:|4;
+!!BMx16:Fy44;
+!!BMx16:E?y55;
+!!SN:W^Water_Cure_%X16^/y55;
+!!BMx16:E0;
+
+!!en;
+
+!!if&y33=1;
+
+
+!!VRz3:S^Meffect263.def^;
+!!FU(PlayCustomAnimation2):P0/3/y99/100/1/0/1; [Function to play custom animation By Hawaiing]
+
+
+!!SN:W^Water_Converted_%X16^/0;
+
+!!BMx16:G-13/?y1/d; 0 - 스택 번호
+!!SN:E5622208/2/^CR248.def^;
+!!BMx16:G-13/v1/d; 0 - 스택 번호
+!!UN:Cy1/4/?y3;
+!!VRy3:+4;
+!!UN:Cy3/4/?y4;
+!!SN:Ey4/2/y1;
+
+!!SN:T^TUM_unit.248_3^/?z14; [Set text to show]
+
+!!UN:G1/248/0/z14;
+!!UN:G1/248/1/z14;
+
+!!BMx16:F?y44;
+!!VRy44:&-5;
+!!BMx16:Fy44;
+!!SN:W^Water_Cure_%X16^/?y55;
+!!BMx16:Ey55;
+
+!!en;
+!!SN:W^Converting_a^/0;
+
+!!BU:R;
+
+
+!?FU(OnKeyPressed_Battle)&i^key^=71;
+
+!!CM:D?y88;
+!!BU&y88>=0/y88<=187:Ey88/?y87;
+!!BMy87&y87>=0/y87<=41:T?y86;
+!!FU&y86=247:E;
+
+!!SN:W^Converting_a^/?y1;
+!!FU&y1=1:E;
+
+!!BG:N?y14;
+!!BMy14:T?y2 P?y99;
+
+!!FU&y2<>247:E;
+!!SN:W^Air_Converted_%Y14^/?y33;
+!!if&y33=0;
+!!SN:W^Converting_a^/1;
+
+
+!!VRz3:S^Meffect263.def^;
+!!FU(PlayCustomAnimation2):P0/3/y99/100/1/0/1; [Function to play custom animation By Hawaiing]
+
+
+!!SN:W^Air_Converted_%Y14^/1;
+
+!!BMy14:G-13/?y1/d; 0 - 스택 번호
+!!SN:E5622208/2/^CR297.def^;
+!!BMy14:G-13/v1/d; 0 - 스택 번호
+!!UN:Cy1/4/?y3;
+!!VRy3:+4;
+!!UN:Cy3/4/?y4;
+!!SN:Ey4/2/y1;
+
+!!SN:T^TUM_unit.247_3^/?z13; [Set text to show]
+
+!!UN:G1/247/0/z13;
+!!UN:G1/247/1/z13;
+
+!!BMy14:F?y44;
+!!VRy44:&-5;
+!!VRy44:|2;
+!!BMy14:Fy44;
+
+!!SN:W^Converting_a^/0;
+!!en;
+
+!!if&y33=1;
+
+!!SN:W^Converting_a^/1;
+
+!!VRz3:S^Meffect263.def^;
+!!FU(PlayCustomAnimation2):P0/3/y99/100/1/0/1; [Function to play custom animation By Hawaiing]
+
+
+!!SN:W^Air_Converted_%Y14^/0;
+
+!!BMy14:G-13/?y1/d; 0 - 스택 번호
+!!SN:E5622208/2/^CR247.def^;
+!!BMy14:G-13/v1/d; 0 - 스택 번호
+!!UN:Cy1/4/?y3;
+!!VRy3:+4;
+!!UN:Cy3/4/?y4;
+!!SN:Ey4/2/y1;
+
+!!SN:T^TUM_unit.247_4^/?z13; [Set text to show]
+
+!!UN:G1/247/0/z13;
+!!UN:G1/247/1/z13;
+
+!!BMy14:F?y44;
+!!VRy44:&-3;
+!!VRy44:|4;
+!!BMy14:Fy44;
+
+
+!!SN:W^Converting_a^/0;
+!!en;
+
+
+
+!?FU(OnAfterBattleUniversal)&1000;
+!!UN:G1/247/0/0;
+!!UN:G1/247/1/0;
+!!UN:G1/248/0/0;
+!!UN:G1/248/1/0;
+
+!?FU(ACM_beforeCreatureInfoDlg_Show);
+!!UN:Cx1/24/4/?y1;                      [get creature dlg]
+
+!!if&y1>0;
+  !!UN:Cx1/8/4/?y2 Cy2/8/4/?y3;         [get stack from stack lmao]
+  !!UN:Cy3/52/4/?t;                     [get creature type]
+    !!if&t>=247/t<=248;                 [if npc]
+
+      !!CM:D?y20;                       [Get Battlefield position with click]
+      !!BU:Ey20/?y21; !!FU&y21=-1:E;    [get monster ID at position and exit if no monster]
+      !!BMy21:T?y22 I?y23 S?y24;        [get monster type and side index]
+      !!BHy23:N?y25;                    [Get hero or commander ID]
+      !!if&y22>=247/y22<=248; [if any commander and a hero]
+      !!if&y22=247;
+      !!SN:W^Air_Converted_%Y21^/?y33;
+      !!SN&y33=0:T^TUM_unit.247_2^/?z-1; [Set text to show]
+      !!SN&y33=1:T^TUM_unit.247_1^/?z-1; [Set text to show]
+      !!SN&y33=0:T^TUM_unit.247_4^/?z13; [Set text to show]
+      !!SN&y33=1:T^TUM_unit.247_3^/?z13; [Set text to show]
+
+      !!UN:G1/247/0/z13;
+      !!UN:G1/247/1/z13;
+      !!en;
+      !!if&y22=248;
+      !!SN:W^Water_Converted_%Y21^/?y33;
+      !!SN&y33=1:T^TUM_unit.248_2^/?z-1; [Set text to show]
+      !!SN&y33=0:T^TUM_unit.248_1^/?z-1; [Set text to show]
+      !!SN&y33=1:T^TUM_unit.248_4^/?z13; [Set text to show]
+      !!SN&y33=0:T^TUM_unit.248_3^/?z13; [Set text to show]
+
+      !!UN:G1/248/0/z13;
+      !!UN:G1/248/1/z13;
+      !!en;
+      !!en;
+
+***End
+
+      !!VRy4:S-1;
+      !!SN:E6288816/2/y1/y4;
+      !!VRy5:Sv1;
+      !!if&y5>0;
+        !!UN:Cy5/24/2/?y6 Cy5/26/2/?y7;   [get original item position]
+        !!UN:Cy5/28/2/?y8 Cy5/30/2/?y9;   [get original item size]
+        !!UN:Cy5/64/4/?y10;
+        !!VRy11:Sy10 +4;
+        !!VRy12:S9598952;                 [set item address]
+        !!SN:E6286720/2/y5/6/6;           [hide original description text item]
+        !!SN:E6014624/2/y12/y6/y7/y8/y9/z-1/y11/4/-2/0/0/8; [create new DlgText item with new id at z2 address]
+        !!SN:E6287984/2/y1/y12/-1;        [add item to dlg list]
+      !!en;
+  !!en;
+!!en;
+
+
+!?MF1;
+!!MF:N?y1;
+!!BMy1:G17/?y2/?y3;
+!!FU&y2<1:E;
+!!SN:W^Thund_Damage%Y1^/?y11;
+!!BMy1:Ky11;
+!!BMy1:P?y5;
+!!VRz3:S^MTart11.def^;
+!!FU(PlayCustomAnimation2):P0/3/y5/100/0/0/1; [Function to play custom animation By Hawaiing]
+
+
+!!BMy1:T?y81;
+
+!!UN:N3/-2/y81/1;
+!!SN:T^TUM_unit.247_5^/?z1/^damage^/y11/^target^/z-2;
+!!BA:Q?f;
+!!BU&1000/f=0:Mz1;
+
+!!BU:R;
+
+
+!?MF1;
+
+!!BG:N?y2;
+!!BMy2:T?y3 N?y11;
+!!FU&y3<>247:E;
+!!SN:W^Air_Converted_%Y2^/?y33;
+!!FU&y33=0:E;
+!!BG:E?y4;
+!!FU&y4<0:E;
+!!VRy10:S2;
+
+
+!!BMy4:G17/?y22/?y23;
+!!FU&y22>0:E;
+
+!!BMy4:M17/y10/0;
+!!VRy11:*5;
+!!SN:W^Thund_Damage%Y4^/y11;
+!!BG:D?y5;
+
+
+!!VRz3:S^MTart11.def^;
+!!FU(PlayCustomAnimation2):P0/3/y5/100/0/0/1; [Function to play custom animation By Hawaiing]
+
+
+!!BMy4:T?y81;
+
+!!UN:N3/-2/y81/1;
+!!SN:T^TUM_unit.247_6^/?z1/^damage^/y11/^target^/z-2;
+!!BA:Q?f;
+!!BU&1000/f=0:Mz1;
+
+
+** 248 Water
+
+
+!?FU(Remove_Shooting_Ability);
+!!BMx16:T?y1;
+!!FU&y1<>248:E;
+
+!!BMx16:F?y44;
+!!VRy44:&-5;
+!!BMx16:Fy44;
+
+
+!?FU(OnKeyPressed_Battle)&i^key^=71;
+
+!!CM:D?y88;
+!!BU&y88>=0/y88<=187:Ey88/?y87;
+!!BMy87&y87>=0/y87<=41:T?y86;
+!!FU&y86=248:E;
+
+
+!!SN:W^Converting_a^/?y1;
+!!FU&y1=1:E;
+
+!!BG:N?y14;
+!!BMy14:T?y2 P?y99;
+
+!!FU&y2<>248:E;
+!!SN:W^Water_Converted_%Y14^/?y33;
+!!if&y33=0;
+!!SN:W^Converting_a^/1;
+
+
+!!VRz3:S^Meffect263.def^;
+!!FU(PlayCustomAnimation2):P0/3/y99/100/1/0/1; [Function to play custom animation By Hawaiing]
+
+
+!!SN:W^Water_Converted_%Y14^/1;
+
+!!BMy14:G-13/?y1/d; 0 - 스택 번호
+!!SN:E5622208/2/^CR298.def^;
+!!BMy14:G-13/v1/d; 0 - 스택 번호
+!!UN:Cy1/4/?y3;
+!!VRy3:+4;
+!!UN:Cy3/4/?y4;
+!!SN:Ey4/2/y1;
+
+!!SN:T^TUM_unit.248_4^/?z14; [Set text to show]
+
+!!UN:G1/248/0/z14;
+!!UN:G1/248/1/z14;
+
+!!BMy14:F?y44;
+!!VRy44:|4;
+!!BMy14:Fy44;
+!!BMy14:E?y55;
+!!SN:W^Water_Cure_%Y14^/y55;
+!!BMy14:E0;
+
+!!SN:W^Converting_a^/0;
+!!en;
+
+!!if&y33=1;
+
+!!SN:W^Converting_a^/1;
+
+!!VRz3:S^Meffect263.def^;
+!!FU(PlayCustomAnimation2):P0/3/y99/100/1/0/1; [Function to play custom animation By Hawaiing]
+
+
+!!SN:W^Water_Converted_%Y14^/0;
+
+!!BMy14:G-13/?y1/d; 0 - 스택 번호
+!!SN:E5622208/2/^CR248.def^;
+!!BMy14:G-13/v1/d; 0 - 스택 번호
+!!UN:Cy1/4/?y3;
+!!VRy3:+4;
+!!UN:Cy3/4/?y4;
+!!SN:Ey4/2/y1;
+
+!!SN:T^TUM_unit.248_3^/?z14; [Set text to show]
+
+!!UN:G1/248/0/z14;
+!!UN:G1/248/1/z14;
+
+!!BMy14:F?y44;
+!!VRy44:&-5;
+!!BMy14:Fy44;
+!!SN:W^Water_Cure_%Y14^/?y55;
+!!BMy14:Ey55;
+
+
+!!SN:W^Converting_a^/0;
+!!en;
+
+
+!?BG0;
+!!BG:A?y1 S?y2 H?y3 N?y4 Q?y21 E?y22;
+!!BMy4:T?y5;
+!!FU&y5<>248:E;
+
+!!if&y1=10:;
+!!BMy4:T?y5 N?y6;
+!!VRy6:*5;
+!!FU(Cure_Water_El):Py22/y6;
+!!en:;
+
+
+!?FU(Cure_Water_El);
+!!VRy3:Sx1;
+
+!!BMy3:N?y23 B?y24 L?y25 H?y26 T?y88 P?y55;
+
+!!FU&y23=0:E;
+!!FU&y23=y24/y25=0:E;
+
+!!VRy12:Sx2 %y26;
+!!VRy15:Sy25;
+!!VRy15:Sy15-y12;
+!!VRy16:Sy15;
+!!VRy11:Sx2:y26;                        [Number of possible Revives]
+
+!!if&y12>=y25;
+!!VRy16:*-1;
+!!VRy17:Sy26;
+!!VRy17:-y16;
+!!VRy16:Sy17;
+!!VRy11:+1;                             [Add 1 creature for correct rest life]
+!!en;
+
+!!VRy6:Sy23+y11;                         [Total Number after attack]
+!!VRy16&y6>y24:S0;                       [Fix for Commander, Set lost life to zero if could heal more than 1 stack above maximum]
+!!VRy6&y6>=y24:Sy24;                      [Set Number Cannot be more than before fight]
+!!VRy16&y16=y26:Sy26-1;
+!!VRy33:Sy6-y23;
+
+!!BMy3:Ny6 Ly16;                       [Set Number and apply rest life]
+
+
+!!BMy3:T?y81;
+
+!!UN:N3/-2/y81/1;
+!!SN&y6>y23:T^TUM_unit.248_6^/?z1/^damage^/x2/^damage2^/y33/^target^/z-2;
+!!SN&y6<=y23:T^TUM_unit.248_5^/?z1/^damage^/x2/^target^/z-2;
+!!BA:Q?f;
+!!BU&1000/f=0:Mz1;
+
+!VRz3:S^Meffect270.def^;
+!FU(PlayCustomAnimation2)&y6>y23:P0/3/y55/100/1/0/1; [Function to play custom animation By Hawaiing]
+
+
+!?MF1;
+!!UN:C42149568/4/?y10;                  [Get Physical Damage type]
+!!if|y10=4455011; [Only run when melee or shooting damage]
+!!BG:N?y2;
+!!BMy2:T?y4;
+!!FU&y4<>248:E;
+!!MF:N?y3;
+!!BMy3:P?y5;
+
+
+!!VRz3:S^Meffect025.def^;
+!!FU(PlayCustomAnimation2):P0/3/y5/100/1/0/1; [Function to play custom animation By Hawaiing]
+
+!!BMy3:M54/2/3;
+
+
+** 249 Plasma
+
+!?FU(OnCombatRound)&v997>=0;
+!!SN:W^ACM_twice_acting stackw^/-1;      [reset act twice counter and battle stack each new battle round]
+!!SN:W^ACM_twice_acting stackg^/-1;      [reset act twice counter and battle stack each new battle round]
+!!if&i^battle_round^>=0;
+  !!re i/0/41;                          [loop all stacks and reset]
+    !!SN:W^ACM_Com_abilityCounterw_%i^/0;
+    !!SN:W^ACM_Com_abilityCounterg_%i^/0;
+    !!SN:W^Walk_only_%i^/0;
+  !!en;
+!!en;
+
+
+!?FU(OnBeforeBattleAction)&i^battle_round^>=0;
+!!SN:W^ACM_twice_acting stackw^/-1;
+!!SN:W^Arch_angel_acted^/-1;
+!!BG:A?y1 N?y2;                         [Get action type and stack number]
+!!FU&y1<>2/
+     y1<>6/
+     y1<>7/
+     y1<>9/
+     y1<>10/
+     y1<>11/
+     y1<>12:E; exit for wrong condition
+
+!!BMy2:T?y3;                       [get type and side]
+!!if|y3=249/y3=202;                   [if any commander]
+  !!SN:W^ACM_twice_acting stackw^/y2;    [set and save stack that should act twice]
+  !!SN&y3=202:W^Arch_angel_acted^/y2;
+!!en;
+
+
+!?FU(OnBattleActionEnd);
+!!SN:W^ACM_twice_acting stackw^/?y1;
+!!if&y1>=0/y1<=41;                      [if a valid battle stack]
+  !!SN:W^ACM_Com_abilityCounterw_%Y1^/?y2;[check ability counter]
+  !!SN:W^Arch_angel_acted^/?y3;
+  !!BMy1&y2=0:Fd~(MON_FLAG_ACTED);      [set act twice flag for stack]
+  !!BMy1&y2=0/y3=y1:Fd(MON_FLAG_MORALE);      [set act twice flag for stack]
+  !!SN&y2=0/y3=y1:P^GoodMrle.wav^;
+  !!BMy1&y2=0/y3=y1:V20;
+  !!SN:W^ACM_Com_abilityCounterw_%Y1^/d-1;[reduce ability counter]
+!!en;
+
+
+!?FU(OnBeforeBattleStackTurn);
+!!SN:W^ACM_twice_acting stackw^/?y1; 
+!!FU&y1=-1:E;                           [exit if no valid stack]
+!!BMy1:T?y2 N?y3;                       [get type and number]
+!!FU|y2=-1/y3<=0:E;                       [exit if not valid]
+!!SN:W^ACM_twice_acting stackw^/x1;      [set stack that should act twice]
+
+
+** 250 Mineral
+
+!?MF1;
+!!UN:C42149568/4/?y10;                  [Get Physical Damage type]
+!!if|y10=4462398/y10=4455011/y10=4456676; [Only run when melee or shooting damage]
+!!MF:N?y1;
+!!BMy1:T?y2 P?y9;
+!!FU&y2<>250/y2<>308:E;
+!!SN:W^Urox_Shield_%Y1^/?y3;
+!!FU&y3=0:E;
+!!VRy3:-1;
+!!SN:W^Urox_Shield_%Y1^/y3;
+!!MF:E0;
+
+!!VRz4:S^CRUSDFND.wav^;
+!!SN:Pz4;
+
+
+!!VRz3:S^Meffect108.def^;
+!!FU(PlayCustomAnimation2):P0/3/y9/100/1/0/1; [Function to play custom animation By Hawaiing]
+
+!!SN&y2=250:T^TUM_unit.250_1^/?z1;
+!!SN&y2=308:T^TUM_unit.308_1^/?z1;
+!!BA:Q?f;
+!!BU&1000/f=0:Mz1;
+
+!?BG0;
+!!BG:A?y1 N?y2;
+!!FU&y1<>3:E;
+!!BMy2:T?y3 P?y9;
+!!FU&y3<>250/y3<>308:E;
+!!SN:W^Urox_Shield_%Y2^/1;
+
+!!FU(TwoHex_Find2):Py9/?y88;
+!!VRy29:Sy9;
+!!VRy29&y88=1:Sy9-1;
+
+!!VRz3:S^meleres.def^;
+!!FU(PlayCustomAnimation2):P0/3/y29/100/1/0/1; [Function to play custom animation By Hawaiing]
+
+!!SN&y3=250:T^TUM_unit.250_2^/?z1;
+!!SN&y3=308:T^TUM_unit.308_2^/?z1;
+!!BA:Q?f;
+!!BU&1000/f=0:Mz1;
+
+
+
+
+** 251 Void
+
+!?MF1;
+!!UN:C42149568/4/?y10;                  [Get Physical Damage type]
+!!if|y10=4462398/y10=4455011/y10=4456676:; 
+!!BA:Q?y99;
+!!FU&y99=1:E;
+!!MF:N?y1;                              [Attacking Stack]
+!!BMy1:T?y2 N?y55 I?y56 F?y66;
+!!FU&y2<>251:E;
+!!VRy66:&8388608;
+!!FU&y66>0:E;
+!!BG:N?y3;
+!!FU&y1=y3:E;
+!!BMy1:P?y10;
+[:find_position]
+!!VRy50:+1;
+!!VRy7:S1T185;
+!!BU:Ey7/?y5;
+!!BU:Oy7/?y6;
+
+!!FU&y50=200:E;                         [Exit if no valid Target can be found]
+!!SN|y5>=0/y6<>0/y7=17/y7=34/y7=51/y7=68/y7=85/y7=102/y7=119/y7=136/y7=153/y7=170/y7=186:G[find_position]; [Loop]
+!!SN|y7=16/y7=33/y7=50/y7=67/y7=84/y7=101/y7=118/y7=135/y7=152/y7=169/y7=184:G[find_position]; [Loop]
+
+!!BMy1:N?y4;
+!!FU&y4=0:E;
+!!SN:W^Void_Teleport^/1;
+!!SN:W^Void_Teleport_y1^/y1;
+!!SN:W^Void_Teleport_y2^/y2;
+!!SN:W^Void_Teleport_y7^/y7;
+!!SN:W^Void_Teleport_y10^/y10;
+!!SN:W^Void_Teleport_y11^/y11;
+!!SN:W^Void_Teleport_y55^/y55;
+!!SN:W^Void_Teleport_y56^/y56;
+
+!?FU(OnBattleActionEnd)&1000;
+!!SN:W^Void_Teleport^/?y99;
+!!FU&y99=0:E;
+!!SN:W^Void_Teleport^/0;
+
+!!SN:W^Void_Teleport_y1^/?y1;
+!!SN:W^Void_Teleport_y2^/?y2;
+!!SN:W^Void_Teleport_y7^/?y7;
+!!SN:W^Void_Teleport_y10^/?y10;
+!!SN:W^Void_Teleport_y11^/?y11;
+!!SN:W^Void_Teleport_y55^/?y55;
+!!SN:W^Void_Teleport_y56^/?y56;
+
+!!BMy1:N?y4;
+!!FU&y4=0:E;
+
+
+
+!!VRz3:S^Meffect067.def^;
+!!FU(PlayCustomAnimation2):P0/3/y10/100/1/0/1; [Function to play custom animation By Hawaiing]
+!!VRz3:S^Meffect067.def^;
+!!FU(PlayCustomAnimation2):P0/3/y7/100/1/0/1; [Function to play custom animation By Hawaiing]
+!!BMy1:Py7;
+
+!!BU:Sy2/y55/y10/y56/-1/0;
+!!BU:Ey10/?y11;
+!!BMy11:F?y12;
+!!VRy12:|79691776;
+!!BMy11:Fy12;
+
+
+!!BU:R;
+
+
+** 256 Sharp shooter Elf
+
+!?MF1;
+!!FU:E;
+
+!!UN:C42149568/4/?y10;                  [Get Physical Damage type]
+!!if|y10=4455011; [Only run when melee or shooting damage]
+!!BG:N?y1 D?y12;
+!!MF:N?y2;
+!!BMy1:T?y3 P?y11;
+!!FU&y3<>256:E;
+
+!!FU(CalcDistanceBetweenHexes2):Py11/y12/?y4;
+
+!!VRy13:Sy4*2;
+
+!!BA:Q?f;
+!!SN:T^TUM_unit.256_1^/?z1/^damage^/y4/^damage2^/y13; 518
+!BU&1000/f=0:Mz1;
+
+!!MF:D?y30;
+!!VRy31:S100+y13;
+!!VRy30:*y31;
+!!VRy30::100;
+
+
+
+!!en;
+
+
+
+**274 Shadow Dragon
+
+!?MF1;                                  [*Physical Combat *]
+
+!!BA:Q?y1;
+!!FU&y1=1:E;                            [Exit in Quick Combat]
+
+!!BG:A?y1;
+!!FU&y1<>6:E;
+
+!!BG:N?y1;                              [Attacking Stack]
+!!BMy1:T?y2;
+!!FU&y2<>274:E;
+!!BMy1:A?y11;
+!!MF:N?y4;                              [damage receiving stack]
+!!MF:D?y3;
+!!BMy4:T?y5;
+!!FU&y5=274:E;
+!!BMy4:D?y12;
+
+!!DO(Shadow_Dragon)/0/20/1&y4<21:Py3/y4/y12;
+!!DO(Shadow_Dragon)/21/41/1&y4>20:Py3/y4/y12;
+
+!?FU(Shadow_Dragon);
+!!FU&x16=x2:E;
+!!BMx16:T?y1;
+!!FU|y1=145/y1=146/y1=147/y1=148/y1=149:E; 
+!!BMx16:N?y2;
+!!FU&y2<1:E;
+!!BMx16:D?y12;
+!!VRy3:Sx1;
+!!VRy4:Sx3-y12;
+!!VRy5&y4<0:Sy4*5;
+!!VRy5&y4<0::2;
+!!VRy6&y4<0:S100+y5;
+!!VRy6&y6<30:S30;
+!!VRy3&y4<0:Sy3*y6;
+!!VRy3&y4<0::100;
+
+!!UN:N3/2/y1/0;
+!!SN:T^Third_Upgrade_Mod.Dragon2^/?z1/^unit^/z2/^damage^/y3;
+!!MM:Sz1;
+!!BMx16:Ky3;
+
+
+**275 Corrupt Dragon
+
+!?MF1;                                  [*Physical Combat *]
+
+!!UN:C42149568/4/?y10;                  [Get Physical Damage type]
+!!if|y10=4462398/y10=4455011/y10=4456676:; [Only run when melee or shooting damage]
+
+!!BA:Q?y1;
+!!FU&y1=1:E;                            [Exit in Quick Combat]
+
+!!BG:A?y1;
+!!FU&y1<>6:E;
+
+!!BG:N?y1;                              [Attacking Stack]
+!!BMy1:T?y2;
+!!FU&y2<>275:E;
+!!MF:N?y4;                              [damage receiving stack]
+!!BMy4:T?y5;
+!!FU&y5=275:E;
+
+!!BMy4:D?y3;
+!!VRy3::2;
+!!BMy4:Dy3;
+
+!!UN:N3/2/y5/0;
+
+!!SN:T^Third_Upgrade_Mod.Dragon^/?z1/^unit^/z2;
+!!MM:Sz1;
+
+!!en:;
+
+
+**277 Archer Alt
+!?CM4;
+!!CM:S?y1;
+!!FU&y1<>14:E;
+!!BG:N?y10;
+!!BMy10:T?y11 I?y31;;
+!!FU&y11<>277:E;
+!!CM:D?y2;
+!!FU|y2<0/y2>186:E;
+!!BU:Ey2/?y3;
+!!FU&y3<0:E;
+!!BMy3:I?y41;
+!!FU&y31=y41:E;
+!!VRy33:Sy3+100;
+!!SN:W^Target_Saver3^/y33;
+!!VRz3:S^Meffect271.def^;
+!!FU(PlayCustomAnimation2):P0/3/y2/100/1/0/1; [Function to play custom animation By Hawaiing]
+
+
+
+!?BG0;
+!!BU:T?y80;
+!!FU&y80=1:E;
+
+!!BG:A?y1;
+!!if|y1=2/y1=6/y1=7:;
+
+!!BG:N?y1;                              [Attacking Stack]
+!!BMy1:T?y2;
+!!FU&y2<>277:E;
+
+[:find_target]
+!!VRy50:+1;
+!!VRy10&y1<21:S21R20;
+!!VRy10&y1>20:S0R20;
+!!BMy10:P?y5;
+!!BMy10:N?y6;
+!!BMy10:T?y7;
+!!FU&y50=100:E;                         [Exit if no valid Target can be found]
+!!SN|y6=0/y7=145/y7=146/y7=147/y7=148/y7=149:G[find_target]; [Loop]
+!!SN:W^Target_Saver3^/?y20;
+!!VRy33&y20>99:Sy20-100;
+!!BMy33&y20>99:N?y95;
+!!VRy10&y95>0:Sy33;
+
+!!BMy1:U3/?y30;
+!!BMy1:G61/?y21/d;
+!!if&y21=0/y30>0;
+
+!!UN:C6919200/4/?y11;                            [комбат мэнеджер]
+!!VRy12:Sy1*1352+21708+y11;  [получить структуру стека]
+!!VRy13:Sy10*1352+21708+y11;  [получить структуру стека]
+
+
+!!SN:E4453920/2/y12/y13;
+
+
+!!en;
+!!en;
+
+
+**Archer Upg
+
+
+!?CM1;
+!!CA-1:T?y1;
+!!FU&y1<>0:E;
+!!CM:I?y1;
+!!FU&y1<>21:E;
+!!CA-1:H1/?y11;
+
+
+!!HEy11:C0/0/?y2/?y10;
+!!HEy11:C0/1/?y3/?y10;
+!!HEy11:C0/2/?y4/?y10;
+!!HEy11:C0/3/?y5/?y10;
+!!HEy11:C0/4/?y6/?y10;
+!!HEy11:C0/5/?y7/?y10;
+!!HEy11:C0/6/?y8/?y10;
+
+!!if|y2=2/y3=2/y4=2/y5=2/y6=2/y7=2/y8=2/y2=3/y3=3/y4=3/y5=3/y6=3/y7=3/y8=3;
+
+!!VRz4:Sz199944;                      text before building
+!!IF:Q2/21/277/2/z4;
+
+!!if&2;
+!!HEy11:C1/2/277/d;
+!!HEy11:C1/3/277/d;
+!!UNR4/1;
+!!en:;
+!!en:;
+
+
+!$OB94&-1000;
+
+!!HE-1:C1/2/277/d;
+!!HE-1:C1/3/277/d;
+
+!$OB94&1000;
+
+!!HE-1:C0/0/?y2/?y11;
+!!HE-1:C0/1/?y3/?y11;
+!!HE-1:C0/2/?y4/?y11;
+!!HE-1:C0/3/?y5/?y11;
+!!HE-1:C0/4/?y6/?y11;
+!!HE-1:C0/5/?y7/?y11;
+!!HE-1:C0/6/?y8/?y11;
+
+!!if|y2=2/y3=2/y4=2/y5=2/y6=2/y7=2/y8=2/y2=3/y3=3/y4=3/y5=3/y6=3/y7=3/y8=3;
+!!VRz4:Sz199944;                      text before building
+!!IF:Q2/21/277/2/z4;
+
+!!if&2;
+!!HE-1:C1/2/277/d;
+!!HE-1:C1/3/277/d;
+!!en:;
+
+!!en:;
+
+
+**276 Fairy
+
+!?BG0;
+!!BG:A?y1;
+!!FU&y1<>10:E;
+!!BG:N?y2;
+!!BMy2:T?y3;
+!!FU&y3<>276:E;
+!!BG:E?y6;
+!!BMy6:P?y4;
+!!BMy2:N?y7;
+!!VRy7:*5;
+!!BMy2:C16/y4/0/y7/1;
+!!BMy6:N?y5;
+!!BG&y5<1:A12;
+!!FU&y5<1:E;
+!!BMy2:C17/y4/0/y7/1;
+!!BMy6:N?y5;
+!!BG&y5<1:A12;
+!!FU&y5<1:E;
+!!BMy2:C16/y4/0/y7/1;
+!!BMy6:N?y5;
+!!BG&y5<1:A12;
+
+**259 Spell
+
+!?BG0;
+!!BG:A?y1;
+!!FU&y1<>1:E;
+!!BG:Q?y2 E?y3 D?y4 S?y5 N?y7;
+!!BMy3&y3<>-1:P?y4;
+!!SN:W^Spell_Weaver_1^/1;
+!!SN:W^Spell_Weaver_y2^/y2;
+!!SN:W^Spell_Weaver_y3^/y3;
+!!SN:W^Spell_Weaver_y4^/y4;
+!!SN:W^Spell_Weaver_y5^/y5;
+!!SN:W^Spell_Weaver_y7^/y7;
+
+!?FU(OnAfterBattleAction);
+!!SN:W^Spell_Weaver_1^/?y1;
+!!FU&y1=0:E;
+!!SN:W^Spell_Weaver_1^/0;
+!!SN:W^Spell_Weaver_y2^/?y2;
+!!SN:W^Spell_Weaver_y3^/?y3;
+!!SN:W^Spell_Weaver_y4^/?y4;
+!!SN:W^Spell_Weaver_y5^/?y5;
+!!SN:W^Spell_Weaver_y7^/?y7;
+
+
+!!DO(Spell_Weaver)/0/20/1&y2=0:Py5/y4/y3;
+!!DO(Spell_Weaver)/21/41/1&y2=1:Py5/y4/y3;
+
+!!UN:C6919200/4/?y30;                 
+!!BMy7:I?y33;
+!!BMy7:N?y44;
+!!FU&y44=0:E;
+!!VRy31:Sy7;
+!!VRy31&y7>=21:Sy7-21;
+!!SN:E4607760/2/y30/y33/y31;
+
+
+!?FU(Spell_Weaver);
+!!BMx16:T?y1;
+!!FU&y1<>259:E;
+!!BMx16:N?y2;
+!!VRy2::2;
+!!VRy2&y2<1:S1;
+!!FU|x1=57/x1=63/x1=65/y2=0:E;
+!!BMx16|x1=15/x1=16/x1=17/x1=18/x1=19:Cx1/x2/3/y2/1;
+!!BMx16&x1<>15/x1<>16/x1<>17/x1<>18/x1<>19:Cx1/x2/3/y2/0;
+
+!!BMx16:F?y2;
+!!VRy2:&4194304;
+!!FU&y2=0:E;
+!!BMx16:K999999;
+!!BU:R;
+
+
+**278 Gorgon Rider
+!?CM1;
+!!CA-1:T?y1;
+!!FU&y1<>7:E;
+!!CM:I?y1;
+!!FU&y1<>22:E;
+!!CA-1:H1/?y11;
+!!HEy11:C1/102/278/d;
+!!HEy11:C1/103/278/d;
+!!UNR4/1;
+
+!?BG0;
+!!BG:A?y1;
+!!if|y1=2/y1=6:;
+!!BU:T?y99;
+!!FU&y99=1:E;
+
+!!BG:N?y1;                              [Attacking Stack]
+!!BMy1:T?y2;
+!!FU&y2<>278:E;
+
+[:find_target]
+!!VRy50:+1;
+!!VRy10&y1<21:S21R20;
+!!VRy10&y1>20:S0R20;
+!!BMy10:P?y5;
+!!BMy10:N?y6;
+!!BMy10:T?y7;
+!!FU&y50=100:E;                         [Exit if no valid Target can be found]
+!!SN|y6=0/y7=145/y7=146/y7=147/y7=148/y7=149:G[find_target]; [Loop]
+
+!!UN:C6919200/4/?y11;                            [комбат мэнеджер]
+!!VRy12:Sy1*1352+21708+y11;  [получить структуру стека]
+!!VRy13:Sy10*1352+21708+y11;  [получить структуру стека]
+
+!!BMy1:U1/d-10;
+!!BMy1:U2/d-10;
+
+!!SN:E4453920/2/y12/y13;
+
+!!BMy1:U1/d10;
+!!BMy1:U2/d10;
+!!BMy1:U3/0;
+
+!!en:;
+
+!!if&y1=7;
+!!BG:N?y1;                              [Attacking Stack]
+!!BMy1:T?y2;
+!!FU&y2<>278:E;
+!!BG:A0;
+!!en:;
+
+
+
+**284 Hydra Archer
+!?BG0;
+!!BG:A?y1;
+!!if&y1=7:;
+
+!!BG:N?y1;                              [Attacking Stack]
+!!BMy1:T?y2;
+!!FU&y2<>284:E;
+!!BG:E?y3;
+
+!!DO(Hydra_Shoot)/21/41/1&y1<21:Py1/y3;
+!!DO(Hydra_Shoot)/0/20/1&y1>20:Py1/y3;
+!!en:;
+
+!?FU(Hydra_Shoot);
+
+!!BMx16:P?y5;
+!!BMx16:N?y6;
+!!BMx16:T?y7;
+!!FU&y7=149:E;
+!!FU&y6=0:E;
+!!FU&x2=x16:E;
+
+
+!!UN:C6919200/4/?y11;                            [комбат мэнеджер]
+!!VRy12:Sx1*1352+21708+y11;  [получить структуру стека]
+!!VRy13:Sx16*1352+21708+y11;  [получить структуру стека]
+
+!!SN:E4453920/2/y12/y13;
+
+
+
+
+**268 Hell Magog
+
+!?BG0;
+!!BG:A?y1;
+!!if&y1=7:;
+
+!!BG:N?y1;                              [Attacking Stack]
+!!BMy1:T?y2 N?y4;
+!!FU&y2<>268:E;
+
+!!VRy4::5;
+
+!!BG:D?y6;
+
+!!BU:Ey6/?y7;
+
+!!BMy1&y7>=0/y7<=41:C13/y6/0/y4/1;
+!!BMy1&y7<0:C13/y6/0/y4/0;
+
+
+
+**290 Archer
+
+!?BG0;
+!!BG:A?y1;
+
+!!if&y1=7:;
+
+!!BG:N?y1;                              [Attacking Stack]
+!!BMy1:T?y2;
+!!FU&y2<>290:E;
+
+!!BMy1:G8/?y21/?y22;
+
+!!SN:W^Sniper_set^/0;
+
+!!if&y21=0:;
+!!BMy1:V31;
+
+!!VRy50:S0;
+[:find_target]
+!!VRy50:+1;
+!!VRy10&y1<21:S21R20;
+!!VRy10&y1>20:S0R20;
+!!BMy10:P?y5;
+!!BMy10:N?y6;
+!!BMy10:T?y7;
+!!FU&y50=100:E;                         [Exit if no valid Target can be found]
+!!SN|y6=0/y7=149:G[find_target]; [Loop]
+
+!!UN:C6919200/4/?y11;                            [комбат мэнеджер]
+!!VRy12:Sy1*1352+21708+y11;  [получить структуру стека]
+!!VRy13:Sy10*1352+21708+y11;  [получить структуру стека]
+
+!!SN:E4453920/2/y12/y13;
+
+!!VRy50:S0;
+[:find_target]
+!!VRy50:+1;
+!!VRy10&y1<21:S21R20;
+!!VRy10&y1>20:S0R20;
+!!BMy10:P?y5;
+!!BMy10:N?y6;
+!!BMy10:T?y7;
+!!FU&y50=100:E;                         [Exit if no valid Target can be found]
+!!SN|y6=0/y7=149:G[find_target]; [Loop]
+
+!!UN:C6919200/4/?y11;                            [комбат мэнеджер]
+!!VRy12:Sy1*1352+21708+y11;  [получить структуру стека]
+!!VRy13:Sy10*1352+21708+y11;  [получить структуру стека]
+
+!!SN:E4453920/2/y12/y13;
+
+
+!!VRy50:S0;
+[:find_target]
+!!VRy50:+1;
+!!VRy10&y1<21:S21R20;
+!!VRy10&y1>20:S0R20;
+!!BMy10:P?y5;
+!!BMy10:N?y6;
+!!BMy10:T?y7;
+!!FU&y50=100:E;                         [Exit if no valid Target can be found]
+!!SN|y6=0/y7=149:G[find_target]; [Loop]
+
+!!UN:C6919200/4/?y11;                            [комбат мэнеджер]
+!!VRy12:Sy1*1352+21708+y11;  [получить структуру стека]
+!!VRy13:Sy10*1352+21708+y11;  [получить структуру стека]
+
+!!SN:E4453920/2/y12/y13;
+
+!!VRy50:S0;
+[:find_target]
+!!VRy50:+1;
+!!VRy10&y1<21:S21R20;
+!!VRy10&y1>20:S0R20;
+!!BMy10:P?y5;
+!!BMy10:N?y6;
+!!BMy10:T?y7;
+!!FU&y50=100:E;                         [Exit if no valid Target can be found]
+!!SN|y6=0/y7=149:G[find_target]; [Loop]
+
+!!UN:C6919200/4/?y11;                            [комбат мэнеджер]
+!!VRy12:Sy1*1352+21708+y11;  [получить структуру стека]
+!!VRy13:Sy10*1352+21708+y11;  [получить структуру стека]
+
+!!SN:E4453920/2/y12/y13;
+
+!!VRy50:S0;
+[:find_target]
+!!VRy50:+1;
+!!VRy10&y1<21:S21R20;
+!!VRy10&y1>20:S0R20;
+!!BMy10:P?y5;
+!!BMy10:N?y6;
+!!BMy10:T?y7;
+!!FU&y50=100:E;                         [Exit if no valid Target can be found]
+!!SN|y6=0/y7=149:G[find_target]; [Loop]
+
+!!UN:C6919200/4/?y11;                            [комбат мэнеджер]
+!!VRy12:Sy1*1352+21708+y11;  [получить структуру стека]
+!!VRy13:Sy10*1352+21708+y11;  [получить структуру стека]
+
+!!SN:E4453920/2/y12/y13;
+
+!!VRy50:S0;
+[:find_target]
+!!VRy50:+1;
+!!VRy10&y1<21:S21R20;
+!!VRy10&y1>20:S0R20;
+!!BMy10:P?y5;
+!!BMy10:N?y6;
+!!BMy10:T?y7;
+!!FU&y50=100:E;                         [Exit if no valid Target can be found]
+!!SN|y6=0/y7=149:G[find_target]; [Loop]
+
+!!UN:C6919200/4/?y11;                            [комбат мэнеджер]
+!!VRy12:Sy1*1352+21708+y11;  [получить структуру стека]
+!!VRy13:Sy10*1352+21708+y11;  [получить структуру стека]
+
+!!SN:E4453920/2/y12/y13;
+
+!!en:;
+
+!!if&y21>0:;
+!!BMy1:A?y2 U1/?y3 U2/?y4;
+!!VRy2:*2;
+!!VRy3:*5;
+!!VRy4:*5;
+!!BMy1:Ay2 U1/y3 U2/y4;
+!!SN:W^Sniper_set^/1;
+!!SN:W^Sniper_stack^/y1;
+!!BMy1:V80;
+!!en:;
+
+!!en:;
+
+!!if&y1=8:;
+!!BG:N?y1;                              [Attacking Stack]
+!!BMy1:T?y2;
+!!FU&y2<>290:E;
+!!BMy1:M8/1/0;
+!!en:;
+
+
+
+
+!?BG1;
+!!SN:W^Sniper_set^/?y1;
+!!FU&y1=0:E;
+!!SN:W^Sniper_set^/0;
+!!SN:W^Sniper_stack^/?y1;
+!!BMy1:A?y2 U1/?y3 U2/?y4;
+!!VRy2::2;
+!!VRy3::5;
+!!VRy4::5;
+!!BMy1:Ay2 U1/y3 U2/y4;
+
+**292 Soul Taker
+
+!?BG0;
+!!BG:A?y1;
+!!FU&y1<>10:E;
+!!BG:N?y2;
+!!BMy2:T?y3;
+!!FU&y3<>292:E;
+!!BG:E?y4;
+!!BMy2:N?y5;
+!!BMy4:N?y6;
+!!VRy7:Sy6-y5;
+!!VRy7&y7<1:S1;
+!!BMy4:Ny7;
+
+!!if&y5>=y6:;
+!!UN:C6919200/4/?y1;
+!!VRy2:Sy4*1352+21708+y1;
+!!VRy3:Sy2+234;
+!!UN:Cy3/1/1;
+!!BMy4:F?y5;
+!!VRy5:|268435456;
+!!BMy4:N0 Fy5;
+!!SN:E4621680/2/y1/51/1;
+!!SN:E4797616/2/y1/0/1;
+!!en:;
+
+!!BMy4:V80;
+
+**294 Queens Guard
+!?BG0;
+!!BG:A?y1;
+!!FU&y1<>6:E;
+!!BG:N?y1;
+!!BMy1:T?y11;
+!!FU&y11<>294:E;
+!!BG:Q?y2;
+!!BG:H?y3;
+!!BG:D?y4;
+!!BMy1:N?y5;
+
+
+!!FU(Summoning_Rework1):P12/y2/y5/?y18/0;
+
+**295 Gron
+!?BG0;
+!!BG:A?y1;
+!!FU&y1<>6:E;
+!!BG:N?y1;
+!!BMy1:T?y11;
+!!FU&y11<>295:E;
+!!BG:E?y2;
+!!BMy2:F?y3;
+!!VRy3:|67108864;
+!!BMy2:Fy3;
+
+
+**293 Doom Dragon
+!?MF1;                                  [*Physical Combat *]
+
+!!UN:C42149568/4/?y10;                  [Get Physical Damage type]
+!!if|y10=4462398/y10=4455011/y10=4456676:; [Only run when melee or shooting damage]
+
+!!MF:N?y1;
+!!BMy1:T?y2;
+!!FU&y2<>293:E;
+!!BMy1:N?y3;
+!!BMy1:P?y4;
+!!VRy3:*3;
+!!BMy1:C26/y4/0/y3/1;
+
+
+!?BG0;                                  [*Physical Combat *]
+
+!!BG:A?y1;
+!!FU&y1<>6:E;
+
+!!BG:N?y1;
+!!BMy1:T?y2;
+!!FU&y2<>293:E;
+!!BMy1:N?y3;
+!!BMy1:P?y4;
+!!VRy3:*3;
+!!BMy1:C26/y4/0/y3/1;
+
+
+
+** Mutare Drake
+!?FU(OnBattleRound);
+!!BH0:N?y1;
+!!DO(Rule_Dragon)/21/41/1&y1=153:P0;
+!!BH1:N?y1;
+!!DO(Rule_Dragon)/0/20/1&y1=153:P1;
+
+!?FU(Rule_Dragon);
+!!BMx16:F?i;
+!!VRi:&-2147483648;
+!!FU&i=0:E;
+!!BMx16:G60/50/3;
+
+
+
+
+**296 Diablos
+!?MF1;                                  [*Physical Combat *]
+
+!!UN:C42149568/4/?y10;                  [Get Physical Damage type]
+!!if|y10=4462398/y10=4455011/y10=4456676; [Only run when melee or shooting damage]
+
+!!BG:N?y1;                              [Attacking Stack]
+!!BMy1:T?y2;
+!!FU&y2<>296:E;
+!!BMy1:N?y10;
+
+!!MF:N?y4;                              [damage receiving stack]
+
+!!BMy1:I?y5;                            [Side index as for heroes (0:left, 1:right)]
+!!BMy4:P?y1 I?y30;                      [get target position and Side]
+
+!!VRz3:S^DevoteD.def^;
+!!FU(PlayCustomAnimation2):P0/3/y1/100/1/0/1; [Function to play custom animation By Hawaiing]
+
+!!VRy10:*200;
+
+!!MF:F?y21;
+!!VRy21:Sdy10;
+!!MF:Fy21;
+
+!!FU(Find_Near2):Py1/0/?y3;
+!!BU&y3>=0/y3<=186:Ey3/?y8;             [-2 if there is alive stack at that position]
+
+!!BMy8&y8>=0/y8<=41/y4<>y8:I?y40;       [apply damage to surrounding creatures]
+!!BMy8&y8>=0/y8<=41/y4<>y8/y40=y30:Ky10;[apply damage to surrounding creatures if same side]
+
+!!FU(Find_Near2):Py1/1/?y3;
+!!BU&y3>=0/y3<=186:Ey3/?y8;             [-2 if there is alive stack at that position]
+
+!!BMy8&y8>=0/y8<=41/y4<>y8:I?y40;       [apply damage to surrounding creatures]
+!!BMy8&y8>=0/y8<=41/y4<>y8/y40=y30:Ky10;[apply damage to surrounding creatures if same side]
+
+!!FU(Find_Near2):Py1/2/?y3;
+!!BU&y3>=0/y3<=186:Ey3/?y8;             [-2 if there is alive stack at that position]
+
+!!BMy8&y8>=0/y8<=41/y4<>y8:I?y40;       [apply damage to surrounding creatures]
+!!BMy8&y8>=0/y8<=41/y4<>y8/y40=y30:Ky10;[apply damage to surrounding creatures if same side]
+
+!!FU(Find_Near2):Py1/3/?y3;
+!!BU&y3>=0/y3<=186:Ey3/?y8;             [-2 if there is alive stack at that position]
+!!BMy8&y8>=0/y8<=41/y4<>y8:I?y40;       [apply damage to surrounding creatures]
+!!BMy8&y8>=0/y8<=41/y4<>y8/y40=y30:Ky10;[apply damage to surrounding creatures if same side]
+
+!!FU(Find_Near2):Py1/4/?y3;
+!!BU&y3>=0/y3<=186:Ey3/?y8;             [-2 if there is alive stack at that position]
+!!BMy8&y8>=0/y8<=41/y4<>y8:I?y40;       [apply damage to surrounding creatures]
+!!BMy8&y8>=0/y8<=41/y4<>y8/y40=y30:Ky10;[apply damage to surrounding creatures if same side]
+
+!!FU(Find_Near2):Py1/5/?y3;
+!!BU&y3>=0/y3<=186:Ey3/?y8;             [-2 if there is alive stack at that position]
+!!BMy8&y8>=0/y8<=41/y4<>y8:I?y40;       [apply damage to surrounding creatures]
+!!BMy8&y8>=0/y8<=41/y4<>y8/y40=y30:Ky10;[apply damage to surrounding creatures if same side]
+
+
+
+!!en;
+
+
+
+
+
+!?MF1;
+!!UN:C42149568/4/?y10;                  [Get Physical Damage type]
+
+!!if&y10=4454752:; [Only run when melee or shooting damage]
+
+!!BG:A?y1;                              [Aktion in y1]
+
+!!if&y1=7:;
+!!BG:N?y1;                              [Attacking Stack]
+!!BG:E?y11;
+!!MF:N?y4;                              [damage receiving stack]
+!!FU&y4=y11:E;
+
+!!BMy1:T?y41;
+
+!!FU&y41<>214:E;
+
+!!BA:Q?f;
+!!BMy4&f=0:V53;                         [Show Fireball animation]
+!!BMy4:P?y1;                      [get target position and Side]
+!!BMy11:I?y30;
+!!MF:F?y10;                             [get damage of ballista]
+!!VRy10::2;                             [25% of the damage]
+
+
+!!FU(Find_Near2):Py1/0/?y3;
+!!BU&y3>=0/y3<=186:Ey3/?y8;             [-2 if there is alive stack at that position]
+
+!!BMy8&y8>=0/y8<=41/y4<>y8:I?y40;       [apply damage to surrounding creatures]
+!!BMy8&y8>=0/y8<=41/y4<>y8/y40=y30:Ky10;[apply damage to surrounding creatures if same side]
+
+!!FU(Find_Near2):Py1/1/?y3;
+!!BU&y3>=0/y3<=186:Ey3/?y8;             [-2 if there is alive stack at that position]
+
+!!BMy8&y8>=0/y8<=41/y4<>y8:I?y40;       [apply damage to surrounding creatures]
+!!BMy8&y8>=0/y8<=41/y4<>y8/y40=y30:Ky10;[apply damage to surrounding creatures if same side]
+
+!!FU(Find_Near2):Py1/2/?y3;
+!!BU&y3>=0/y3<=186:Ey3/?y8;             [-2 if there is alive stack at that position]
+
+!!BMy8&y8>=0/y8<=41/y4<>y8:I?y40;       [apply damage to surrounding creatures]
+!!BMy8&y8>=0/y8<=41/y4<>y8/y40=y30:Ky10;[apply damage to surrounding creatures if same side]
+
+!!FU(Find_Near2):Py1/3/?y3;
+!!BU&y3>=0/y3<=186:Ey3/?y8;             [-2 if there is alive stack at that position]
+!!BMy8&y8>=0/y8<=41/y4<>y8:I?y40;       [apply damage to surrounding creatures]
+!!BMy8&y8>=0/y8<=41/y4<>y8/y40=y30:Ky10;[apply damage to surrounding creatures if same side]
+
+!!FU(Find_Near2):Py1/4/?y3;
+!!BU&y3>=0/y3<=186:Ey3/?y8;             [-2 if there is alive stack at that position]
+!!BMy8&y8>=0/y8<=41/y4<>y8:I?y40;       [apply damage to surrounding creatures]
+!!BMy8&y8>=0/y8<=41/y4<>y8/y40=y30:Ky10;[apply damage to surrounding creatures if same side]
+
+!!FU(Find_Near2):Py1/5/?y3;
+!!BU&y3>=0/y3<=186:Ey3/?y8;             [-2 if there is alive stack at that position]
+!!BMy8&y8>=0/y8<=41/y4<>y8:I?y40;       [apply damage to surrounding creatures]
+!!BMy8&y8>=0/y8<=41/y4<>y8/y40=y30:Ky10;[apply damage to surrounding creatures if same side]
+
+!!en:;
+!!en:;
+
+
+!?FU(Find_Near2);                  [Funktion to calculate neighbouring Hex cells]
+!!UN:C6919200/4/?y1;                    [Y1 = combatManager]
+!!VRx2:*2;
+!!VRx1:*12+ y1+ 78952+ x2;
+!!UN:Cx1/2/?x3;
+
+
+
+!?FU(PlayCustomAnimation2);
+
+!!FU|x1<0/x1>82/x2<0/x2>1000:E;
+!!VRx3|x3<0/x3>187:S93;
+!!VRx4&x4<0:S100;
+!!VRx5|x5<0/x5>4:S0;
+!!VRx6|x6<0/x6>1:S0;
+!!UN:C6919200/4/?y20;
+!!VRy21:Sy20 +78568;
+!!VRy22:Sy20 +78572;
+!!UN:C4454270/4/?y1;
+!!UN:Cy21/4/0 Cy22/4/-1;
+!!VRy2:Sx1 *12 +y1;
+!!VRy3:Sy2 +8;
+!!VRy4:Sx2 *512 +9597416;
+!!VRy5:Sx6 *256 +x5;
+!!UN:Cy2/4/?y10;
+!!UN:Cy3/4/?y11;
+!!UN:Cy2/4/y4;
+!!UN&x7<>0:Cy3/4/y5;
+!!SN:E4810128/2/y20/x1/x3/x4/0;
+!!UN:Cy2/4/y10;
+!!UN&x7<>0:Cy3/4/y11;
+!!UN:Cy21/4/0 Cy22/4/-1;
+
+
+
+**299 Fire Dragon/ 300 Frozen Dragon**
+
+!?BG0;                                  [*Physical Combat *]
+
+!!BG:A?y1;
+!!FU&y1<>6/y1<>2/y1<>7/y1<>10:E;
+
+!!BG:Q?y10;
+!!BG:N?y11;
+
+!!BMy11:T?y50;
+!!FU&y50=149:E;
+
+!!BHy10:N?y20;
+
+!!HEy20:A2/128/?y33/?y34;
+!!HEy20:A2/204/?y33/?y35;
+
+!!DO(Special_Dragon_Check)/0/20/1&y10=1:Py11/y34/y35;
+!!DO(Special_Dragon_Check)/21/41/1&y10=0:Py11/y34/y35;
+
+!!BG:N?y11;
+!!BMy11:N?y12;
+!!BG&y12=0:A12;
+
+!?FU(Special_Dragon_Check);
+
+!!BMx16:T?y2;
+!!FU&y2<>299/y2<>300:E;
+!!BMx16:N?y3;
+!!BMx16:P?y4;
+!!BMx1:P?y5;
+!!FU&y2=299/x2=1:E;
+!!FU&y2=300/x3=1:E;
+
+
+
+!SN:W^Changed_Light^/1;
+!!SN:W^Changed_dragon1^/1;
+!!SN:W^Changed_dragon2^/x16;
+
+!SN:L^Era.dll^/?y21;                    [y1=handle]
+!SN:Ay21/^RedirectFile^/?y22;            [y2=FU address]
+!SN:Ey22/1/^C06SPF0.def^/^C04SPF0.def^;  [switch Lightning DEF to asdFireball C20SPX.DEF C13SPF.DEF]
+
+
+!!VRy3&y2=299:*15;
+!!VRy3&y2=300:*50;
+!!BMx16&y2=299:C26/y4/0/y3/1;
+!!BMx16&y2=300:C22/y5/0/y3/1;
+!!SN:W^Changed_dragon1^/0;
+
+!!BU:R;
+
+
+!?FU(OnAfterBattleUniversal);
+!!FU:E;
+!!SN:W^Changed_Light^/?y1;
+!!FU&y1=0:E;
+!!SN:W^Changed_Light^/0;
+!!SN:L^Era.dll^/?y1;                    [y1=handle]
+!!SN:Ay1/^RedirectFile^/?y2;            [y2=FU address]
+!!SN:Ey2/1/^C06SPF0.def^/^^;            [restore Fireball DEF]
+
+
+!?MR2&1000;
+!!SN:W^Changed_dragon1^/?y1;
+!!FU&y1=0:E;
+!!SN:W^Changed_dragon2^/?y2;
+
+!!BG:N?y1;  [Get attacking stack number]
+!!MR:N?y4;  [Get defending stack number]
+!!BMy2:I?y5; [Get attacking stack side]
+!!BMy4:I?y6; [Get defending stack side]
+!!MR&y5=y6:F100;
+!!MR&y5<>y6:F0;
+
+
+
+
+**301***
+
+
+!?FU(OnBattleActionEnd);
+
+!!BG:N?y1 A?y99 E?y10 D?y33;
+!!if|y99=6/y99=7;
+!!BMy1:T?y3;
+!!FU&y3<>301:E;
+!!FU&y10<0:E;
+!!BMy10:N?y80;
+!!FU&y80=0:E;
+
+!!BMy10:G34/?y66/?y77;
+!!FU&y66=0:E;
+
+!!BMy10:T?y15;
+!!UN:N3/-2/y15/1;
+!!SN:T^TUM_unit.301_1^/?z1/^target^/z-2;
+!!BU&1000/f=0:Mz1;
+
+!!BMy10:Z?y44;
+!!SN:E4473392/2/y44/34;
+
+!!VRz3:S^Meffect067.def^;
+!!FU(PlayCustomAnimation2):P0/3/y33/100/1/0/1; [Function to play custom animation By Hawaiing]
+
+!!BU:R;
+
+!!en;
+
+
+**302**
+!?FU(OnBattleRound);
+!!DO(increase_Speed_1)/0/41/1&v997=0:P6;
+!!DO(increase_Speed_1)/0/41/1&v997=1:P-6;
+!!DO(Reset_Force)/0/41/1:P;
+
+!?FU(increase_Speed_1);
+!!BMx16:T?y1 N?y2;
+!!FU&y1<>302:E;
+!!FU&y2=0:E;
+!!BMx16:Sdx1;
+
+
+**303**
+
+!?FU(Reset_Force);
+!!SN:W^Force_Used_%X16^/0;
+
+
+!?MM0;
+!!SN:W^Select_force^/?y2;
+!!FU&y2=0:E;
+
+!!SN:T^TUM_unit.303_1^/?z1; [Set text to show]
+!!MM:Mz1;
+
+!!UN:R5/3/d;
+
+
+!?FU(OnKeyPressed_Battle)&i^key^=71;
+!!BG:N?y1;
+!!BMy1:T?y3;
+!!FU&y3<>303:E;
+!!SN:W^Force_Used_%Y1^/?y33;
+!!FU&y33=1:E;
+
+!!SN:T^TUM_unit.303_1^/?z1; [Set text to show]
+!!MM:Mz1;
+
+!!UN:R5/3/d;
+
+!!SN:W^Select_force^/1;
+
+!?FU(OnBattleScreenMouseClick);
+!!SN:W^Select_force^/?y2;
+!!FU&y2=0:E;
+!!CM:F?y1 S?y99;
+
+!!if&y1=512/y99=14;
+!!SN:W^Select_force^/0;
+!!en;
+
+
+!!if&y1=0/y99=12;
+
+!!CM:D?y2;
+!!FU|y2<0/y2>186:E;
+
+!!CM:R0;
+!!BG:N?y10;
+
+!!BMy10:U3/?y41;;
+!!SN&y41<3:T^TUM_unit.303_2^/?z1;
+!!IF&y41<3:Mz1;
+!!FU&y41<3:E;
+!!BMy10:U3/d-3;
+
+!!BMy10:C12/y2/2/2/0;
+!!SN:W^Select_force^/0;
+!!SN:W^Force_Used_%Y10^/1;
+!!en;
+
+**304**
+
+
+
+!?MM0;
+!!SN:W^Select_force2^/?y2;
+!!FU&y2=0:E;
+
+!!SN:W^imp_damage^/?y11;
+!!SN:T^TUM_unit.304_1^/?z1/^damage^/y11;
+!!MM:Mz1;
+
+!!CM:D?y2;
+!!if&y2>=0/y2<186;
+!!BG:N?y3;
+!!BU:Ey2/?y4;
+!!FU&y4>=0/y4<>y3:E;
+!!UN:R5/2/18;
+
+!!en;
+
+
+
+
+!?FU(OnKeyPressed_Battle)&i^key^=71;
+!!BG:N?y1;
+!!BMy1:T?y3;
+!!FU&y3<>304:E;
+
+!!BMy1:N?y11;
+!!VRy11:*20;
+!!SN:W^imp_damage^/y11;
+!!SN:T^TUM_unit.304_1^/?z1/^damage^/y11;
+!!MM:Mz1;
+
+!!UN:R5/2/18;
+
+!!SN:W^Select_force2^/1;
+
+!?FU(OnBattleScreenMouseClick);
+!!SN:W^Select_force2^/?y2;
+!!FU&y2=0:E;
+!!CM:F?y1 S?y99;
+
+!!if&y1=512/y99=14;
+!!SN:W^Select_force2^/0;
+!!en;
+
+
+!!if&y1=0/y99=12;
+
+!!CM:D?y2;
+!!FU|y2<0/y2>186:E;
+!!BG:N?y10;
+!!BM:P?y12;
+!!FU&y12<>y2:E;
+
+!!CM:R0;
+
+!!BMy10:N?y50;
+!!VRy50:*20;
+
+!!SN:W^hell_activate^/0;
+
+!!VRz3:S^Meffect225.def^;
+!!FU(PlayCustomAnimation2):P0/3/y2/100/1/0/1; [Function to play custom animation By Hawaiing]
+
+
+!!BMy10:K9999999;[apply damage to surrounding creatures if same side]
+!!DO(Dead_body2)/0/5/1:Py10/y2/y50;
+!!BG:A12;
+!!BU:R;
+
+!!SN:W^Select_force2^/0;
+!!en;
+
+
+
+!?FU(OnBeforeBattleAction);
+!!SN:W^Select_force2^/?y2;
+!!FU&y2=0:E;
+
+!!BG:N?y10 A?y1 D?y5;
+
+!!if&y1=2;
+!!BMy10:T?y11;
+!!FU&y11<>304:E;
+!!SN:W^Select_force2^/0;
+!!SN:W^hell_activate^/1;
+!!SN:W^hell_stack^/y10;
+!!SN:W^hell_stack2^/y5;
+!!en;
+
+!!if&y1<>2;
+!!SN:W^Select_force2^/0;
+!!en;
+
+
+!?FU(OnAfterBattleAction);
+!!SN:W^hell_activate^/?y2;
+!!FU&y2=0:E;
+
+
+!!SN:W^hell_stack2^/?y5;
+!!SN:W^hell_stack^/?y10;
+
+!!BMy10:N?y50;
+!!VRy50:*20;
+
+
+!!SN:W^hell_activate^/0;
+
+!!VRz3:S^Meffect225.def^;
+!!FU(PlayCustomAnimation2):P0/3/y5/100/1/0/1; [Function to play custom animation By Hawaiing]
+
+
+!!BMy10:K9999999;[apply damage to surrounding creatures if same side]
+!!DO(Dead_body2)/0/5/1:Py10/y5/y50;
+!!BU:R;
+
+
+
+
+
+!?FU(Dead_body2);
+!!FU(Find_Near2):Px2/x16/?y3;
+!!BMx1:I?y30;
+!!BU&y3>=0/y3<=186:Ey3/?y8;             [-2 if there is alive stack at that position]
+!!FU&y8<0:E;
+!!BMy8:I?y40;       [apply damage to surrounding creatures]
+!!BMy8&y40<>y30:Kx3;[apply damage to surrounding creatures if same side]
+
+!!BMy8:T?y15;
+!!UN:N3/-2/y15/1;
+
+!!BA:Q?f;
+!!SN:T^TUM_unit.304_2^/?z1/^damage^/x3/^target^/z-2;
+!!BU&1000/f=0:Mz1;
+
+
+***306
+
+
+!?MF1;
+!!UN:C42149568/4/?y10;                  [Get Physical Damage type]
+!!if|y10=4462398/y10=4455011/y10=4456676; [Only run when melee or shooting damage]
+
+!!BG:N?y98;
+!!BMy98:T?y99 I?y88 P?y89;
+!!FU&y99<>306:E;
+!!MF:N?y1;
+!!FU&y1=y98:E;
+
+!!BA:Q?f;
+!!FU&f=1:E;
+
+!!BMy1:P?y2 B?y3 H?y4 N?y5 T?y6 L?y7 F?y8 O?y9;
+
+!!VRy8:&4194304;                       [just look summoned bit]
+!!FU&y8>0:E;                           [Exit if cloned or summoned]
+
+!!VRy10:Sy4-y7;
+
+!!VRy50:Sy3*y4;
+
+!!VRy50::5;
+
+
+!!VRy5:-1;
+!!VRy11:Sy4*y5;
+!!VRy11:+y10;
+
+!!MF:F?y12;
+
+!!FU&y12<y11:E;
+!!SN:W^Act_Again_Roc^/1;
+!!SN:W^Act_Again_Rocy98^/y98;
+!!SN:W^Act_Again_Rocy1^/y1;
+
+
+!?FU(OnBattleActionEnd);
+!!SN:W^Act_Again_Roc^/?y3;
+!!FU&y3=0:E;
+!!SN:W^Act_Again_Roc^/0;
+!!SN:W^Act_Again_Rocy98^/?y98;
+!!SN:W^Act_Again_Rocy1^/?y1;
+
+!!SN:P^GoodMrle.wav^;
+!!BMy98:V20;
+
+!!BMy98:Fd~(MON_FLAG_ACTED);      [set act twice flag for stack]
+
+!!BMy1:T?y81;
+
+!!UN:N3/-2/y81/1;
+!!SN:T^TUM_unit.306_1^/?z1/^target^/z-2;
+!!BA:Q?f;
+!!BU&1000/f=0:Mz1;
+
+
+**306**
+
+
+!?MF1;
+!!UN:C42149568/4/?y10;                  [Get Physical Damage type]
+!!if|y10=4462398/y10=4455011/y10=4456676; [Only run when melee or shooting damage]
+
+!!BG:N?y98;
+!!BMy98:T?y99 I?y88 P?y89;
+!!FU&y99<>306:E;
+!!MF:N?y1;
+!!FU&y1=y98:E;
+
+!!BA:Q?f;
+!!FU&f=1:E;
+
+!!BMy1:P?y2 B?y3 H?y4 N?y5 T?y6 L?y7 F?y8 O?y9;
+
+!!VRy8:&4194304;                       [just look summoned bit]
+!!FU&y8>0:E;                           [Exit if cloned or summoned]
+
+!!VRy10:Sy4-y7;
+
+!!VRy50:Sy3*y4;
+
+!!VRy50::5;
+
+
+!!VRy5:-1;
+!!VRy11:Sy4*y5;
+!!VRy11:+y10;
+
+!!MF:F?y12;
+
+!!FU&y12<y11:E;
+!!SN:W^Act_Again_Roc^/1;
+!!SN:W^Act_Again_Rocy98^/y98;
+!!SN:W^Act_Again_Rocy1^/y1;
+
+
+!?FU(OnBattleActionEnd);
+!!SN:W^Act_Again_Roc^/?y3;
+!!FU&y3=0:E;
+!!SN:W^Act_Again_Roc^/0;
+!!SN:W^Act_Again_Rocy98^/?y98;
+!!SN:W^Act_Again_Rocy1^/?y1;
+
+!!SN:P^GoodMrle.wav^;
+!!BMy98:V20;
+
+!!BMy98:Fd~(MON_FLAG_ACTED);      [set act twice flag for stack]
+
+!!BMy1:T?y81;
+
+!!UN:N3/-2/y81/1;
+!!SN:T^TUM_unit.306_1^/?z1/^target^/z-2;
+!!BA:Q?f;
+!!BU&1000/f=0:Mz1;
+
+
+
+**312**
+
+
+!?FU(OnBeforeBattleAction)&i^battle_round^>=0;
+!!FU:E;
+
+!!SN:W^ACM_twice_acting stackg^/-1;
+!!BG:A?y1 N?y2;                         [Get action type and stack number]
+!!FU&y1<>7:E; exit for wrong condition
+
+!!BMy2:T?y3;                       [get type and side]
+!!if|y3=312/y3=313/y3=314;                   [if any commander]
+  !!SN:W^ACM_twice_acting stackg^/y2;    [set and save stack that should act twice]
+!!en;
+
+
+!?FU(OnBeforeBattleAction)&i^battle_round^>=0;
+!!FU:E;
+  !!BG:N?y1 A?y3;
+  !!SN:W^Walk_only_%Y1^/?y31;
+  !!FU&y31=0:E;
+  !!if|y3=6/y3=7;
+  
+
+
+  [:find_posit4]
+  !!VRy50:+1;
+  !!VRy18:S0T185;
+  !!BMy1:P?y32;
+
+  !!BU&y18>=0:Ey18/?y15;
+  !!BU&y18>=0:Oy18/?y16;
+
+  !!UN:C6919200/4/?y30;
+
+  !!VRy12:Sy1*1352+21708+y30;  [получить структуру стека]
+  !!SN:E4479536/2/y12/y18/1;
+
+  !!BMy1:P?y33;
+
+  !!BG&y50=300:A12;
+  !!FU&y50=300:E;                         [Exit if no valid Target can be found]
+  !!SN|y15>=0/y16<>0/y33=y32:G[find_posit4]; [Loop]
+
+  !!BG:A12;
+
+  !!en;
+
+
+
+
+
+!?FU(OnBattleActionEnd);
+!!FU:E;
+!!SN:W^ACM_twice_acting stackg^/?y1;
+!!if&y1>=0/y1<=41;                      [if a valid battle stack]
+  !!SN:W^ACM_Com_abilityCounterg_%Y1^/?y2;[check ability counter]
+  !!BMy1&y2=0:Fd~(MON_FLAG_ACTED);      [set act twice flag for stack]
+  !!SN:W^Walk_only_%Y1^/1;
+  !!SN:W^ACM_Com_abilityCounterg_%Y1^/d-1;[reduce ability counter]
+!!en;
+
+
+
+
+
+!?FU(OnBeforeBattleStackTurn);
+!!FU:E;
+!!SN:W^ACM_twice_acting stackg^/?y1; 
+!!FU&y1=-1:E;                           [exit if no valid stack]
+!!BMy1:T?y2 N?y3;                       [get type and number]
+!!FU|y2=-1/y3<=0:E;                       [exit if not valid]
+!!SN:W^ACM_twice_acting stackg^/x1;      [set stack that should act twice]
+
+
+
+
+!?MM0;
+!!FU:E;
+!!CM:D?y2;
+!!if&y2>=0/y2<186;
+!!BG:N?y1;
+
+!!SN:W^Walk_only_%Y1^/?y31;
+
+
+!!FU&y31=0:E;
+!!UN:R5/2/1;
+!!en;
+
+
+
+**314
+
+!?FU(OnStackToStackDamage);
+; Ignore invalid/theoretical calculations and melee attacks.
+!!FU&x1<0:E;
+!!FU&x2<0:E;
+!!FU&x9<>0:E;
+!!FU&x7<>1:E;
+
+; Only creature 314.
+!!BMx1:T?y1;
+!!FU&y1<>314:E;
+
+; Target must still exist/alive.
+!!BMx2:N?y2;
+!!FU&y2<=0:E;
+
+; 20% proc chance.
+!!VRy3:R100;
+!!FU&y3>50:E;
+
+; Remember defender stack ID before using more y variables.
+!!VRy10:Sx2;
+
+; Visual effect: native Roots/Dendroid binding animation.
+!!BMx2:V68;
+
+; Apply native Dendroid Bind. Duration is intentionally large because the
+; engine ignores Bind duration; our OnCombatRound timer removes it explicitly.
+!!BMx2:M72/999/3;
+
+; Expire at the start of combat round current+3.
+; Re-proccing refreshes the timer back to 3 rounds.
+!!VRy4:Sv997+3;
+!!SN:W^Bind314_%Y10^/y4;
+
+
+; ---------------------------------------------------------------------------
+; At the start of each visible combat round, remove Bind effects whose
+; 3-round timer has expired.
+; ---------------------------------------------------------------------------
+!?FU(OnCombatRound);
+!!DO(Bind314_CheckExpiry)/0/41/1:P;
+
+!?FU(Bind314_CheckExpiry);
+; x16 = battle stack index 0..41
+!!SN:W^Bind314_%X16^/?y1;
+!!FU&y1<=0:E;
+!!FU&v997<y1:E;
+
+; Clear our timer first so this cannot repeat even if the stack died.
+!!SN:W^Bind314_%X16^/0;
+
+; Dead/nonexistent stack: nothing else to do.
+!!BMx16:N?y2;
+!!FU&y2<=0:E;
+
+; Remove native Roots effect by setting its active duration to zero.
+!!FU(WOG_CleanUpSpells2):P72/x16;
+
+; Small visual cue on release: Dispel animation.
+!!BMx16:V41;
+
+
+; ---------------------------------------------------------------------------
+; Battle lifecycle cleanup. Stack IDs 0..41 are reused every battle, so never
+; carry timers from one combat into another.
+; ---------------------------------------------------------------------------
+!?BA0;
+!!DO(Bind314_ClearTimer)/0/41/1:P;
+
+!?BA1;
+!!DO(Bind314_ClearTimer)/0/41/1:P;
+
+!?FU(Bind314_ClearTimer);
+!!SN:W^Bind314_%X16^/0;
+
+
+
+**regen bug fix*
+
+!?FU(OnBattleStackObtainsTurn);
+!!BMx2:T?y1;
+!!if|y1=258/y1=252/y1=205/y1=245/y1=302;
+!!BMx2:N?y2;
+!!FU&y2<1:E;
+!!BMx2:H?y10 L?y11;
+!!FU&y11=0:E;
+!!VRy12:Sy11-50;
+!!VRy12&y12<0:S0;
+!!BMx2:Ly12;
+!!VRz1:S^..\data\p\Regener.WAV^;
+!!SN:Pz1; Play the sound of a new building
+!!BMx2:V79;
+!!en;
+

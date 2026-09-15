@@ -1,0 +1,395 @@
+ZVSE2
+
+; =============================================================================
+; HD_WOG.dll - Universal Quick Army Management / Smart Split creature XP fix
+;
+; Fixes the HD_WOG smart-split bug where creature experience was averaged by
+; stack count instead of creature count when equal creature types had different
+; XP values.
+;
+; Buggy:
+;   (xp1 + xp2 + ...) / stackCount
+;
+; Fixed:
+;   (xp1*qty1 + xp2*qty2 + ...) / totalQty
+;
+; -----------------------------------------------------------------------------
+; UNIVERSAL STRATEGY
+; -----------------------------------------------------------------------------
+; No HD_WOG.dll RVA is hard-coded.
+;
+; 1) Resolve the loaded HD_WOG.dll base.
+; 2) Read PE SizeOfImage and scan only inside that mapped image.
+; 3) Use msvcrt!memchr to locate candidate 0x8B bytes efficiently.
+; 4) Accept a candidate only when ALL guarded bytes match the known Smart Split
+;    implementation, including the final buggy idiv at candidate + 0xFB.
+; 5) Require exactly ONE guarded candidate. Zero or multiple hits => no patch.
+; 6) Allocate a private 32-byte RWX thunk with VirtualAlloc; no DLL-internal
+;    INT3/code cave is required.
+; 7) Replace only the 9-byte XP accumulation expression and the idiv disp8.
+; 8) Flush the CPU instruction cache and restore original page protection.
+;
+; Confirmed matching HD_WOG builds supplied for testing:
+;   SHA-256 1ca0211859e2b9f44b722f26578871b4fc1eb9788d98c357e79dd13857422aab
+;     Smart Split accumulator RVA 0x0A5828
+;   SHA-256 ad728788de0f1ce675a72ca0246819a2895424c22498b7e9a8376fb953cf5369
+;     Smart Split accumulator RVA 0x0A7F88
+;   SHA-256 17a95b55b3e3845e6ea4374fc8c84fa4d19fbbcfe1acc4f674290252a1f6cfee
+;     Smart Split accumulator RVA 0x09A018 (V21 sample)
+;
+; The patch is intentionally fail-closed. An unknown build whose machine code
+; differs is left untouched.
+; =============================================================================
+
+!?PI;
+!!FU(HDEXP_ApplyUniversalPatch):P;
+
+; HD_WOG may not yet be loaded at PI in some setups.
+; Re-running is safe: once patched, the original signature is gone and the
+; scanner returns zero guarded hits.
+!?FU(OnStartOrLoad);
+!!FU(HDEXP_ApplyUniversalPatch):P;
+
+
+; =============================================================================
+; Apply universal signature-based patch
+; =============================================================================
+!?FU(HDEXP_ApplyUniversalPatch);
+
+; -----------------------------------------------------------------------------
+; Resolve HD_WOG.dll and validate a minimal PE header.
+; -----------------------------------------------------------------------------
+!!SN:L^HD_WOG.dll^/?y1;
+!!FU&y1=0:E;
+
+; DOS MZ
+!!UN:Cy1/2/?y2;
+!!FU&y2<>23117:E;                    [4D 5A]
+
+; e_lfanew at base + 0x3C
+!!VRy3:Sy1+60;
+!!UN:Cy3/4/?y4;
+!!FU&y4<=0:E;
+!!FU&y4>1048576:E;                  [sanity guard]
+
+; PE\0\0
+!!VRy5:Sy1+y4;
+!!UN:Cy5/4/?y6;
+!!FU&y6<>17744:E;                   [50 45 00 00]
+
+; OptionalHeader.SizeOfImage = PE + 0x50
+!!VRy7:Sy5+80;
+!!UN:Cy7/4/?y8;
+!!FU&y8<65536:E;
+!!FU&y8>16777216:E;                 [HD_WOG should never be a 16+ MiB image]
+
+; -----------------------------------------------------------------------------
+; Resolve native helpers.
+; memchr is used so ERM does NOT perform ~1 million byte-by-byte iterations.
+; -----------------------------------------------------------------------------
+!!SN:L^msvcrt.dll^/?y9;
+!!FU&y9=0:E;
+!!SN:Ay9/^memchr^/?y10;
+!!FU&y10=0:E;
+
+; Scan range. The strongest guard reads through candidate + 0xFD, so the last
+; legal candidate start is base + SizeOfImage - 0xFE.
+!!VRy11:Sy1;                         [scan cursor]
+!!VRy12:Sy1+y8-254;                 [last legal candidate start, inclusive]
+!!VRy13:S0;                         [guarded hit count]
+!!VRy14:S0;                         [guarded hit address]
+
+; -----------------------------------------------------------------------------
+; Signature scan
+;
+; Primary bytes at candidate:
+;   8B 55 DC 03 55 D8 89 55 DC
+;     mov edx,[ebp-24h]
+;     add edx,[ebp-28h]
+;     mov [ebp-24h],edx
+;
+; Additional immediate continuation guard:
+;   +09: EB 0B 8B 45 FC C7 44 85 9C FF FF FF
+;
+; Final weighted-average bug guard:
+;   +F7: 8B 45 DC 99
+;   +FB: F7 7D EC     idiv dword ptr [ebp-14h]
+; -----------------------------------------------------------------------------
+!!re i;
+  !!VRy15:Sy12-y11+1;
+  !!br&y15<=0:;
+
+  ; memchr(scanCursor, 0x8B, remaining)
+  !!SN:Ey10/1/y11/139/y15;
+  !!VRy16:Sv1;
+  !!br&y16=0:;
+
+  ; Fast exact guard for the 9-byte buggy accumulator.
+  !!UN:Cy16/4/?y17;                 [8B 55 DC 03]
+  !!VRy18:Sy16+4;
+  !!UN:Cy18/4/?y19;                 [55 D8 89 55]
+  !!VRy18:Sy16+8;
+  !!UN:Cy18/1/?y20;                 [DC]
+
+  !!if&y17=64771467/y19=1435097173/y20=220;
+    ; Continuation guard: +09..+20
+    !!VRy18:Sy16+9;
+    !!UN:Cy18/4/?y21;               [EB 0B 8B 45]
+    !!VRy18:+4;
+    !!UN:Cy18/4/?y22;               [FC C7 44 85]
+    !!VRy18:+4;
+    !!UN:Cy18/4/?y23;               [9C FF FF FF]
+
+    !!if&y21=1166740459/y22=-2059089924/y23=-100;
+      ; Final calculation guard at +0xF7 / +0xFB.
+      !!VRy18:Sy16+247;
+      !!UN:Cy18/4/?y24;             [8B 45 DC 99]
+      !!VRy18:Sy16+251;
+      !!UN:Cy18/2/?y25;             [F7 7D]
+      !!VRy18:+2;
+      !!UN:Cy18/1/?y26;             [EC]
+
+      !!if&y24=-1713617525/y25=32247/y26=236;
+        !!VRy13:+1;
+        !!VRy14:Sy16;
+      !!en;
+    !!en;
+  !!en;
+
+  ; More than one guarded match is ambiguous. Stop scanning and fail closed.
+  !!br&y13>1:;
+  !!VRy11:Sy16+1;
+!!en;
+
+!!FU&y13<>1:E;
+!!FU&y14=0:E;
+
+; -----------------------------------------------------------------------------
+; Re-check the exact patch bytes immediately before modifying memory.
+; This protects against another plugin changing the function between scan and
+; patch (unlikely, but cheap to guard).
+; -----------------------------------------------------------------------------
+!!UN:Cy14/4/?y17;
+!!FU&y17<>64771467:E;
+!!VRy18:Sy14+4;
+!!UN:Cy18/4/?y19;
+!!FU&y19<>1435097173:E;
+!!VRy18:Sy14+8;
+!!UN:Cy18/1/?y20;
+!!FU&y20<>220:E;
+!!VRy18:Sy14+251;
+!!UN:Cy18/2/?y25;
+!!FU&y25<>32247:E;
+!!VRy18:+2;
+!!UN:Cy18/1/?y26;
+!!FU&y26<>236:E;
+
+; -----------------------------------------------------------------------------
+; Resolve Win32 memory APIs.
+; -----------------------------------------------------------------------------
+!!SN:L^kernel32.dll^/?y27;
+!!FU&y27=0:E;
+!!SN:Ay27/^VirtualAlloc^/?y28;
+!!FU&y28=0:E;
+!!SN:Ay27/^VirtualFree^/?y29;
+!!FU&y29=0:E;
+!!SN:Ay27/^VirtualProtect^/?y30;
+!!FU&y30=0:E;
+!!SN:Ay27/^FlushInstructionCache^/?y31;
+!!FU&y31=0:E;
+!!SN:Ay27/^GetCurrentProcess^/?y32;
+!!FU&y32=0:E;
+
+; -----------------------------------------------------------------------------
+; Allocate 32 bytes of private executable memory.
+; VirtualAlloc(NULL, 32, MEM_COMMIT|MEM_RESERVE, PAGE_EXECUTE_READWRITE)
+;   MEM_COMMIT|MEM_RESERVE = 0x3000 = 12288
+;   PAGE_EXECUTE_READWRITE = 0x40   = 64
+; -----------------------------------------------------------------------------
+!!SN:Ey28/1/0/32/12288/64;
+!!VRy33:Sv1;                        [thunk address]
+!!FU&y33=0:E;
+
+; Thunk machine code (15 bytes):
+;   8B 45 D8                   mov  eax,[ebp-28h]      ; stack XP
+;   8B 4D FC                   mov  ecx,[ebp-04h]      ; current slot
+;   0F AF 44 8E 1C             imul eax,[esi+ecx*4+1Ch] ; XP * original qty
+;   01 45 DC                   add  [ebp-24h],eax      ; weighted sum
+;   C3                         ret
+!!UN:Cy33/4/-1948760693;            [8B 45 D8 8B]
+!!VRy34:Sy33+4;
+!!UN:Cy34/4/-1357906867;            [4D FC 0F AF]
+!!VRy34:Sy33+8;
+!!UN:Cy34/4/18648644;               [44 8E 1C 01]
+!!VRy34:Sy33+12;
+!!UN:Cy34/1/69;                     [45]
+!!VRy34:+1;
+!!UN:Cy34/1/220;                    [DC]
+!!VRy34:+1;
+!!UN:Cy34/1/195;                    [C3]
+
+; Verify thunk before redirecting any game code to it.
+!!UN:Cy33/4/?y17;
+!!VRy34:Sy33+4;
+!!UN:Cy34/4/?y19;
+!!VRy34:Sy33+8;
+!!UN:Cy34/4/?y20;
+!!VRy34:Sy33+12;
+!!UN:Cy34/1/?y21;
+!!VRy34:+1;
+!!UN:Cy34/1/?y22;
+!!VRy34:+1;
+!!UN:Cy34/1/?y23;
+
+; If thunk verification fails, release it and leave HD_WOG untouched.
+!!if&y17<>-1948760693;
+  !!SN:Ey29/1/y33/0/32768;
+  !!FU:E;
+!!en;
+!!if&y19<>-1357906867;
+  !!SN:Ey29/1/y33/0/32768;
+  !!FU:E;
+!!en;
+!!if&y20<>18648644;
+  !!SN:Ey29/1/y33/0/32768;
+  !!FU:E;
+!!en;
+!!if&y21<>69;
+  !!SN:Ey29/1/y33/0/32768;
+  !!FU:E;
+!!en;
+!!if&y22<>220;
+  !!SN:Ey29/1/y33/0/32768;
+  !!FU:E;
+!!en;
+!!if&y23<>195;
+  !!SN:Ey29/1/y33/0/32768;
+  !!FU:E;
+!!en;
+
+; GetCurrentProcess() for instruction-cache flushes.
+!!SN:Ey32/1;
+!!VRy35:Sv1;
+
+; Flush newly generated thunk code before it can ever be called.
+!!SN:Ey31/1/y35/y33/15;
+
+; -----------------------------------------------------------------------------
+; Make the whole modified Smart Split span writable in one call.
+; Modified bytes are [candidate + 0 .. +8] and candidate + 0xFD.
+; Length 0xFE (=254) covers both. It may cross a page boundary; VirtualProtect
+; handles every page in this range because they belong to the same image.
+;
+; thunk+16 is unused writable storage for DWORD oldProtection.
+; -----------------------------------------------------------------------------
+!!VRy36:Sy33+16;                    [DWORD oldProtection scratch]
+!!SN:Ey30/1/y14/254/64/y36;
+!!VRy37:Sv1;
+
+; VirtualProtect failed: no target bytes were changed, so release thunk.
+!!if&y37=0;
+  !!SN:Ey29/1/y33/0/32768;
+  !!FU:E;
+!!en;
+
+; -----------------------------------------------------------------------------
+; PATCH #1: replace xpSum += stackXp with CALL thunk + NOP x4.
+;
+;   original: 8B 55 DC 03 55 D8 89 55 DC
+;   patched : E8 <rel32> 90 90 90 90
+;
+; rel32 = thunk - (candidate + 5). On 32-bit x86, the DWORD wraps naturally.
+; -----------------------------------------------------------------------------
+!!VRy38:Sy33-y14-5;
+!!UN:Cy14/1/232;                    [E8]
+!!VRy34:Sy14+1;
+!!UN:Cy34/4/y38;                    [dynamic rel32]
+!!VRy34:Sy14+5;
+!!UN:Cy34/4/-1869574000;            [90 90 90 90]
+
+; PATCH #2: final divisor [ebp-14h] -> [ebp-1Ch].
+;   F7 7D EC -> F7 7D E4
+!!VRy34:Sy14+253;
+!!UN:Cy34/1/228;                    [E4]
+
+; -----------------------------------------------------------------------------
+; Verify target patch before restoring page protection.
+; -----------------------------------------------------------------------------
+!!UN:Cy14/1/?y17;                  [E8]
+!!VRy34:Sy14+1;
+!!UN:Cy34/4/?y19;                  [rel32]
+!!VRy34:Sy14+5;
+!!UN:Cy34/4/?y20;                  [NOP x4]
+!!VRy34:Sy14+251;
+!!UN:Cy34/2/?y21;                  [F7 7D]
+!!VRy34:+2;
+!!UN:Cy34/1/?y22;                  [E4]
+
+; If any write verification fails, roll back the known original bytes while the
+; page is still writable, restore protection, release the unused thunk, and exit.
+!!if&y17<>232;
+  !!FU(HDEXP_RollbackUniversal):Py14/y30/y36/y29/y33/y31/y35;
+  !!FU:E;
+!!en;
+!!if&y19<>y38;
+  !!FU(HDEXP_RollbackUniversal):Py14/y30/y36/y29/y33/y31/y35;
+  !!FU:E;
+!!en;
+!!if&y20<>-1869574000;
+  !!FU(HDEXP_RollbackUniversal):Py14/y30/y36/y29/y33/y31/y35;
+  !!FU:E;
+!!en;
+!!if&y21<>32247;
+  !!FU(HDEXP_RollbackUniversal):Py14/y30/y36/y29/y33/y31/y35;
+  !!FU:E;
+!!en;
+!!if&y22<>228;
+  !!FU(HDEXP_RollbackUniversal):Py14/y30/y36/y29/y33/y31/y35;
+  !!FU:E;
+!!en;
+
+; Flush modified HD_WOG code.
+!!SN:Ey31/1/y35/y14/254;
+
+; Restore the original protection stored at thunk+16.
+!!UN:Cy36/4/?y39;
+!!SN:Ey30/1/y14/254/y39/y36;
+
+; IMPORTANT: Do NOT VirtualFree(y33). The patched CALL permanently targets the
+; thunk for the lifetime of this loaded HD_WOG module/process.
+
+
+; =============================================================================
+; Rollback helper
+;
+; x1 = target address
+; x2 = VirtualProtect address
+; x3 = pointer to saved original protection
+; x4 = VirtualFree address
+; x5 = thunk address
+; x6 = FlushInstructionCache address
+; x7 = current process handle
+; =============================================================================
+!?FU(HDEXP_RollbackUniversal);
+
+; Restore original 9-byte accumulator:
+;   8B 55 DC 03 55 D8 89 55 DC
+!!UN:Cx1/4/64771467;                [8B 55 DC 03]
+!!VRy1:Sx1+4;
+!!UN:Cy1/4/1435097173;              [55 D8 89 55]
+!!VRy1:Sx1+8;
+!!UN:Cy1/1/220;                     [DC]
+
+; Restore original divisor byte EC.
+!!VRy1:Sx1+253;
+!!UN:Cy1/1/236;                     [EC]
+
+; Flush restored code.
+!!SN:Ex6/1/x7/x1/254;
+
+; Restore original memory protection.
+!!UN:Cx3/4/?y2;
+!!SN:Ex2/1/x1/254/y2/x3;
+
+; The thunk is no longer referenced after rollback.
+!!SN:Ex4/1/x5/0/32768;              [MEM_RELEASE]

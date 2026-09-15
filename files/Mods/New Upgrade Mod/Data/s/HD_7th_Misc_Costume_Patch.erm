@@ -1,0 +1,241 @@
+ZVSE2
+
+; ============================================================================
+; HD Mod Costume/Preset - 6th + 7th Misc Slot support
+; Target HD_WOG build: the HD_WOG.dll supplied together with this script.
+;
+; What this changes:
+;   Ctrl+1..9 : saves body artifact slots 14 (Ammo Cart -> 7th Misc) and 16 (Catapult -> 6th Misc) too
+;   1..9      : loads slots 14 and 16 too
+;   Shift+1..9: keeps HD Mod's original overlay behavior, including slots 14 and 16
+;   0         : undo preset includes slots 14 and 16 too
+;
+; HD's original processed slot order is:
+;   0..12, 18
+; This patch changes it to:
+;   0..12, 14, 16, 18
+; Slots 13 and 15 (remaining war machines) and 17 (spellbook) remain untouched.
+;
+; IMPORTANT:
+; Your existing GetHdArtifactPresetBase + 0..170 saver/loader may stay as-is.
+; 171 records = 9 presets * 19 artifact slots.
+; ============================================================================
+
+!?FU(OnStartOrLoad);
+!!FU(HD7_ApplyCostumePatch):P;
+!!FU(HD7_NormalizePresetSlots14And16):P;
+
+; Put this handler AFTER the existing Art_Slot_Loader_HD handler in script order.
+; Old saves contain 0 in the previously-unused slot-14/16 preset cells. Artifact 0 is
+; Spellbook and cannot legally occupy the repurposed misc slots, so 0 is safely
+; migrated to the normal empty-artifact representation (-1, 0).
+!?FU(OnAfterLoadGame);
+!!FU(HD7_ApplyCostumePatch):P;
+!!FU(HD7_NormalizePresetSlots14And16):P;
+
+
+; ----------------------------------------------------------------------------
+; Apply the code patch once.
+; The supplied helper is used as a build guard: for this HD_WOG build the preset
+; array resolved by GetHdArtifactPresetBase must be HD_WOG base + 0xFA868.
+; If that is not true, NOTHING is patched.
+; ----------------------------------------------------------------------------
+!?FU(HD7_ApplyCostumePatch);
+!!SN:L^HD_WOG.dll^/?y1;
+!!FU&y1=0:E;
+
+!!SN:L^HD_Artifact_Preset_Helper.dll^/?y2;
+!!FU&y2=0:E;
+!!SN:Ay2/^GetHdArtifactPresetBase^/?y3;
+!!FU&y3=0:E;
+!!SN:Ey3/1/y1;
+!!VRy4:Sv1;                         [y4 = HD costume preset array]
+!!FU&y4=0:E;
+
+; Strong build guard for the supplied HD_WOG.dll.
+!!VRy5:Sy1+1026152;                 [0xFA868]
+!!FU&y4<>y5:E;
+
+; Already patched with this 7-slot version? RVA 0x91630 becomes INC EAX (0x40).
+!!VRy6:Sy1+595504;                  [RVA 0x91630]
+!!UN:Cy6/1/?y7;
+!!FU&y7=64:E;                       [0x40 = already patched]
+
+; Standalone use only: expect the original Ctrl+number save size (0x1A).
+; If the older 6th-slot ERM is also loaded it has already changed this to 0x22,
+; so we abort instead of stacking two binary patches. Replace the old ERM.
+!!VRy6:Sy1+595308;                  [RVA 0x9156C]
+!!UN:Cy6/1/?y7;
+!!FU&y7<>26:E;                      [0x1A expected in original]
+
+; Additional opcode guards. Abort on any mismatch.
+!!VRy6:Sy1+595203;                  [RVA 0x91503]
+!!UN:Cy6/1/?y7;
+!!FU&y7<>14:E;
+!!VRy6:Sy1+595215;                  [RVA 0x9150F]
+!!UN:Cy6/1/?y7;
+!!FU&y7<>18:E;
+
+!!VRy6:Sy1+595488;                  [RVA 0x91620]
+!!UN:Cy6/4/?y7;
+!!FU&y7<>-11485821:E;
+!!VRy6:Sy1+595637;                  [RVA 0x916B5]
+!!UN:Cy6/4/?y7;
+!!FU&y7<>-12010109:E;
+!!VRy6:Sy1+595730;                  [RVA 0x91712]
+!!UN:Cy6/4/?y7;
+!!FU&y7<>-10437245:E;
+!!VRy6:Sy1+595826;                  [RVA 0x91772]
+!!UN:Cy6/4/?y7;
+!!FU&y7<>-11747965:E;
+!!VRy6:Sy1+596309;                  [RVA 0x91955]
+!!UN:Cy6/4/?y7;
+!!FU&y7<>-10961533:E;
+!!VRy6:Sy1+596491;                  [RVA 0x91A0B]
+!!UN:Cy6/4/?y7;
+!!FU&y7<>-11223677:E;
+
+; HD_WOG .text is read/execute. Make the single containing 4 KiB page writable.
+; Use preset[9].slot[17] (unused by HD costume code) as VirtualProtect scratch.
+!!VRy8:Sy4+1504;                    [9*0x98 + 17*8 = 0x5E0]
+!!SN:L^kernel32.dll^/?y9;
+!!FU&y9=0:E;
+!!SN:Ay9/^VirtualProtect^/?y10;
+!!FU&y10=0:E;
+!!VRy11:Sy1+593920;                 [RVA 0x91000, page start]
+!!SN:Ey10/1/y11/4096/64/y8;         [PAGE_EXECUTE_READWRITE = 0x40]
+!!FU&v1=0:E;
+
+; ----- preset initialization -----
+; Inner init loop: 0..12 -> 14 -> 15 -> 16 -> 17 -> 18. Slots 15/17 are only cleared here, never loaded.
+!!VRy6:Sy1+595203;
+!!UN:Cy6/1/19;                      [0x0E -> 0x13]
+!!VRy6:Sy1+595215;
+!!UN:Cy6/1/14;                      [0x12 -> 0x0E]
+
+; ----- Ctrl+number save -----
+; 0x1A DWORDs = 13 records. 0x22 DWORDs = 17 records, so slots 14 and 16 are copied.
+; Existing code still copies slot 18 separately.
+!!VRy6:Sy1+595308;
+!!UN:Cy6/1/34;                      [0x1A -> 0x22]
+
+; ----- number / Shift+number / 0 load -----
+; Each replacement maps loop indices as:
+;   i < 13 : i
+;   i = 13 : ++i -> 14
+;   next i = 15 : ++i -> 16
+;   next i = 17 : ++i -> 18
+;   next i = 19 -> exit
+; Byte pattern for remap: 0x40 0x90 0x90 0x90 0x90 (INC EAX + 4 NOPs).
+
+!!VRy6:Sy1+595488;
+!!FU(HD7_Write28):Py6/-11500149/-125566977/-2089845485/209456632/-1869574080/1350928784/-1862270977;
+
+!!VRy6:Sy1+595637;
+!!FU(HD7_Write28):Py6/-12024437/-125566977/-2093515501/209456632/-1869574080/1216711056/-1862270977;
+
+!!VRy6:Sy1+595730;
+!!FU(HD7_Write32):Py6/-10451573/-125566977/260902675/-2097151998/209456632/-1869574080/1619364240/-1862270977;
+
+!!VRy6:Sy1+595826;
+!!FU(HD7_Write28):Py6/-11762293/-125566977/-2090173165/209456632/-1869574080/1283819920/-1862270977;
+
+!!VRy6:Sy1+596309;
+!!FU(HD7_Write32):Py6/-10975861/-125566977/-2020798701/-2097152000/209456632/-1869574080/1485146512/-1862270977;
+
+!!VRy6:Sy1+596491;
+!!FU(HD7_Write32):Py6/-11238005/-125566977/-2020798701/-2097152000/209456632/-1869574080/1418037648/-1862270977;
+
+; Restore original page protection.
+!!UN:Cy8/4/?y12;
+!!SN:Ey10/1/y11/4096/y12/y8;
+
+; Clean the scratch preset cell to normal empty-artifact representation.
+!!UN:Cy8/4/-1;
+!!VRy8:+4;
+!!UN:Cy8/4/0;
+
+
+; ----------------------------------------------------------------------------
+; 28-byte writer (7 DWORDs)
+; ----------------------------------------------------------------------------
+!?FU(HD7_Write28);
+!!UN:Cx1/4/x2;
+!!VRx1:+4;
+!!UN:Cx1/4/x3;
+!!VRx1:+4;
+!!UN:Cx1/4/x4;
+!!VRx1:+4;
+!!UN:Cx1/4/x5;
+!!VRx1:+4;
+!!UN:Cx1/4/x6;
+!!VRx1:+4;
+!!UN:Cx1/4/x7;
+!!VRx1:+4;
+!!UN:Cx1/4/x8;
+
+
+; ----------------------------------------------------------------------------
+; 32-byte writer (8 DWORDs)
+; ----------------------------------------------------------------------------
+!?FU(HD7_Write32);
+!!UN:Cx1/4/x2;
+!!VRx1:+4;
+!!UN:Cx1/4/x3;
+!!VRx1:+4;
+!!UN:Cx1/4/x4;
+!!VRx1:+4;
+!!UN:Cx1/4/x5;
+!!VRx1:+4;
+!!UN:Cx1/4/x6;
+!!VRx1:+4;
+!!UN:Cx1/4/x7;
+!!VRx1:+4;
+!!UN:Cx1/4/x8;
+!!VRx1:+4;
+!!UN:Cx1/4/x9;
+
+
+; ----------------------------------------------------------------------------
+; Normalize slots 14 and 16 in all ten HD costume records.
+; Older HD versions leave these cells as zero because the slots were not used by
+; costume presets. Artifact 0 = Spellbook and cannot legally occupy either
+; repurposed misc slots, therefore zero is safely converted to EMPTY = {-1, 0}.
+; ----------------------------------------------------------------------------
+!?FU(HD7_NormalizePresetSlots14And16);
+!!SN:L^HD_WOG.dll^/?y1;
+!!FU&y1=0:E;
+!!SN:L^HD_Artifact_Preset_Helper.dll^/?y2;
+!!FU&y2=0:E;
+!!SN:Ay2/^GetHdArtifactPresetBase^/?y3;
+!!FU&y3=0:E;
+!!SN:Ey3/1/y1;
+!!VRy4:Sv1;
+!!FU&y4=0:E;
+
+; Only normalize when this code patch is actually active.
+; The remap instruction at RVA 0x91630 must be INC EAX (0x40).
+!!VRy5:Sy1+595504;                 [RVA 0x91630]
+!!UN:Cy5/1/?y6;
+!!FU&y6<>64:E;
+
+!!DO(HD7_NormalizeOnePreset)/0/9/1:Py4;
+
+!?FU(HD7_NormalizeOnePreset);
+; x1 = preset base, x16 = preset index 0..9
+!!VRy1:Sx16*152;                   [0x98 per preset]
+!!VRy1:+x1;
+
+; Normalize slot 14 and slot 16 independently.
+!!VRy2:Sy1+112;                    [slot 14 * 8]
+!!FU(HD7_NormalizeCell):Py2;
+!!VRy2:Sy1+128;                    [slot 16 * 8]
+!!FU(HD7_NormalizeCell):Py2;
+
+!?FU(HD7_NormalizeCell);
+; x1 = address of one 8-byte artifact record
+!!UN:Cx1/4/?y1;
+!!FU&y1<>0:E;
+!!UN:Cx1/4/-1;
+!!VRx1:+4;
+!!UN:Cx1/4/0;

@@ -1,0 +1,94 @@
+ZVSE2
+
+; =============================================================================
+; Artifact 244 - Terrain penalty immunity V4 (pure ERM fallback)
+;
+; V1-V3 used executable hooks. In this installation they did not change the
+; observed movement cost, so V4 does not patch h3era HD.exe at all.
+;
+; Native H3 movement code reads Pathfinding directly from hero+0xC9
+; (_Hero_.second_skill[0]). While artifact 244 is actually equipped in FEET
+; slot 8, this script temporarily keeps only that byte at 3 (Expert).
+; The original byte is saved per hero and restored when the boots are removed.
+;
+; This does NOT add/reorder a visible secondary-skill slot and does NOT change
+; second_skill_show[] or second_skill_count; only the byte used by movement
+; calculation is changed.
+; =============================================================================
+
+
+; -----------------------------------------------------------------------------
+; Equip / unequip. Era exposes current artifact ID as v998 for these events.
+; -----------------------------------------------------------------------------
+!?FU(OnEquipArt)&v998=244;
+!!HE-1:N?y1;
+!!FU(A244_ForcePathfindingByte):Py1;
+
+!?FU(OnUnequipArt)&v998=244;
+!!HE-1:N?y1;
+!!FU(A244_RestorePathfindingByte):Py1;
+
+
+; -----------------------------------------------------------------------------
+; Existing saves may already have artifact 244 equipped when this script first
+; appears. Resync every hero after start/load.
+; -----------------------------------------------------------------------------
+!?FU(OnStartOrLoad);
+!!DO(A244_SyncHero)/0/155/1:P;
+
+
+; -----------------------------------------------------------------------------
+; A244_SyncHero
+; x16 = hero ID from DO.
+; FEET slot is doll slot 8. Backpack copies do not activate the effect.
+; -----------------------------------------------------------------------------
+!?FU(A244_SyncHero);
+!!HEx16:A1/?y1/8;
+!!if&y1=244;
+  !!FU(A244_ForcePathfindingByte):Px16;
+!!else;
+  ; If a saved ACTIVE flag exists but the boots are no longer equipped,
+  ; restore the saved real value.
+  !!VRy2:Si^A244_PF_ACTIVE_%x16^;
+  !!FU(A244_RestorePathfindingByte)&y2<>0:Px16;
+!!en;
+
+
+; -----------------------------------------------------------------------------
+; A244_ForcePathfindingByte
+; x1 = hero ID
+;
+; Hero structure offset +201 (0xC9) is Pathfinding level.
+; Save it only on the first activation, then force Expert (=3).
+; -----------------------------------------------------------------------------
+!?FU(A244_ForcePathfindingByte);
+!!HEx1:Z?y1;
+!!FU&y1<=0:E;
+!!VRy2:Sy1+201;
+!!UN:Cy2/1/?y3;
+
+!!VRy4:Si^A244_PF_ACTIVE_%x1^;
+!!if&y4=0;
+  !!VRi^A244_PF_ORIG_%x1^:Sy3;
+  !!VRi^A244_PF_ACTIVE_%x1^:S1;
+!!en;
+
+; Expert Pathfinding for native movement-cost calculation.
+!!UN:Cy2/1/3;
+
+
+; -----------------------------------------------------------------------------
+; A244_RestorePathfindingByte
+; x1 = hero ID
+; -----------------------------------------------------------------------------
+!?FU(A244_RestorePathfindingByte);
+!!VRy1:Si^A244_PF_ACTIVE_%x1^;
+!!FU&y1=0:E;
+
+!!VRy2:Si^A244_PF_ORIG_%x1^;
+!!HEx1:Z?y3;
+!!FU&y3<=0:E;
+!!VRy4:Sy3+201;
+!!UN:Cy4/1/y2;
+
+!!VRi^A244_PF_ACTIVE_%x1^:S0;
