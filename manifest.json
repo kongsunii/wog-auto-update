@@ -1,9 +1,141 @@
 {
-  "version": "0.0.1",
+  "version": "21.01",
   "files": [
     {
-      "path": "test.txt",
-      "sha256": "46ed7a2e8aff942ddaa08106f4c05f4399ceb80009d254dd731dd4b1db96e597"
+      "path": "Credit.txt",
+      "sha256": "4ed1542378c808d0ee5ebab2237821c2970ab8bd01da437794ee14be811fc0de"
+    },
+    {
+      "path": "Mods/Advanced Classes Mod/Data/Advanced Class Mod.pac",
+      "sha256": "a2de8602bf4272210932ed9d36728ca04f642d253bf22c194f746e3016246cb8"
+    },
+    {
+      "path": "Mods/Advanced Classes Mod/Data/s/Advanced Classes Skills.erm",
+      "sha256": "d036c949a7748013cd4e1bf090a176450878eed4ace0675d5739e12558465273"
+    },
+    {
+      "path": "Mods/Advanced Classes Mod/Data/s/Advanced Classes Skills.ert",
+      "sha256": "bba7a018a4dae34593979f6afd6a6784a2ed9ca03f0603656bad153e3a29efa2"
+    },
+    {
+      "path": "Mods/Advanced Classes Mod/EraPlugins/6th_slot.dll",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "Mods/Advanced Classes Mod/EraPlugins/7th_slot_layout.dll",
+      "sha256": "7b02daf917fe75c74c5e39ada5d12b1ae7f0a42dc21a5a15e9193dd62795673a"
+    },
+    {
+      "path": "Mods/Game Enhancement Mod/data/s/gem_compound_artifact_hints.erm",
+      "sha256": "a8d9af733fe28fe5b8b67fcc7bfae99e1912019af702bd0c9e0ab37fecf6e635"
+    },
+    {
+      "path": "Mods/Game Enhancement Mod/data/s/gem_fixes.erm",
+      "sha256": "d7f4d741e3ebbbf84015f0736e545d7bf79ed0cb072f2134290f0dd159a647d6"
+    },
+    {
+      "path": "Mods/New Upgrade Mod/Data/EmeraldArtifacts.pac",
+      "sha256": "002a201469d339f1d4bf8c54af51768529f7bd72c921ef272ef2350979a5d640"
+    },
+    {
+      "path": "Mods/New Upgrade Mod/Data/KONGSUNI.pac",
+      "sha256": "fc66e78776e48d943a07b4028d726f4b340d0cad2a3c9dcdef4b46028188c42c"
+    },
+    {
+      "path": "Mods/New Upgrade Mod/Data/Kong text.pac",
+      "sha256": "34931ce88a67c631ffa4fe76936a97b987f8bdc7e6c459f65d17316ef664e01b"
+    },
+    {
+      "path": "Mods/New Upgrade Mod/Data/portraits.zip",
+      "sha256": "9f24c9a69ce70751433f1dc9cdbd7185a354652248dfcdd9c35d68d021ab4b6a"
+    },
+    {
+      "path": "Mods/New Upgrade Mod/Data/s/Artifact244_TerrainPenaltyFix.erm",
+      "sha256": "49ca8c0bb6d87cc3ab99382f4f5da33aaf352aa9796fcfa5c8350ef79bf0e292"
+    },
+    {
+      "path": "Mods/New Upgrade Mod/Data/s/HD_7th_Misc_Costume_Patch.erm",
+      "sha256": "ff6d14bfed11468d702f92362cfc964115de26bfb0e349dbde1824d4782ddabd"
+    },
+    {
+      "path": "Mods/New Upgrade Mod/Data/s/HD_WOG_SmartSplit_XP_Fix_Universal.erm",
+      "sha256": "7841fb3b8d8358865eb8b0670523a11dfabb411f66b11b8a9f64a9e928d9319b"
+    },
+    {
+      "path": "Mods/New Upgrade Mod/Data/s/TUM_Units.erm",
+      "sha256": "013a9faf2b97fe4d13252d3096b999b516a98d0f3ded4ab08938c02a0c0653cd"
+    },
+    {
+      "path": "Mods/New Upgrade Mod/Data/s/Third Upgrade Mod.erm",
+      "sha256": "7c97eec441b56dfb232835712b124f3c34805f9b4e1789bc2fb842ac9eb557fa"
+    },
+    {
+      "path": "Mods/New Upgrade Mod/EraPlugins/Hawaiing_Dialog.era",
+      "sha256": "97eab5749c7c751d3ec5b17ebff425fbc2042ec519f99d844b3a6fb13871ebdc"
+    },
+    {
+      "path": "Mods/New Upgrade Mod/EraPlugins/MCrEdit/Ammo.mop",
+      "sha256": "4a8297e41ccce70c17732902c4d25935f52616f93c92a3f68dcaa6ee818c9cba"
+    },
+    {
+      "path": "Mods/New Upgrade Mod/EraPlugins/MCrEdit/Block.mop",
+      "sha256": "055e63bdfd0d9928ebaa2d31fff4d5872327d763644837f45d7db63d48bc3947"
+    },
+    {
+      "path": "Mods/New Upgrade Mod/EraPlugins/MCrEdit/DefenseBonus.mop",
+      "sha256": "e7fc667e43280d8f86a78ebea4125a59b88a2fe95475a4e4d775ddb8760a75a1"
+    },
+    {
+      "path": "Mods/New Upgrade Mod/EraPlugins/MCrEdit/Demonology.mop",
+      "sha256": "21257541da2414f5cf8e86bca3f8775fae11660c97655977166301ecadb7b83c"
+    },
+    {
+      "path": "Mods/New Upgrade Mod/EraPlugins/MCrEdit/FireWall.mop",
+      "sha256": "ad13a208f9518287cd59ed88fe8c70081e3d28e373fa10adcacc178e0ca3ba97"
+    },
+    {
+      "path": "Mods/New Upgrade Mod/EraPlugins/MCrEdit/ImposedSpells.mop",
+      "sha256": "6f0fdbf618e219be13615598577f6037e234784061e37ca74dec13da2ff37d87"
+    },
+    {
+      "path": "Mods/New Upgrade Mod/EraPlugins/MCrEdit/Lang",
+      "sha256": "e8f84ca8012f78d1470b49e39e8b79d3e9da07bba22e03305b4eff232584acc2"
+    },
+    {
+      "path": "Mods/New Upgrade Mod/EraPlugins/MCrEdit/MonstersSetup.mop",
+      "sha256": "e3d85d4ba98956c0020a3656b70ec964d75f662c9509abc534ed50678fc696b4"
+    },
+    {
+      "path": "Mods/New Upgrade Mod/EraPlugins/MCrEdit/eng/Ability.txt",
+      "sha256": "10415fccc0934517bdafb5d2c834aa4fc0163fe45e8b835d178b043d822388be"
+    },
+    {
+      "path": "Mods/New Upgrade Mod/EraPlugins/MCrEdit/eng/Common.txt",
+      "sha256": "5587c60275859ebc1ffd87ea034fa5985c80acc6f4be4ce6fd887944eb162903"
+    },
+    {
+      "path": "Mods/New Upgrade Mod/EraPlugins/MCrEdit/eng/Monsters.txt",
+      "sha256": "d7b4e48a6c5b329eda570a0480799568a04ff6f7ecbb3e36faf4246c7df01c36"
+    },
+    {
+      "path": "Mods/New Upgrade Mod/EraPlugins/MCrEdit/eng/Plural.txt",
+      "sha256": "6c87ec04d2bb6872928c6fd237a7ce7341e98c8c026da59f8b74ac46a83b88ad"
+    },
+    {
+      "path": "Mods/New Upgrade Mod/EraPlugins/MCrEdit/eng/Spells.txt",
+      "sha256": "f84441db97994b68b21104d47a712101d2359e2dbd77fb9bbe5be41ce0a074bd"
+    },
+    {
+      "path": "Mods/list.txt",
+      "sha256": "86b8e5292a1cb8b69aeb07c63da04f50093bf2bee8b35a4667f146f1d0d5e61c"
+    },
+    {
+      "path": "Updater.exe",
+      "sha256": "7ea1b0edf9f98838c43c104ede3ab7f7b466fecdf1dd991d5b370d065e98abfc"
+    },
+    {
+      "path": "h3era HD.exe",
+      "sha256": "5efe8b45a8ddb168bc7f51025b722be0b48fe679b7ce56bdfd4992bb1f9da8b0"
     }
   ]
 }
