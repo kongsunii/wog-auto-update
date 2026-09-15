@@ -1,4 +1,9 @@
 {
   "version": "0.0.1",
-  "files": []
+  "files": [
+    {
+      "path": "test.txt",
+      "sha256": "46ed7a2e8aff942ddaa08106f4c05f4399ceb80009d254dd731dd4b1db96e597"
+    }
+  ]
 }
