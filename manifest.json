@@ -1,5 +1,5 @@
 {
-  "version": "21.01",
+  "version": "21.02",
   "files": [
     {
       "path": "Credit.txt",
@@ -39,7 +39,8 @@
     },
     {
       "path": "Mods/New Upgrade Mod/Data/KONGSUNI.pac",
-      "sha256": "fc66e78776e48d943a07b4028d726f4b340d0cad2a3c9dcdef4b46028188c42c"
+      "sha256": "fc66e78776e48d943a07b4028d726f4b340d0cad2a3c9dcdef4b46028188c42c",
+      "url": "https://github.com/kongsunii/wog-auto-update/releases/download/v21.02/fc66e78776e4_KONGSUNI.pac"
     },
     {
       "path": "Mods/New Upgrade Mod/Data/Kong text.pac",
@@ -131,7 +132,7 @@
     },
     {
       "path": "Updater.exe",
-      "sha256": "7ea1b0edf9f98838c43c104ede3ab7f7b466fecdf1dd991d5b370d065e98abfc"
+      "sha256": "95c0301a1866cfd962dd096a1739f1658667d0cf15b809ff7e860710f251f9b4"
     },
     {
       "path": "h3era HD.exe",
