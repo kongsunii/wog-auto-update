@@ -96,6 +96,14 @@
       "sha256": "34931ce88a67c631ffa4fe76936a97b987f8bdc7e6c459f65d17316ef664e01b"
     },
     {
+      "path": "Mods/New Upgrade Mod/Data/artifacts/194.cfg",
+      "sha256": "71095f2b442a00d6fe891b7d9370c3c253aa2f887a8214d78d2303a34fa717a5"
+    },
+    {
+      "path": "Mods/New Upgrade Mod/Data/artifacts/256.cfg",
+      "sha256": "d003ccef2df272b5e6c9c0b9d3fe8a77da5cb16d96233bb007f09787b6a46621"
+    },
+    {
       "path": "Mods/New Upgrade Mod/Data/portraits.zip",
       "sha256": "9f24c9a69ce70751433f1dc9cdbd7185a354652248dfcdd9c35d68d021ab4b6a"
     },
