@@ -749,20 +749,22 @@ script by Perry R
 !?BG0;
 !!BG:A?y1;
 !!FU&y1<>1/y1<>10:E;
-!!BG:S?y2;
+!!BG:S?y2 Q?y30;
 
 !!if|y2=27/y2=28/y2=29/y2=30/y2=31/y2=32/y2=33/y2=34/y2=36/y2=37/y2=38/y2=41/y2=43/y2=46/y2=48;
-!!DO(Buff_Pegasus)/0/41/1:Py2;
+!!DO(Buff_Pegasus)/0/41/1:Py2/y30;
 !!en;
 
 !!if|y2=49/y2=50/y2=51/y2=53/y2=55/y2=56/y2=57/y2=58/y2=64;
-!!DO(Buff_Pegasus)/0/41/1:Py2;
+!!DO(Buff_Pegasus)/0/41/1:Py2/y30;
 !!en;
 
 !?FU(Buff_Pegasus);
-!!BMx16:T?y1 N?y3;
+!!BMx16:T?y1 N?y3 I?y50;
 !!FU&y1<>204:E;
 !!FU&y3=0:E;
+
+!!FU&y50<>x2/x1=38:E;
 
 !!BMx16:P?y2;
 
