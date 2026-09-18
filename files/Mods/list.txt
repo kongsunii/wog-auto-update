@@ -11,7 +11,6 @@ BattleQueue
 Game Enhancement Mod
 TrainerX
 Towns of Day and Night
-More Battlefields
 New Interface Mod
 Advanced Classes Mod
 XXL
