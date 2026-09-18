@@ -34,55 +34,6 @@
       "sha256": "d7f4d741e3ebbbf84015f0736e545d7bf79ed0cb072f2134290f0dd159a647d6"
     },
     {
-      "path": "Mods/More Battlefields/Data/more battlefields.zip",
-      "sha256": "d3775199884c9a2cb3f2f9c10aecef87222b5de6189c8cc4801147285f357f28",
-      "url": "https://github.com/kongsunii/wog-auto-update/releases/download/v21.02/d3775199884c_more.battlefields.zip"
-    },
-    {
-      "path": "Mods/More Battlefields/Data/s/more battlefields.erm",
-      "sha256": "f1435ccd10d2ff49dee506df78c5b713864d94f3e48b3398f0b032dbe8da5eeb"
-    },
-    {
-      "path": "Mods/More Battlefields/Morns Labetha.ico",
-      "sha256": "6d279867490f156f06f5773be37cbabc1d0f98f62c2773aa2488eb0a1f8629b2"
-    },
-    {
-      "path": "Mods/More Battlefields/Screens/360dc63761ac713f5c26dc891f6f4f3c.jpg",
-      "sha256": "63296eafa0c2cbdb14b316b395658535261dbf37cb67875d9b21f30fbb767f89"
-    },
-    {
-      "path": "Mods/More Battlefields/Screens/47f516b9317cece7530a2780dd70dc31.jpg",
-      "sha256": "5112a01a3d6b1e94ef71a4969f8ab7cd0d98ec50c3c063ef83e3df9e529b5c0d"
-    },
-    {
-      "path": "Mods/More Battlefields/Screens/c1c1ae9cf116bbdeaa72a2f43012a5f4.jpg",
-      "sha256": "ae3291c25260b0a5e2e84fca127b28bd196de0bfbabb83002fc4a38843fe8d83"
-    },
-    {
-      "path": "Mods/More Battlefields/Screens/e079102f5063604bab2a79c17774d923.jpg",
-      "sha256": "580bde5ae786acd039fceecb14b739cee436bd920b816cea87272cfe710be9ea"
-    },
-    {
-      "path": "Mods/More Battlefields/mod.json",
-      "sha256": "8a822c21be9295d94a8a7556edeb2031e145d05223d895dd915eb402e402de6a"
-    },
-    {
-      "path": "Mods/More Battlefields/readme.md",
-      "sha256": "d5f0028da5545285198c653200617398f6dcd6effecb5aff8e73b1f084b7f6ff"
-    },
-    {
-      "path": "Mods/More Battlefields/readme.txt",
-      "sha256": "ff9cedabfd08c9c879a7b59e560af91df74dc865f27a7e098394b50f51447d75"
-    },
-    {
-      "path": "Mods/More Battlefields/readme_chn.txt",
-      "sha256": "564a676d6189eb5ca7a5e7237f46062166c4ba242e2225294e4c6fa37ab57f3b"
-    },
-    {
-      "path": "Mods/More Battlefields/readme_rus.txt",
-      "sha256": "36bc3f664e7781e84663ee401d91630dc7a9f4c7822173b1f18104c065034360"
-    },
-    {
       "path": "Mods/New Upgrade Mod/Data/EmeraldArtifacts.pac",
       "sha256": "002a201469d339f1d4bf8c54af51768529f7bd72c921ef272ef2350979a5d640"
     },
@@ -185,7 +136,7 @@
     },
     {
       "path": "Mods/list.txt",
-      "sha256": "86b8e5292a1cb8b69aeb07c63da04f50093bf2bee8b35a4667f146f1d0d5e61c"
+      "sha256": "96928ffe9c9dd5042ddc128c6f50b567b0e66757c88aada29ce685e3a281c299"
     },
     {
       "path": "h3era HD.exe",
