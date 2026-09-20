@@ -8956,7 +8956,7 @@ Change graphics of Meteor Shower and Implosion when at Master and GM level
 
 !!HEy31:A2/195/?y22/?y23;
 
-!!if&y23>0/y4>0;
+!!if&y23>0/y10<>212;
 !!HEy31:Ed/?y51;
 !!VRy51:*10;
 !!VRx4:Sdy51;
