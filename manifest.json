@@ -1,5 +1,5 @@
 {
-  "version": "21.02",
+  "version": "21.03",
   "files": [
     {
       "path": "Credit.txt",
@@ -11,7 +11,7 @@
     },
     {
       "path": "Mods/Advanced Classes Mod/Data/s/Advanced Classes Skills.erm",
-      "sha256": "d036c949a7748013cd4e1bf090a176450878eed4ace0675d5739e12558465273"
+      "sha256": "50cf603bf9effde4a257af7782cf83a2f8c5223555c0f0b4a28f36e825c6306d"
     },
     {
       "path": "Mods/Advanced Classes Mod/Data/s/Advanced Classes Skills.ert",
@@ -40,7 +40,7 @@
     {
       "path": "Mods/New Upgrade Mod/Data/KONGSUNI.pac",
       "sha256": "fc66e78776e48d943a07b4028d726f4b340d0cad2a3c9dcdef4b46028188c42c",
-      "url": "https://github.com/kongsunii/wog-auto-update/releases/download/v21.02/fc66e78776e4_KONGSUNI.pac"
+      "url": "https://github.com/kongsunii/wog-auto-update/releases/download/v21.03/fc66e78776e4_KONGSUNI.pac"
     },
     {
       "path": "Mods/New Upgrade Mod/Data/Kong text.pac",
@@ -56,11 +56,15 @@
     },
     {
       "path": "Mods/New Upgrade Mod/Data/portraits.zip",
-      "sha256": "9f24c9a69ce70751433f1dc9cdbd7185a354652248dfcdd9c35d68d021ab4b6a"
+      "sha256": "241f835d668ee72ccf94874533a90a8107aae0ecf16717e2ba2276e3cf4c1a76"
     },
     {
       "path": "Mods/New Upgrade Mod/Data/s/Artifact244_TerrainPenaltyFix.erm",
       "sha256": "49ca8c0bb6d87cc3ab99382f4f5da33aaf352aa9796fcfa5c8350ef79bf0e292"
+    },
+    {
+      "path": "Mods/New Upgrade Mod/Data/s/BattleHexHighlight_integration.erm",
+      "sha256": "22ace0368dc5c5de6b9b8457582233708ab1d80479fa6ec9d9526972e02cef24"
     },
     {
       "path": "Mods/New Upgrade Mod/Data/s/HD_7th_Misc_Costume_Patch.erm",
@@ -71,16 +75,28 @@
       "sha256": "7841fb3b8d8358865eb8b0670523a11dfabb411f66b11b8a9f64a9e928d9319b"
     },
     {
+      "path": "Mods/New Upgrade Mod/Data/s/Magog.erm",
+      "sha256": "ce53abe478eb188f2f6eea31631e975f88ffaefa4730318ad7ffc086dedcbe79"
+    },
+    {
       "path": "Mods/New Upgrade Mod/Data/s/TUM_Units.erm",
-      "sha256": "8b039fbc08945f81ee000360901be13b93c1fa999c74d9924e502f1f14fc6bea"
+      "sha256": "58a22cec44fdc54605ef1caac111defd0f83c0d6ce8e3ce3fd01f0a65010e557"
     },
     {
       "path": "Mods/New Upgrade Mod/Data/s/Third Upgrade Mod.erm",
-      "sha256": "f34b0b517cd213a3e6ad6ba6cd5027fc90a2b47e167cf609b6ebe77d50cbe47e"
+      "sha256": "2133a78b4c047262ffd1be370b8fd8243b475be01ef793f30466c36c9eaa91ed"
+    },
+    {
+      "path": "Mods/New Upgrade Mod/Data/s/test.erm",
+      "sha256": "5f8452ceaf26e435f1e154f8189f5d2a4b370e270961f4b7778bca3a3cba3d8f"
+    },
+    {
+      "path": "Mods/New Upgrade Mod/EraPlugins/BattleHexHighlight.era",
+      "sha256": "e77b8c2495ba14897aff445c3878fc0accdba9fb6ecaba66bd5415b93e9ed50c"
     },
     {
       "path": "Mods/New Upgrade Mod/EraPlugins/Hawaiing_Dialog.era",
-      "sha256": "97eab5749c7c751d3ec5b17ebff425fbc2042ec519f99d844b3a6fb13871ebdc"
+      "sha256": "69266cd4eb3031dd1d1d682bff21c8df593fbf504ffe6c388ba3704264a54405"
     },
     {
       "path": "Mods/New Upgrade Mod/EraPlugins/MCrEdit/Ammo.mop",
