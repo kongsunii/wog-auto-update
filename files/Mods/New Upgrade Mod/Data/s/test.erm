@@ -1,0 +1,162 @@
+ZVSE2
+
+
+
+!?FU(OnEveryDay)&i^timerIsAi^=0/i^timerDay^>30;
+!!DO(AI_unit_reset)/0/314/1:P;
+
+
+
+!?FU(OnEveryDay)&i^timerIsAi^=1/i^timerDay^>30/i^timerDay^<101;
+!!DO(AI_Set_unit)/0/314/1:P10/10000;
+
+
+
+!?FU(OnEveryDay)&i^timerIsAi^=1/i^timerDay^>100;
+!!DO(AI_Set_unit)/0/314/1:P50/5000;
+
+
+
+!?FU(AI_unit_reset);
+!!SN:W^AIVALUEChange_%X16^/?y1;
+!!FU&y1=0:E;
+!!SN:W^AIVALUEChange_%X16^/0;
+!!MA:Ix16/y1;
+
+
+!?FU(AI_Set_unit);
+!!MA:Ix16/?y1;
+!!SN:W^AIVALUEChange_%X16^/?y2;
+!!FU&y2>0:E;
+!!SN:W^AIVALUEChange_%X16^/y1;
+!!VRy1::x1;
+!!VRy1&y1>=x2:Sx2;
+!!MA:Ix16/y1;
+
+
+
+!?FU(OnKeyPressed_AdvMap)&i^key^=162/999/i^key_down^;
+!!SN:L^HD_WOG.dll^/?y1;
+!!SN:L^HD_Artifact_Preset_Helper.dll^/?y2;
+!!SN:Ay2/^GetHdArtifactPresetBase^/?y3;
+!!SN:Ey3/1/y1;
+!!FU&v1=0:E;
+!!DO(Art_Slot_Saver_HD)/0/170/1:Pv1;
+
+!?FU(OnCloseHeroScreen);
+!!SN:L^HD_WOG.dll^/?y1;
+!!SN:L^HD_Artifact_Preset_Helper.dll^/?y2;
+!!SN:Ay2/^GetHdArtifactPresetBase^/?y3;
+!!SN:Ey3/1/y1;
+!!FU&v1=0:E;
+!!DO(Art_Slot_Saver_HD)/0/170/1:Pv1;
+
+
+!?FU(OnSavegameWrite);
+!!SN:L^HD_WOG.dll^/?y1;
+!!SN:L^HD_Artifact_Preset_Helper.dll^/?y2;
+!!SN:Ay2/^GetHdArtifactPresetBase^/?y3;
+!!SN:Ey3/1/y1;
+!!FU&v1=0:E;
+!!DO(Art_Slot_Saver_HD)/0/170/1:Pv1;
+
+!?FU(Art_Slot_Saver_HD);
+!!VRy1:Sx16*8;
+!!VRy2:Sx1+y1;
+!!VRy12:Sy2+4;
+!!UN:Cy2/4/?y3;
+!!UN:Cy12/4/?y13;
+!!SN:W^Slot_1_%X16_1^/y3;
+!!SN:W^Slot_1_%X16_2^/y13;
+
+!?FU(OnAfterLoadGame);
+!!SN:L^HD_WOG.dll^/?y1;
+!!SN:L^HD_Artifact_Preset_Helper.dll^/?y2;
+!!SN:Ay2/^GetHdArtifactPresetBase^/?y3;
+!!SN:Ey3/1/y1;
+!!FU&v1=0:E;
+!!DO(Art_Slot_Loader_HD)/0/170/1:Pv1;
+
+!?FU(Art_Slot_Loader_HD);
+!!SN:W^Slot_1_%X16_1^/?y3;
+!!SN:W^Slot_1_%X16_2^/?y13;
+!!VRy1:Sx16*8;
+!!VRy2:Sx1+y1;
+!!VRy12:Sy2+4;
+!!UN:Cy2/4/y3;
+!!UN:Cy12/4/y13;
+
+
+!?TM19&v950=0;
+
+!!FU670:P; [do conversion if we haven't yet]
+
+** end of timer routine
+
+
+** function to do conversion
+
+!?FU670;
+
+** setup of and display dialogue box for WoGification message
+!!VRv1:S0;
+!!VRz1:Sz100000;
+!!VRz2:Sz100001;
+!!VRz3:S^../data/zvs/lib1.res/wogoption2.bmp^;
+!!VRz4:Sz100002;
+!!VRz-1:S^^;
+!!IF:D1/1/-1/2/3/-1/-1/-1/4/-1/-1/-1/-1/-1/-1/-1;
+!!IF:F1/-1/-1/-1/-1/1; [enabled cancel button]
+!!UN:P248/?y26; [check if "Display WoGification Messages" is enabled: y26]
+!!IF&y26=1:E1/1; [display WoGification dialogue box if enabled]
+!!UN:R5/1/1; [Change cursor to "wait" hourglass cursor]
+!!UN:R7/0/1; [Show cursor and disable changing]
+!!VRv3340:S0; [Initialize v3340 to 0]
+!!VRv3340&v1<0:S99; [Set v3340 to 99 if WoGification cancelled]
+!!IF&v3340=99:M1/z100038;
+!!UN&v3340=99:R7/0/0; [Show mouse cursor and enable changing if WoGification cancelled]
+!!UN&v3340=99:R5/0/0; [Restore default cursor if WoGification cancelled]
+
+!!VRv950:S1; [note we've done conversion]
+!!FU&v3340=99:E; [Exit if WoGification cancelled]
+
+!!UN:X?v957/?v958; [get map size and underground flag]
+
+!!UN:P900/?y22; [Check if Stack Experience is enabled: y22]
+!!UN:P143/?y23; [Check if New Artifacts is enabled: y23]
+!!UN:P234/?y24; [Check if Warlord's Banner is disabled: y24]
+!!UN&y22=0:A156/1; [If Stack Experience is disabled, disable Warlord's Banner]
+!!UN:P245/?y25; [Check if Level 7+ Troops Only Gain 50% Experience is enabled: y25]
+
+!!DO29/0/196/1&y22=1/y25=1:P; [Set 50% Exp. Multiplier for Level 7+ Troops]
+
+ [If Stack Experience enabled, New WoG Artifacts enabled, and]
+ [Warlord's Banners not banned, add Banners to Creature Banks]
+!!FU25&y22=1/y24=0:P;
+
+
+!?FU25;
+!!UN:U16/-1/?y2; [Number of Creature Banks on map: y2]
+!!VRv1:S-1; [Initialize v1 to first object for faster UN:U format]
+!!DO27/1/y2/1&y2>0:P16; [Loop through all Creature Banks]
+!!UN:U24/-1/?y3; [Number of Derelict Ships on map: y2]
+!!VRv1:S-1; [Initialize v1 to first object for faster UN:U format]
+!!DO27/1/y3/1&y3>0:P24; [Loop through all Creature Banks]
+!!UN:U25/-1/?y4; [Number of Dragon Utopias on map: y2]
+!!VRv1:S-1; [Initialize v1 to first object for faster UN:U format]
+!!DO27/1/y4/1&y4>0:P25; [Loop through all Creature Banks]
+!!UN:U84/-1/?y5; [Number of Crypts on map: y2]
+!!VRv1:S-1; [Initialize v1 to first object for faster UN:U format]
+!!DO27/1/y5/1&y5>0:P84; [Loop through all Crypts]
+!!UN:U85/-1/?y6; [Number of Shipwrecks on map: y2]
+!!VRv1:S-1; [Initialize v1 to first object for faster UN:U format]
+!!DO27/1/y6/1&y6>0:P85; [Loop through all Shipwrecks]
+
+
+!?FU27;
+!!UN:Ux1/-1/-1/1; [Store Creature Bank Coordinates in v1/v2/v3]
+!!VRy1:S0 R2; [Random number from 0..1: y1]
+!!CB1&y1=1:A3/156; [Add a Banner to 50% of Creature Banks]
+!!CB1&x1=25:A3/156; [Add an extra Banner to all Dragon Utopias]
+
+

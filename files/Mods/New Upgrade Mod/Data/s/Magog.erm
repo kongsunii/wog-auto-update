@@ -1,0 +1,185 @@
+ZVSE2
+
+
+!?MM0;
+
+!!SN:W^Magog_Activated^/?y45;
+
+!!BG:N?y1;
+!!BMy1:F?y2 P?y10 I?y30 T?y80;
+!!VRy2:&1048576;
+!!FU&y2=0:E;
+!!BMy1:F?y2;
+!!VRy2:&262144;
+!!VRy3&y2=0:S0;
+!!VRy3&y2>0:S1;
+
+!!CM:F?y55;
+!!VRy55:&1;
+!!FU&y55>0:E;
+
+!!if&y45=1;
+
+!!CM:D?y11;
+
+!!FU|y11<0/y11>186:E;
+!!DO(Reset_Magog_Unit)/0/41/1:Py30/y3;
+!!SN:T^TUM_unit.Magog_2^/?z1; [Set text to show]
+!!MM:M^%Z1^;
+!!FU(CalcDistanceBetweenHexes2):Py10/y11/?y12;
+!!UN&y12>10:R5/2/15;
+!!UN&y12<=10:R5/2/3;
+!!BU:Ey11/?y45;
+
+!!SN:W^Magog_Target^/y11;
+
+!!UN&y80=222:R5/2/3;
+!!UN&y80=212:R5/2/3;
+!!FU&y80=212:E;
+!!re i/0/5;
+!!VRy22:S1;
+!!FU(Find_Near_Magog):Py11/i/?y12;
+!!BU&y12>=0/y12<=186:Ey12/?y13;
+!!BMy13&y13>=0/y13<=41:I?y40 F?y22;
+!!VRy22:&16;
+
+
+!!en;
+!!en;
+
+
+!!if&y45=0;
+!!MM:M?z352;
+!!SN:T^TUM_unit.Magog_1^/?z1; [Set text to show]
+!!MM:M^%Z1 %Z352^;
+!!en;
+
+
+
+
+!?FU(OnKeyPressed_Battle)&i^key^=71;
+
+!!BG:N?y1;
+!!BMy1:F?y2 P?y10 I?y30 T?y80;
+!!VRy2:&1048576;
+!!FU&y2=0:E;
+!!SN:W^Magog_Activated^/?y45;
+!!SN&y45=0:W^Magog_Activated^/1;
+!!SN&y45=1:W^Magog_Activated^/0;
+
+!!CM:D?y11;
+
+!!FU|y11<0/y11>186:E;
+
+!!BMy1:F?y2;
+!!VRy2:&262144;
+!!VRy3&y2=0:S0;
+!!VRy3&y2>0:S1;
+
+
+!!if&y45=0;
+!!SN:T^TUM_unit.Magog_2^/?z1; [Set text to show]
+!!MM:M?z354;
+!!FU(CalcDistanceBetweenHexes2):Py10/y11/?y12;
+!!UN&y12>9:R5/2/15;
+!!UN&y12<=9:R5/2/3;
+
+
+!!UN&y80=222:R5/2/3;
+!!UN&y80=212:R5/2/3;
+!!en;
+
+
+
+!!if&y45=1;
+!!SN:T^TUM_unit.Magog_1^/?z1; [Set text to show]
+!!MM:M?z354;
+!!en;
+
+
+!?FU(OnKeyPressed_Battle)&i^key^=68;     [D키 - 방어/행동 종료]
+!!SN:W^Magog_Activated^/0;               [G키 모드 해제]
+
+!?FU(OnKeyPressed_Battle)&i^key^=87;     [W키 - 대기]
+!!SN:W^Magog_Activated^/0;               [G키 모드 해제]
+
+!?FU(OnKeyPressed_Battle)&i^key^=32;     [Space - Defend]
+!!SN:W^Magog_Activated^/0;
+
+!?FU(OnAfterBattleAction);               [어떤 전투 행동이든 완료되면]
+!!SN:W^Magog_Activated^/0;               [남아 있는 G키 모드 해제]
+
+!?CM4;
+!!SN:W^Magog_Activated^/?y45;
+!!FU&y45<>1:E;      
+
+!!CM:F?y1 S?y2;
+!!FU|y1<>0/y2<>12:E;
+
+!!SN:W^Magog_Target^/?y1;
+!!CM:D?y21;
+!!FU&y1<>y21:E;
+
+
+!!BU:Ey21/?y10;
+!!FU&y10>=0:E;
+
+!!BG:N?y1;
+!!BMy1:F?y2;
+!!VRy2:&1048576;
+!!FU&y2=0:E;
+!!CM:R0;
+!!VRy2&y1<21:S1;
+!!VRy2&y1>20:S0;
+!!BU:S139/0/y21/y2/-1/0;
+!!BU:Ey21/?y10;
+!!BMy1:G-95/y21/d;
+!!BMy10:G-100/8/d;
+!!BMy10:F?y33;
+!!VRy33:|4194304;
+!!BMy10:Fy33;
+
+!!UN:C6919200/4/?y11;                            [комбат мэнеджер]
+!!VRy12:Sy1*1352+21708+y11;  [получить структуру стека]
+!!VRy13:Sy10*1352+21708+y11;  [получить структуру стека]
+!!SN:E4453920/2/y12/y13;
+
+!!BG:H?y88;
+!!SN:W^Legend_Warrior_Hero%Y88^/?y8;
+!!SN&y8=1:E4453920/2/y12/y13;
+
+!!HEy88:A2/277/?y22/?y23;
+!!SN&y23=1:E4453920/2/y12/y13;
+
+!!BU:R;
+!!BG:A12;
+!!SN:W^Magog_Activated^/0;
+
+
+
+!?FU(CalcDistanceBetweenHexes2);      [by wessonsm]
+!#VA(hex1:x) (hex2:x) (distance:x);
+
+!!VR(x1:y):S(hex1) %17;
+!!VR(y1:y):S(hex1) :17;
+!!VR(x2:y):S(hex2) %17;
+!!VR(y2:y):S(hex2) :17;
+!!VR(distanceY:y):S(y1) -(y2);
+!!VR(distanceY)&(distanceY)<0: *-1;
+!!VR(x1):*2;
+!!VR(y1):&1;
+!!VR(x2):*2;
+!!VR(y2):&1;
+!!VR(distanceX:y):S(x1) -(y1) -(x2) +(y2);
+!!VR(distanceX)&(distanceX)<0:*-1;
+!!VR(distanceX):-(distanceY);
+!!VR(distance):S(distanceX);
+!!VR(distance)&(distance)<0:S0;
+!!VR(distanceY):*2;
+!!VR(distance):+(distanceY) :2;
+
+!?FU(Find_Near_Magog);                  [Funktion to calculate neighbouring Hex cells]
+!!UN:C6919200/4/?y1;                    [Y1 = combatManager]
+!!VRx2:*2;
+!!VRx1:*12+ y1+ 78952+ x2;
+!!UN:Cx1/2/?x3;

@@ -8211,6 +8211,11 @@ Till here Normal Necromancy
 !!BA:M1/6/?v8053/?v7053;
 
 
+; 이 파일에서 병력을 회복시키기 전에 심령술 처리 이후의 HE 상태를 보존한다.
+; 전용 FU는 종료 후 호출자의 로컬 변수를 원래 상태로 복원한다.
+!?FU(OnAfterBattleUniversal);
+!!FU(ACM_Cardinal_Save_PostBattle_Army):P;
+
 ** start of battle end trigger
 !?FU(OnAfterBattleUniversal)&1000;      [Continue trigger if any skills are enabled]
 ** first aid
@@ -8306,7 +8311,7 @@ Till here Normal Necromancy
 !!VRx3:+1;                              [next slot]
 ** end of function
 
-** function to heal a stack
+** function to heal a stack [카디널 부활에 심령술 씹히는 현상 개선안 적용함수]
 !?FU(Improved_FirstAid_Bonus2);
 
 !!HEv7020:B0/?z1;                       [get hero's name]
@@ -8324,8 +8329,19 @@ Till here Normal Necromancy
 !!SN&1000/y5=1/x8=1:T^AC_Misc.First Aid 3^/?z-9 Iz-9/?z-9;
 !!SN&1000/y5>1/x8=1:T^AC_Misc.First Aid 3^/?z-9 Iz-9/?z-9;
 
-!!IF&1000/y5=1:Q2/21/x5/1/z-9;
-!!IF&1000/y5>1:Q2/21/x5/1/z-9;
+; 이 메시지들은 기존 Cardinal 기록이 존재할 때만 표시한다.
+!!VRy20:S1; [심령술 생성 유닛에 응급치료 다이얼로그가 뜨던 현상 개선]
+!!if&x1=1/x4>=0/x4<=6;
+  !!SN:W^Cardinal_recover^/?y21;
+  !!SN:W^Cardinal_BattleEnd_Saved^/?y22;
+  !!if&y21=1/y22=1;
+    !!SN:W^Cardinal_Slot_Number_%X4^/?y23;
+    !!SN:W^Cardinal_BattleEnd_Number_%X4^/?y24;
+    !!VRy20&y23>0/y24=0:S0;
+  !!en;
+!!en;
+!!IF&1000/y5=1/y20=1:Q2/21/x5/1/z-9;
+!!IF&1000/y5>1/y20=1:Q2/21/x5/1/z-9;
 !!UN:R1;                                [redraw screen to show revived creatures]
 !!VRj&y5>0:Sx4;                         [note that we healed a stack if we did]
 ** end of function
@@ -8395,7 +8411,7 @@ Till here Normal Necromancy
 !!BA:Hy2/?y4;                           [Current Hero]
 !!FU&y4<0:E;                            [Exit if none]
 !!BMy1:T?y3;                            [Get Creature Number]
-!!DO(AC_Function_26)/0/21/1&y3=147/y2=0:P; [Left Side and First Aid Tent]
+!!DO(AC_Function_26)/0/20/1&y3=147/y2=0:P; [Left Side and First Aid Tent][공격 측 텐트의 병력 손실 표시 대상에서 적군 첫 스택 21번 제외]
 !!DO(AC_Function_26)/21/41/1&y3=147/y2=1:P; [Right Side and First Aid Tent]
 
 
@@ -8693,7 +8709,7 @@ and creature is %X1^;
 !!en;
 
 !!BA:H1/?y1;                            [Defender Hero]
-!!if&y1>0;
+!!if&y1>=0; [수비 응급치료 용량 계산에서 유효한 영웅 0번을 제외하던 >0을 >=0으로 수정]
 !!HEy1:S27/?y3;                         [Checke ob der First Aid hat]
 !!SN:W^H3_First Aid_0_Hero%Y1^/?y30;    [Checke ob der Held Master First Aid hat und Speichere in y30]
 !!SN:W^H3_First Aid_1_Hero%Y1^/?y31;    [Checke ob der Held Grandmaster First Aid hat und Speichere in y31]
@@ -8747,7 +8763,7 @@ and creature is %X1^;
 !!HEy2:S27/?y3;  Ballistics
 !!HEy2:E?y6/?y7/1;                                 [get level of this hero]
 !!SN:W^H3_First Aid_0_Hero%Y2^/?y11;    [Checke ob der Held Master Ballistics hat und Speichere in y11]
-!!SN:W^H3_First Aid_10_Hero%Y2^/?y12;    [Checke ob der Held Grandmaster Ballistics hat und Speichere in y12]
+!!SN:W^H3_First Aid_1_Hero%Y2^/?y12;    [Checke ob der Held Grandmaster Ballistics hat und Speichere in y12][공격 측 응급치료 GM 플래그의 _10_ 오타를 실제 저장 키인 _1_로 수정]
 !!VRy10&y3=1:S10; !!VRy10&y3=2:S15; !!VRy10&y3=3/y11=0/y12=0:S20; !!VRy10&y3=3/y11=1/y12=0:S30; !!VRy10&y3=3/y11=1/y12=1:S50;
 !!VRy10:*y7;
 !!DO(KO_first)/0/20/1&y3>0:Py10;
@@ -8755,7 +8771,7 @@ and creature is %X1^;
 !!BA:H1/?y4;  Defender
 !!FU&y4<0:E;
 !!HEy4:S27/?y3;  Ballistics
-!!HEy2:E?y6/?y7/1;                                 [get level of this hero]
+!!HEy4:E?y6/?y7/1;                                 [수비 텐트 HP 계산에 공격 영웅 y2의 레벨을 읽던 코드를 수비 영웅 y4로 수정][get level of this hero]
 !!SN:W^H3_First Aid_0_Hero%Y4^/?y11;    [Checke ob der Held Master Ballistics hat und Speichere in y11]
 !!SN:W^H3_First Aid_1_Hero%Y4^/?y12;    [Checke ob der Held Grandmaster Ballistics hat und Speichere in y12]
 !!VRy10&y3=1:S10; !!VRy10&y3=2:S15; !!VRy10&y3=3/y11=0/y12=0:S20; !!VRy10&y3=3/y11=1/y12=0:S30; !!VRy10&y3=3/y11=1/y12=1:S50;
@@ -8801,6 +8817,7 @@ and creature is %X1^;
 !!BA:H0/?y1;                            [Attacker Hero Number]
 
 !!SN:W^Cardinal_recover^/0;
+!!SN:W^Cardinal_PostBattle_Saved^/0;    [직전에 저장한 전투 종료 후 병력 스냅샷을 초기화]
 !!FU&y1<0:E;                            [Exit if no Hero]
 !!HEy1:A2/190/?y20/?y21;
 !!FU&y21=0:E;
@@ -8816,14 +8833,84 @@ and creature is %X1^;
 !!if&y3=1/y7=1/y5=0/y6=0/y8=0/y9=0/y10=0/y21=1; [Loop]
 
 !!SN:W^Cardinal_recover^/1;
+!!SN:W^Cardinal_BattleEnd_Saved^/0;     [전투 종료 생존량 저장 여부 초기화]
 !!HEy1:O?y2;                            [get owner of this hero]
 
 !!SN:W^Cardinal_Hero_Attacker_Owner^/y2;      [Check Owner Before Fight]
 
 !!re i/0/6;                            [cycle hero troops]
-!!HEy1:C0/i/?y2/?y3; !!SN:W^Cardinal_Slot_Type_%Vi^/y2; !!SN:W^Cardinal_Slot_Number_%Vi^/y3; [save slots]
+!!HEy1:C0/i/?y2/?y3;
+!!SN:W^Cardinal_Slot_Type_%Vi^/y2;
+!!SN:W^Cardinal_Slot_Number_%Vi^/y3;
+!!SN:W^Cardinal_BattleStack_%Vi^/-1;    [전투 스택 ID는 BF 시점에 BM:O를 통해 매핑됨]
+!!SN:W^Cardinal_BattleEnd_Type_%Vi^/y2;
+!!SN:W^Cardinal_BattleEnd_Number_%Vi^/y3;
 !!en;
 !!en;
+
+
+; BF 시점에 BM:O를 이용해 각 원래 영웅 슬롯을 실제 전투 스택과 매핑한다.
+; 최종 생존 병력 스냅샷은 OnAfterBattleAction에서 BU:C=1이 보고될 때,
+; 즉 실제로 전투를 종료시킨 액션에서만 저장한다.
+!?BF;
+!!SN:W^Cardinal_recover^/?y1;
+!!FU&y1<>1:E;
+!!BA:H0/?y1;
+!!FU&y1<0:E;
+!!HEy1:O?y2;
+!!SN:W^Cardinal_Hero_Attacker_Owner^/?y3;
+!!FU&y2<>y3:E;
+!!FU&y2=-1:E;
+
+!!DO(ACM_Cardinal_Map_Battle_Stack)/0/20/1:P;
+; 여기서는 의도적으로 Cardinal_BattleEnd_Saved를 0으로 유지한다.
+; BF에서는 전투 스택 ID 매핑만 수행한다.
+
+!?FU(ACM_Cardinal_Map_Battle_Stack);
+; x16 = 전투 스택 ID (공격 측 0..20)
+; BM:O는 해당 전투 스택이 원래 속했던 영웅 병력 슬롯이다.
+; -1이면 원래 영웅 슬롯이 없는 병력이다(소환 병력 등).
+!!BMx16:I?y1 O?y2 T?y3 N?y4;
+!!FU&y1<>0:E;
+!!FU|y2<0/y2>6:E;
+!!SN:W^Cardinal_Slot_Type_%Y2^/?y5;
+!!FU&y3<>y5:E;                           [해당 영웅 슬롯의 원래 병종만 매핑]
+!!SN:W^Cardinal_BattleStack_%Y2^/x16;
+!!SN:W^Cardinal_BattleEnd_Type_%Y2^/y3;
+!!SN:W^Cardinal_BattleEnd_Number_%Y2^/y4;
+
+!?FU(ACM_Cardinal_Update_Battle_Stack);
+; x16 = 원래 영웅 슬롯 0..6. 저장해 둔 전투 스택을 직접 조회한다.
+!!SN:W^Cardinal_BattleStack_%X16^/?y1;
+!!FU|y1<0/y1>20:E;
+!!BMy1:T?y2 N?y3;
+!!VRy3&y3<0:S0;
+!!SN:W^Cardinal_BattleEnd_Type_%X16^/y2;
+!!SN:W^Cardinal_BattleEnd_Number_%X16^/y3;
+
+
+; OnAfterBattleUniversal에서 응급치료 처리 전에 호출된다.
+; BM:N 기반 생존 병력 스냅샷은 OnAfterBattleAction + BU:C=1 시점에 확정되어 있다.
+; 여기서 HE를 조회함으로써 심령술 같은 기본 전투 종료 후 병력 증가분을 보존한다.
+!?FU(ACM_Cardinal_Save_PostBattle_Army);
+!!SN:W^Cardinal_PostBattle_Saved^/0;
+!!SN:W^Cardinal_recover^/?y1;
+!!FU&y1<>1:E;
+!!SN:W^Cardinal_BattleEnd_Saved^/?y4;
+!!FU&y4<>1:E;
+!!BA:H0/?y1;
+!!FU&y1<0:E;
+!!HEy1:O?y2;
+!!SN:W^Cardinal_Hero_Attacker_Owner^/?y3;
+!!FU&y2<>y3:E;
+!!FU&y2=-1:E;
+!!re i/0/6;
+  !!HEy1:C0/i/?y2/?y3;
+  !!SN:W^Cardinal_PostBattle_Type_%Vi^/y2;
+  !!SN:W^Cardinal_PostBattle_Number_%Vi^/y3;
+!!en;
+!!SN:W^Cardinal_PostBattle_Hero^/y1;
+!!SN:W^Cardinal_PostBattle_Saved^/1;
 
 !?FU(OnAfterBattleUniversal);
 
@@ -8837,14 +8924,159 @@ and creature is %X1^;
 !!FU&y2<>y3:E;                          [Prevent to give Bonus if retreat]
 !!FU&y2=-1:E;                           [Exit if no owner]
 
-!!re i/0/6;                            [cycle hero troops]
-  !!HEy1:C0/i/?y2/?y3; !!SN:W^Cardinal_Slot_Type_%Vi^/?y20; !!SN:W^Cardinal_Slot_Number_%Vi^/?y30; [compare with old value]
-  !!VRy5:Sy30-y3;                 
-  !!HEy1&y3<y30/y5>0:C0/i/y20/y30; [add troops to AI again]
+*!re i/0/6;                            [cycle hero troops]
+  *!HEy1:C0/i/?y2/?y3; !!SN:W^Cardinal_Slot_Type_%Vi^/?y20; !!SN:W^Cardinal_Slot_Number_%Vi^/?y30; [compare with old value]
+  *!VRy5:Sy30-y3;                 
+  *!HEy1&y3<y30/y5>0:C0/i/y20/y30; [add troops to AI again]
+*!en;
+
+
+!!FU(ACM_Cardinal_Restore_Army):Py1;
+!!SN:W^Cardinal_BattleEnd_Saved^/0;
+!!SN:W^Cardinal_PostBattle_Saved^/0;
+
+; 실제 전투 생존 병력은 기존 BMFIX 추적 로직에서 BM:O로 매핑된 BM:N 값을 사용한다.
+; 전투 종료 후 HE 값은 심령술과 같은 기본 전투 종료 후 병력 증가분을 감지하는 용도로만 사용한다.
+;
+; 최종 병력 구성 규칙:
+;   1) 전투 전 원래 슬롯을 우선하며, 원래 슬롯 위치를 유지한다.
+;   2) Cardinal은 각 원래 병력 스택을 최소한 전투 전 수량까지 복구한다.
+;   3) 기본 전투 종료 후 증가량 = 해당 병종의 전투 종료 후 총 병력 수 - 실제 BM 생존 병력 수.
+;   4) 실제 전투 종료 후 증가분은 모두 변경 없이 큐에 저장한다.
+;      원래 슬롯 구성을 먼저 복원한 뒤, 기본 C2로 저장된 증가분을 추가하여
+;      기존 엔진의 병합/배치 동작을 그대로 사용한다.
+!?FU(ACM_Cardinal_Restore_Army);
+!!VRy1:Sx1;
+!!SN:W^Cardinal_BattleEnd_Saved^/?y44;
+!!SN:W^Cardinal_PostBattle_Saved^/?y49;
+!!SN:W^Cardinal_PostBattle_Hero^/?y43;
+!!VRy49&y43<>y1:S0;
+!!VRy49&y44<>1:S0;
+!!FU|y44<>1/y49<>1:E;
+
+; 이번 복구 처리에서 사용할 C2 전투 종료 후 추가 병력 큐를 초기화한다.
+!!re i/0/6;
+  !!SN:W^Cardinal_C2_Type_%Vi^/-1;
+  !!SN:W^Cardinal_C2_Number_%Vi^/0;
+!!en;
+
+; 먼저 원래 병력이 우선되는 7개 슬롯을 구성한다.
+!!DO(ACM_Cardinal_Plan_Original_Slot)/0/6/1:Py1;
+
+; 병종별 실제 전투 종료 후 추가 병력을 계산한다.
+!!DO(ACM_Cardinal_Plan_Post_Extra)/0/6/1:Py1;
+
+; 원래 병력 우선 슬롯 구성을 먼저 복원한다.
+!!DO(ACM_Cardinal_Apply_Final_Slot)/0/6/1:Py1;
+
+; 원래 슬롯 복원이 끝난 뒤, 모든 실제 전투 종료 후 증가분을 기본 C2로 되돌려 넣는다.
+!!DO(ACM_Cardinal_Apply_C2_Extra)/0/6/1:Py1;
+
+
+; x1 = 영웅, x16 = 원래 영웅 슬롯 0..6
+!?FU(ACM_Cardinal_Plan_Original_Slot);
+!!SN:W^Cardinal_Final_Type_%X16^/-1;
+!!SN:W^Cardinal_Final_Number_%X16^/0;
+
+!!SN:W^Cardinal_Slot_Type_%X16^/?y1;
+!!SN:W^Cardinal_Slot_Number_%X16^/?y2;
+!!FU|y1<0/y2<=0:E;
+
+; BM 생존 수량을 실제 손실 계산의 기준으로 사용한다.
+; Cardinal은 원래 병력 수량까지 복구하되,
+; 전투 중 정상적으로 원래 수량보다 증가한 병력은 그대로 보존한다.
+!!SN:W^Cardinal_BattleEnd_Number_%X16^/?y3;
+!!VRy3&y3<0:S0;
+!!VRy4:Sy2;
+!!VRy4&y3>y2:Sy3;
+
+!!SN:W^Cardinal_Final_Type_%X16^/y1;
+!!SN:W^Cardinal_Final_Number_%X16^/y4;
+
+
+; x1 = 영웅, x16 = 전투 종료 후 HE 슬롯 하나(0..6)
+!?FU(ACM_Cardinal_Plan_Post_Extra);
+!!SN:W^Cardinal_PostBattle_Type_%X16^/?y1;
+!!SN:W^Cardinal_PostBattle_Number_%X16^/?y2;
+!!FU|y1<0/y2<=0:E;
+
+; 전투 종료 후 동일 병종은 한 번만 처리한다.
+; 동일 병종이 여러 슬롯에 존재하면 가장 앞쪽 슬롯을 기준으로 처리한다.
+!!SN:W^Cardinal_Work_Seen^/0;
+!!DO(ACM_Cardinal_Check_Earlier_Post_Type)/0/6/1:Py1/x16;
+!!SN:W^Cardinal_Work_Seen^/?y3;
+!!FU&y3=1:E;
+
+; 이 병종의 기본 전투 종료 후 추가분
+; = 전투 종료 후 전체 수량 - 실제 BM 생존 병력 전체 수량.
+!!SN:W^Cardinal_Work_PostTotal^/0;
+!!SN:W^Cardinal_Work_SurvivorTotal^/0;
+!!DO(ACM_Cardinal_Sum_Post_Type)/0/6/1:Py1;
+
+!!SN:W^Cardinal_Work_PostTotal^/?y4;
+!!SN:W^Cardinal_Work_SurvivorTotal^/?y5;
+!!VRy7:Sy4-y5;
+!!VRy7&y7<0:S0;
+!!FU&y7<=0:E;
+
+; 기본 전투 종료 후 증가분을 그대로 C2 추가 병력으로 보존한다.
+; 여기서는 동일 병종 증가분을 별도로 예외 처리하지 않는다.
+; 기본 C2가 원래의 병합/배치 동작을 그대로 수행하도록 한다.
+!!SN:W^Cardinal_C2_Type_%X16^/y1;
+!!SN:W^Cardinal_C2_Number_%X16^/y7;
+
+
+; x1 = 대상 병종, x2 = 현재 전투 종료 후 슬롯, x16 = 검사 슬롯
+!?FU(ACM_Cardinal_Check_Earlier_Post_Type);
+!!FU&x16>=x2:E;
+!!SN:W^Cardinal_PostBattle_Type_%X16^/?y1;
+!!SN&y1=x1:W^Cardinal_Work_Seen^/1;
+
+
+; x1 = 대상 병종, x16 = 검사 슬롯
+!?FU(ACM_Cardinal_Sum_Post_Type);
+; 기본 전투 종료 후 영웅 병력에서 이 병종의 전체 수량을 합산한다.
+!!SN:W^Cardinal_PostBattle_Type_%X16^/?y1;
+!!SN:W^Cardinal_PostBattle_Number_%X16^/?y2;
+!!if&y1=x1/y2>0;
+  !!SN:W^Cardinal_Work_PostTotal^/?y3;
+  !!VRy3:+y2;
+  !!SN:W^Cardinal_Work_PostTotal^/y3;
+!!en;
+
+; 이 병종에 해당하는 모든 원래 병력 스택의 실제 생존 수량을 합산한다.
+!!SN:W^Cardinal_Slot_Type_%X16^/?y4;
+!!SN:W^Cardinal_BattleEnd_Number_%X16^/?y5;
+!!VRy5&y5<0:S0;
+!!if&y4=x1;
+  !!SN:W^Cardinal_Work_SurvivorTotal^/?y6;
+  !!VRy6:+y5;
+  !!SN:W^Cardinal_Work_SurvivorTotal^/y6;
+!!en;
+
+
+; x1 = 영웅, x16 = 최종 슬롯 0..6
+!?FU(ACM_Cardinal_Apply_Final_Slot);
+!!SN:W^Cardinal_Final_Type_%X16^/?y1;
+!!SN:W^Cardinal_Final_Number_%X16^/?y2;
+!!HEx1:C0/x16/?y3/?y4;
+
+; 여기서는 원래 병력이 우선되는 슬롯 구성만 다시 만든다.
+; 전투 종료 후 새로 추가된 병종은 의도적으로 제거한 뒤 C2로 다시 추가한다.
+; 따라서 새 병종이 원래 병력 슬롯을 밀어내는 일을 방지할 수 있다.
+!!if|y1<0/y2<=0;
+  !!HEx1&y3>=0/y4>0:C0/x16/(NO_MON)/0;
+!!el;
+  !!HEx1|y3<>y1/y4<>y2:C0/x16/y1/y2;
 !!en;
 
 
 
+; x1 = 영웅, x16 = 큐에 저장된 전투 종료 후 추가 병력 항목 0..6
+!?FU(ACM_Cardinal_Apply_C2_Extra);
+!!SN:W^Cardinal_C2_Type_%X16^/?y1;
+!!SN:W^Cardinal_C2_Number_%X16^/?y2;
+!!HEx1&y1>=0/y2>0:C2/y1/y2/1;
 
 ***************************Diplomacy********************************************
 *Chance to increase Stack Size of Hero after every fight*
@@ -11515,7 +11747,8 @@ x3-x5=Town Coordinates
 
 !?MF1;                                  [*Physical Combat *]
 
-!!if|y10=4462398/y10=4455011/y10=4456676/y10=4462479/y10=4455746; [근접/사격/주변공격 + Magog Fireball + Lich Death Cloud]
+!!UN:C42149568/4/?y10;                  [Get Physical Damage type]
+!!if|y10=4462398/y10=4455011/y10=4454752/y10=4456676/y10=4462479/y10=4455746; [근접/사격/주변공격 + Magog Fireball + Lich Death Cloud]
 
 !!BA:Q?y1;
 !!FU&y1=1:E;                            [Exit in Quick Combat]
@@ -11528,7 +11761,7 @@ x3-x5=Town Coordinates
 !!BMy98:N?y9;
 !!FU&y9=0:E;
 !!FU&y10=4455746/y98<>y51:E;  
-
+!!FU&y10=4454752/y98<>y51:E;             [마고그 Fireball도 실제 메인 타겟 MF1에서만 임의시전]
 
 !!SN:W^Master_Mage_Hero%Y4^/?y13;
 !!SN:W^Master_Adventurer_Hero%Y4^/?y14;
@@ -11592,6 +11825,7 @@ x3-x5=Town Coordinates
 !!BHy43:M?y99;
 !!FU(AC_MasterSpellFX_PostCastCleanup):Py11; [강제시전 시 캐스팅 전 currentMagicAnim 해제]
 !!BHy43:Cy11/y5/3/1;                     [Cast Spell at Target]
+!!FU(AC_MasterSpellFX_PostCastCleanup):Py11; [강제시전 종료 후 강화 이펙트 대상 7종 currentMagicAnim 해제]
 !!BHy43&y99=0:M0;
 !!SN:W^Kongsuni_Slayer_0^/0;
 
@@ -11640,7 +11874,7 @@ x3-x5=Town Coordinates
 
 !?MF1;                                  [*Physical Combat *]
 !!UN:C42149568/4/?y10;                  [Get Physical Damage type]
-!!if|y10=4462398/y10=4455011/y10=4456676/y10=4462479/y10=4455746; [근접/사격/주변공격 + Magog Fireball + Lich Death Cloud]
+!!if|y10=4462398/y10=4455011/y10=4454752/y10=4456676/y10=4462479/y10=4455746; [근접/사격/주변공격 + Magog Fireball + Lich Death Cloud]
 
 !!BA:Q?y1;
 !!FU&y1=1:E;                            [Exit in Quick Combat]
@@ -11653,7 +11887,7 @@ x3-x5=Town Coordinates
 !!BMy98:N?y9;
 !!FU&y9=0:E;
 !!FU&y10=4455746/y98<>y51:E;             [리치는 실제 메인 타겟 MF1에서만 임의시전]
-
+!!FU&y10=4454752/y98<>y51:E;             [마고그 Fireball도 실제 메인 타겟 MF1에서만 임의시전]
 
 !!SN:W^Master_Mage_Hero%Y4^/?y13;
 !!SN:W^Master_Adventurer_Hero%Y4^/?y14;
@@ -11718,6 +11952,7 @@ x3-x5=Town Coordinates
 !!BHy43:M?y99;
 !!FU(AC_MasterSpellFX_PostCastCleanup):Py11; [강제시전 시 캐스팅 전 currentMagicAnim 해제]
 !!BHy43:Cy11/y5/3/1;                     [Cast Spell at Target]
+!!FU(AC_MasterSpellFX_PostCastCleanup):Py11; [강제시전 종료 후 강화 이펙트 대상 7종 currentMagicAnim 해제]
 !!BHy43&y99=0:M0;
 !!SN:W^Kongsuni_Slayer_0^/0;
 
@@ -12106,11 +12341,12 @@ x3-x5=Town Coordinates
 
 !!FU(AC_MasterSpellFX_PostCastCleanup):Py11; [강제시전 시 캐스팅 전 currentMagicAnim 해제]
 !!BHy43:Cy11/y5/3/1;                     [Cast Spell at Target]
+!!FU(AC_MasterSpellFX_PostCastCleanup):Py11; [강제시전 종료 후 강화 이펙트 대상 7종 currentMagicAnim 해제]
 
 !!SN:W^Kongsuni_Precast_0^/0;            [중첩 강제 시전 종료 즉시 잠금 해제]
 
 !!BMy51&y51>=0:N?y9;
-!!BG&y9<1/y51>=0:A0;
+!!BG&y9<1/y51>=0/y90<>20/y90<>21/y90<>22/y90<>23:A0; [원래 주문이 위치기반 광역(프로스트 링/파이어볼/인페르노/메테오 샤워)이면 죽은 클릭 스택 때문에 영웅시전을 취소하지 않음]
 !!SN:W^Kongsuni_Legend_damage^/0;
 
 !!HEy4:Iy30/1;                          [Reset Spell Points]
@@ -12172,11 +12408,12 @@ x3-x5=Town Coordinates
 
 !!FU(AC_MasterSpellFX_PostCastCleanup):Py11; [강화 이펙트 대상 주문이면 이전 동일 주문 애니메이션 재사용 방지]
 !!BHy43:Cy11/y5/3/1;                     [Cast Spell at Target]
+!!FU(AC_MasterSpellFX_PostCastCleanup):Py11; [강제시전 종료 후 강화 이펙트 대상 7종 currentMagicAnim 해제]
 
 !!SN:W^Kongsuni_Precast_1^/0;            [중첩 강제 시전 종료 즉시 잠금 해제]
 
 !!BMy51&y51>=0:N?y9;
-!!BG&y9<1/y51>=0:A0;
+!!BG&y9<1/y51>=0/y90<>20/y90<>21/y90<>22/y90<>23:A0; [원래 주문이 위치기반 광역(프로스트 링/파이어볼/인페르노/메테오 샤워)이면 죽은 클릭 스택 때문에 영웅시전을 취소하지 않음]
 !!SN:W^Kongsuni_Legend_damage^/0;
 
 
@@ -12253,7 +12490,9 @@ x3-x5=Town Coordinates
 !!SN|y6=0/y7=145/y7=146/y7=147/y7=148/y7=149:G[find_target]; [Loop]
 *!SN&1000/f=0:T^AC_Misc.Precast ability^/?z2;
 *!IF&1000/f=0:L^%Z2^;
+!!FU(AC_MasterSpellFX_PostCastCleanup):Py11; [강제시전 시 캐스팅 전 currentMagicAnim 해제]
 !!BH0:Cy11/y5/3/1;                     [Cast Spell at Target]
+!!FU(AC_MasterSpellFX_PostCastCleanup):Py11; [강제시전 종료 후 강화 이펙트 대상 7종 currentMagicAnim 해제]
 !!BH0:M0;                              [Reenable Spell Book after cast]
 
 !!VRy11:S0;
@@ -12275,7 +12514,9 @@ x3-x5=Town Coordinates
 !!SN|y6=0/y7=145/y7=146/y7=147/y7=148/y7=149:G[find_target]; [Loop]
 *!SN&1000/f=0:T^AC_Misc.Precast ability^/?z2;
 *!IF&1000/f=0:L^%Z2^;
+!!FU(AC_MasterSpellFX_PostCastCleanup):Py11; [강제시전 시 캐스팅 전 currentMagicAnim 해제]
 !!BH0:Cy11/y5/3/1;                     [Cast Spell at Target]
+!!FU(AC_MasterSpellFX_PostCastCleanup):Py11; [강제시전 종료 후 강화 이펙트 대상 7종 currentMagicAnim 해제]
 !!BH0:M0;                              [Reenable Spell Book after cast]
 
 !!VRy11:S0;
@@ -12297,7 +12538,9 @@ x3-x5=Town Coordinates
 !!SN|y6=0/y7=145/y7=146/y7=147/y7=148/y7=149:G[find_target]; [Loop]
 *!SN&1000/f=0:T^AC_Misc.Precast ability^/?z2;
 *!IF&1000/f=0:L^%Z2^;
+!!FU(AC_MasterSpellFX_PostCastCleanup):Py11; [강제시전 시 캐스팅 전 currentMagicAnim 해제]
 !!BH0:Cy11/y5/3/1;                     [Cast Spell at Target]
+!!FU(AC_MasterSpellFX_PostCastCleanup):Py11; [강제시전 종료 후 강화 이펙트 대상 7종 currentMagicAnim 해제]
 !!BH0:M0;                              [Reenable Spell Book after cast]
 
 
@@ -12359,7 +12602,9 @@ x3-x5=Town Coordinates
 !!SN|y6=0/y7=145/y7=146/y7=147/y7=148/y7=149:G[find_target]; [Loop]
 *!SN&1000/f=0:T^AC_Misc.Precast ability^/?z2;
 *!IF&1000/f=0:L^%Z2^;
+!!FU(AC_MasterSpellFX_PostCastCleanup):Py11; [강제시전 시 캐스팅 전 currentMagicAnim 해제]
 !!BH1:Cy11/y5/3/1;                     [Cast Spell at Target]
+!!FU(AC_MasterSpellFX_PostCastCleanup):Py11; [강제시전 종료 후 강화 이펙트 대상 7종 currentMagicAnim 해제]
 !!BH1:M0;                              [Reenable Spell Book after cast]
 
 !!VRy11:S0;
@@ -12381,7 +12626,9 @@ x3-x5=Town Coordinates
 !!SN|y6=0/y7=145/y7=146/y7=147/y7=148/y7=149:G[find_target]; [Loop]
 *!SN&1000/f=0:T^AC_Misc.Precast ability^/?z2;
 *!IF&1000/f=0:L^%Z2^;
+!!FU(AC_MasterSpellFX_PostCastCleanup):Py11; [강제시전 시 캐스팅 전 currentMagicAnim 해제]
 !!BH1:Cy11/y5/3/1;                     [Cast Spell at Target]
+!!FU(AC_MasterSpellFX_PostCastCleanup):Py11; [강제시전 종료 후 강화 이펙트 대상 7종 currentMagicAnim 해제]
 !!BH1:M0;                              [Reenable Spell Book after cast]
 
 !!VRy11:S0;
@@ -12403,7 +12650,9 @@ x3-x5=Town Coordinates
 !!SN|y6=0/y7=145/y7=146/y7=147/y7=148/y7=149:G[find_target]; [Loop]
 *!SN&1000/f=0:T^AC_Misc.Precast ability^/?z2;
 *!IF&1000/f=0:L^%Z2^;
+!!FU(AC_MasterSpellFX_PostCastCleanup):Py11; [강제시전 시 캐스팅 전 currentMagicAnim 해제]
 !!BH1:Cy11/y5/3/1;                     [Cast Spell at Target]
+!!FU(AC_MasterSpellFX_PostCastCleanup):Py11; [강제시전 종료 후 강화 이펙트 대상 7종 currentMagicAnim 해제]
 !!BH1:M0;                              [Reenable Spell Book after cast]
 
 
@@ -12463,7 +12712,9 @@ x3-x5=Town Coordinates
 !!SN|y6=0/y7=145/y7=146/y7=147/y7=148/y7=149:G[find_target]; [Loop]
 *!SN&1000/f=0:T^AC_Misc.Precast ability^/?z2;
 *!IF&1000/f=0:L^%Z2^;
+!!FU(AC_MasterSpellFX_PostCastCleanup):Py11; [강제시전 시 캐스팅 전 currentMagicAnim 해제]
 !!BHy2:Cy11/y5/3/1;                     [Cast Spell at Target]
+!!FU(AC_MasterSpellFX_PostCastCleanup):Py11; [강제시전 종료 후 강화 이펙트 대상 7종 currentMagicAnim 해제]
 !!BHy2:M0;                              [Reenable Spell Book after cast]
 
 !!VRy11:S0;
@@ -12485,7 +12736,9 @@ x3-x5=Town Coordinates
 !!SN|y6=0/y7=145/y7=146/y7=147/y7=148/y7=149:G[find_target]; [Loop]
 *!SN&1000/f=0:T^AC_Misc.Precast ability^/?z2;
 *!IF&1000/f=0:L^%Z2^;
+!!FU(AC_MasterSpellFX_PostCastCleanup):Py11; [강제시전 시 캐스팅 전 currentMagicAnim 해제]
 !!BHy2:Cy11/y5/3/1;                     [Cast Spell at Target]
+!!FU(AC_MasterSpellFX_PostCastCleanup):Py11; [강제시전 종료 후 강화 이펙트 대상 7종 currentMagicAnim 해제]
 !!BHy2:M0;                              [Reenable Spell Book after cast]
 
 
@@ -12508,7 +12761,9 @@ x3-x5=Town Coordinates
 !!SN|y6=0/y7=145/y7=146/y7=147/y7=148/y7=149:G[find_target]; [Loop]
 *!SN&1000/f=0:T^AC_Misc.Precast ability^/?z2;
 *!IF&1000/f=0:L^%Z2^;
+!!FU(AC_MasterSpellFX_PostCastCleanup):Py11; [강제시전 시 캐스팅 전 currentMagicAnim 해제]
 !!BHy2:Cy11/y5/3/1;                     [Cast Spell at Target]
+!!FU(AC_MasterSpellFX_PostCastCleanup):Py11; [강제시전 종료 후 강화 이펙트 대상 7종 currentMagicAnim 해제]
 !!BHy2:M0;                              [Reenable Spell Book after cast]
 
 
@@ -12556,7 +12811,9 @@ x3-x5=Town Coordinates
 !!SN|y6=0/y7=145/y7=146/y7=147/y7=148/y7=149:G[find_target]; [Loop]
 *!SN&1000/f=0:T^AC_Misc.Precast ability^/?z2;
 *!IF&1000/f=0:L^%Z2^;
+!!FU(AC_MasterSpellFX_PostCastCleanup)&y98=1:Py11; [강제시전 시 캐스팅 전 currentMagicAnim 해제]
 !!BHy2&y98=1:Cy11/y5/3/1;                     [Cast Spell at Target]
+!!FU(AC_MasterSpellFX_PostCastCleanup)&y98=1:Py11; [강제시전 종료 후 강화 이펙트 대상 7종 currentMagicAnim 해제]
 !!BHy2:M0;                              [Reenable Spell Book after cast]
 
 
@@ -12574,7 +12831,9 @@ x3-x5=Town Coordinates
 !!SN|y6=0/y7=145/y7=146/y7=147/y7=148/y7=149:G[find_target]; [Loop]
 *!SN&1000/f=0:T^AC_Misc.Precast ability^/?z2;
 *!IF&1000/f=0:L^%Z2^;
+!!FU(AC_MasterSpellFX_PostCastCleanup)&y98=1:Py11; [강제시전 시 캐스팅 전 currentMagicAnim 해제]
 !!BHy2&y98=1:Cy11/y5/3/1;                     [Cast Spell at Target]
+!!FU(AC_MasterSpellFX_PostCastCleanup)&y98=1:Py11; [강제시전 종료 후 강화 이펙트 대상 7종 currentMagicAnim 해제]
 !!BHy2:M0;                              [Reenable Spell Book after cast]
 
 
@@ -12592,7 +12851,9 @@ x3-x5=Town Coordinates
 !!SN|y6=0/y7=145/y7=146/y7=147/y7=148/y7=149:G[find_target]; [Loop]
 *!SN&1000/f=0:T^AC_Misc.Precast ability^/?z2;
 *!IF&1000/f=0:L^%Z2^;
+!!FU(AC_MasterSpellFX_PostCastCleanup)&y98=1:Py11; [강제시전 시 캐스팅 전 currentMagicAnim 해제]
 !!BHy2&y98=1:Cy11/y5/3/1;                     [Cast Spell at Target]
+!!FU(AC_MasterSpellFX_PostCastCleanup)&y98=1:Py11; [강제시전 종료 후 강화 이펙트 대상 7종 currentMagicAnim 해제]
 !!BHy2:M0;                              [Reenable Spell Book after cast]
 
 
@@ -12759,7 +13020,9 @@ x3-x5=Town Coordinates
 !!SN&y2=0:W^Kongsuni_Battle_Precast_0^/1;
 !!SN&y2=1:W^Kongsuni_Battle_Precast_1^/1;
 
+!!FU(AC_MasterSpellFX_PostCastCleanup):Py11; [강제시전 시 캐스팅 전 currentMagicAnim 해제]
 !!BHy2:Cy11/y5/3/1;                     [Cast Spell at Target]
+!!FU(AC_MasterSpellFX_PostCastCleanup):Py11; [강제시전 종료 후 강화 이펙트 대상 7종 currentMagicAnim 해제]
 !!BHy2:M0;                              [Reenable Spell Book after cast]
 
 !!SN&y2=0:W^Battlemage_Precast_0^/1;
@@ -18190,7 +18453,7 @@ x1=ComLevel, x2=ComMagicLvl, x3=ComSpellModifier, x4=returns HP, x5=returns min 
   !!VRx4:*y40:100;                      [Set new total HP value]
 !!en;
 
-!!ifx7>=0;                              [Artifact Bonus]
+!!if&x7>=0;                             [Artifact Bonus][오타수정]
   !!HEx7:A2/143/?i/?y28;                [Check Hero artifact for summoning scroll]
   !!VRx4&y28=1:+1000;                   [If Scroll equipped give +1000HP]
 !!en;
@@ -21440,7 +21703,7 @@ Spell Trainer Damage Spells
 !!BA:H1/?y21;     check defender
 !!if&y21>=0;
 !!HEy21:A2/219/?y3/?y10;                  [Check for Pendant of Downfall]
-!!SN&y11=1:W^Double_Cast_Book2^/1;
+!!SN&y10=1:W^Double_Cast_Book2^/1;
 !!HEy21:A2/233/?y3/?y11;                  [Check for Pendant of Downfall]
 !!SN&y11=1/v997=0:W^Double_Cast_Staff2^/1;
 !!SN&y11=1/v997>0:W^Double_Cast_Staff2^/1;
@@ -23776,7 +24039,7 @@ if no the bonus is removed.
 !!FU(Check_ACM_Aura_of_Command)&y2>=0:P0/y2/y1/y3; [Run function to give bonus, pass 0 to avoid animation on units and pass creature ID that emits aura, and battleside]
 
 !?FU(Check_ACM_Aura_of_Command); 
-!!BG:Q?f;                               [Quick Combat flag]
+!!BA:Q?f;                               [Quick Combat flag; BG:Q is the acting side][지휘 오라의 빠른 전투 확인: 행동 진영을 읽는 BG:Q → 빠른 전투를 읽는 BA:Q]
 !!FU&f=1:E;                             [Exit in quick combat]
 !!FU|x2<=0:E;                           [Exit if no valid Creature]
 !!FU(Check_Com_Masteries):Px4/?y40/?y42/0/?y41/0/0/0/0/0/0/0/?y43;[Pass Hero Number and return if Commander Mastery is enabled, and current kill count]
@@ -23802,6 +24065,7 @@ if no the bonus is removed.
         !!if&y13>=1/y14>=1/y15>=1/y10<>145/y10<>146/y10<>147/y10<>148/y10<>149/y10<>x2; [If any valid creature, execlude Warmachines]
             !!re i/0/5;                [loop around the creatures in cirlce 0-6 positions]
             !!FU(ACM_Calc_neighbouring_hex_2):Py1/i/?y3; [Pass position and return first neighbouring hex field]
+            !!VRy5:S-1;                [ACM-AUDIT: invalid hex must not reuse the previous neighbour][오라의 1·2차 이웃 조회 전에 y5=-1로 초기화하여 이전 이웃 스택 번호 재사용 방지]
             !!BU&y3>=0/y3<=186:Ey3/?y5; [Check if create stands on this hex]
             !!BMy5&y5>=0/y5<=41:I?y6 T?y20 S?y7; [Get the creatures side and speed and type]
             !!SN&y5>=0/y5<=41:W^ACM_Aura_of_Command_Stack_%Y4^/?y8; [Check creature bravery flag]
@@ -23815,6 +24079,7 @@ if no the bonus is removed.
             !!if&y40=1/y41=6;           [With Mastery make the Aura 2 hex wide]
               !!re r/0/5;              [loop around the creatures in cirlce 0-6 positions]
               !!FU(ACM_Calc_neighbouring_hex_2):Py3/r/?y30; [Pass position and return first neighbouring hex field]
+              !!VRy5:S-1;              [ACM-AUDIT: clear result before the conditional lookup][오라의 1·2차 이웃 조회 전에 y5=-1로 초기화하여 이전 이웃 스택 번호 재사용 방지]
               !!BU&y30>=0/y30<=186:Ey30/?y5; [Check if create stands on this hex]
               !!BMy5&y5>=0/y5<=41:I?y6 T?y20 S?y7; [Get the creatures side and speed and type]
               !!SN&y5>=0/y5<=41:W^ACM_Aura_of_Command_Stack_%Y4^/?y8; [Check creature bravery flag]
@@ -23839,6 +24104,7 @@ if no the bonus is removed.
 
 !?FU(ACM_Calc_neighbouring_hex_2);      [Funktion to calculate neighbouring Hex cells]
 !!UN:C6919200/4/?y1;                    [Y1 = combatManager]
+!!FU&y1=0:E;
 !!VRx2:*2;
 !!VRx1:*12+ y1+ 78952+ x2;
 !!UN:Cx1/2/?x3;
@@ -38126,6 +38392,9 @@ Change graphics of Meteor Shower and Implosion when at Master and GM level
 !!SN:Ay1/^RedirectFile^/?y2;            [y2=FU address]
 !!SN:Ey2/1/^C08SPE0.def^/^^;            [restore Fireball DEF]
 
+!!BG:A?y3 S?y4;
+!!FU(AC_MasterSpellFX_PostCastCleanup)&y3=1/y4=23:P23;
+
 
 
 !?BG0&1000;
@@ -38153,6 +38422,9 @@ Change graphics of Meteor Shower and Implosion when at Master and GM level
 !!SN:Ay1/^RedirectFile^/?y2;            [y2=FU address]
 !!SN:Ey2/1/^C05SPE0.def^/^^;
 
+!!BG:A?y3 S?y4;
+!!FU(AC_MasterSpellFX_PostCastCleanup)&y3=1/y4=18:P18;
+
 !?BG0&1000;
 !!SN:W^Kongsuni_Precast_0^/?y97;
 !!SN:W^Kongsuni_Precast_1^/?y98;
@@ -38175,6 +38447,9 @@ Change graphics of Meteor Shower and Implosion when at Master and GM level
 !!SN:L^Era.dll^/?y1;                    [y1=handle]
 !!SN:Ay1/^RedirectFile^/?y2;            [y2=FU address]
 !!SN:Ey2/1/^C11SPA1.def^/^^;            [restore Fireball DEF]
+
+!!BG:A?y3 S?y4;
+!!FU(AC_MasterSpellFX_PostCastCleanup)&y3=1/y4=17:P17;
 
 
 !?BG0&1000;
@@ -38200,6 +38475,9 @@ Change graphics of Meteor Shower and Implosion when at Master and GM level
 !!SN:Ay1/^RedirectFile^/?y2;            [y2=FU address]
 !!SN:Ey2/1/^C08SPW5.def^/^^;            [restore Fireball DEF]
 
+!!BG:A?y3 S?y4;
+!!FU(AC_MasterSpellFX_PostCastCleanup)&y3=1/y4=16:P16;
+
 !?BG0&1000;
 !!SN:W^Kongsuni_Precast_0^/?y97;
 !!SN:W^Kongsuni_Precast_1^/?y98;
@@ -38222,6 +38500,9 @@ Change graphics of Meteor Shower and Implosion when at Master and GM level
 !!SN:L^Era.dll^/?y1;                    [y1=handle]
 !!SN:Ay1/^RedirectFile^/?y2;            [y2=FU address]
 !!SN:Ey2/1/^C03SPA1.def^/^^;            [restore Fireball DEF]
+
+!!BG:A?y3 S?y4;
+!!FU(AC_MasterSpellFX_PostCastCleanup)&y3=1/y4=19:P19;
 
 !?BG0&1000;
 !!SN:W^Kongsuni_Precast_0^/?y97;
@@ -38249,6 +38530,9 @@ Change graphics of Meteor Shower and Implosion when at Master and GM level
 !!SN:Ay1/^RedirectFile^/?y2;            [y2=FU address]
 !!SN:Ey2/1/^C13SPF.def^/^^;            [restore Fireball DEF]
 
+!!BG:A?y3 S?y4;
+!!FU(AC_MasterSpellFX_PostCastCleanup)&y3=1/y4=21:P21;
+
 !?BG0&1000;
 !!SN:W^Kongsuni_Precast_0^/?y97;
 !!SN:W^Kongsuni_Precast_1^/?y98;
@@ -38271,6 +38555,9 @@ Change graphics of Meteor Shower and Implosion when at Master and GM level
 !!SN:L^Era.dll^/?y1;                    [y1=handle]
 !!SN:Ay1/^RedirectFile^/?y2;            [y2=FU address]
 !!SN:Ey2/1/^C04SPF0.def^/^^;            [restore Fireball DEF]\
+
+!!BG:A?y3 S?y4;
+!!FU(AC_MasterSpellFX_PostCastCleanup)&y3=1/y4=22:P22;
 
 
 
@@ -38716,6 +39003,9 @@ Disabled standard reaction and shows own custom DL with specific def cadre
   !!en;
 !!en;
 
+; 기본 영웅 화면에서 병력 변경이 발생한 뒤 새로 비게 된 슬롯을 정리한다. (병력해고포함)
+!?FU(OnUpdateHeroScreen);
+!!FU(ACM_Clear_Empty_Hero_Army_Slots):Px1;
 
 !?FU(OnAfterHeroInteraction);
 !!SN:W^swap_hero_0^/?y1;
@@ -39878,7 +40168,7 @@ Sniper class gets 1 shot per battleround. Chance to reload increases with kill c
 !!BA:H1/?y2;                            [Defender]
 !!FU&y2<0:E;
 !!FU(Check_Com_Masteries):Py2/0/0/0/?y10;[Pass Hero Number and return current com class]
-!!DO(ACM_Sniper_Shots)/0/10/1&y10=12:P; [call fkt to set shots on commander]
+!!DO(ACM_Sniper_Shots)/21/31/1&y10=12:P; [call fkt to set shots on commander][수비 저격 커맨더 탄약 갱신 대상: 공격 측 0..10 → 수비 측 21..31]
 
 !?FU(ACM_Sniper_Shots);                  
 !!BMx16:T?y1 N?y2;                      [Get creature type]
@@ -39896,10 +40186,14 @@ Sniper class gets 1 shot per battleround. Chance to reload increases with kill c
   !!if&y11=1/y10=12;                    [If sniper class and mastery active]
     !!UN:C4466213/(UNC_INT)/y2;         [make the game think the commander is an arrow tower]
     !!UN:C4479001/(UNC_INT)/y2;         [make the game think the commander is an arrow tower]
+  !!el;                                 [저격 커맨더 다음에 일반 커맨더가 행동할 때도 임시 사격 판정 패치를 기본값으로 복구][ACM-AUDIT: another commander must restore the native comparisons too]
+    !!UN:C4466213/(UNC_INT)/(MON_ARROW_TOWERS);
+    !!UN:C4479001/(UNC_INT)/(MON_ARROW_TOWERS);
   !!en;
 !!el;
 !!UN:C4466213/(UNC_INT)/(MON_ARROW_TOWERS); [Restore Arrow Tower UN:Cs]
 !!UN:C4479001/(UNC_INT)/(MON_ARROW_TOWERS);
+!!en;
 
 
 Restore Arrow Tower UN:Cs OnAfterBattleUniversal & OnAfterLoadGame
@@ -40926,13 +41220,13 @@ x1=position, x2=WM type, x3=kill count, x4=attacking side, x5=mastery
 !!re i/0/40;                            [loop around the creatures in cirlce 0-6 positions]
   !!VRy9:S0R5;                          [generate random number from 0 to 5]
   !!FU(ACM_Calc_neighbouring_hex_2):Px1/y9/?y11; [Pass position and return first neighbouring hex field]
-  !!FU|y11<0/y11>189:E;                 [Exit if wrong battlefield position]
+  !!co|y11<0/y11>186;                   [전쟁 기계·언데드 소환의 잘못된 좌표 후보는 다음 후보로 진행][ACM-AUDIT: reject this candidate and try the next one]
 
   !!if|x2=146/x2=147;                   [For a Ballista or First Aid Tent]
     !!BU:Oy11/?y12 Ey11/?y15;           [check battlefield for obstacle]
     !!VRy13&x4=0:Sy11+1;                [get the in front position also for attacker]
     !!VRy13&x4=1:Sy11-1;                [get the in front position also for defender]
-    !!FU|y13<0/y13>189:E;               [Exit if wrong battlefield position]
+    !!co|y13<0/y13>186;                 [전쟁 기계·언데드 소환의 잘못된 좌표 후보는 다음 후보로 진행][ACM-AUDIT: reject this wide-stack candidate]
     !!BU:Oy13/?y14 Ey13/?y16;           [check it too]
     !!if&y12=0/y14=0/y15=-1/y16=-1;     [if there is free space and two free spaces for ballista]
       !!BU:Sx2/1/y11/x4/-1/1;           [summon a Warmachine]
@@ -41434,13 +41728,13 @@ x1=position, x2=WM type, x3=kill count, x4=attacking side
 !!re i/0/40;                            [loop around the creatures in cirlce 0-6 positions]
   !!VRy9:S0R5;                          [generate random number from 0 to 5]
   !!FU(ACM_Calc_neighbouring_hex_2):Px1/y9/?y11; [Pass position and return first neighbouring hex field]
-  !!FU|y11<0/y11>189:E;                 [Exit if wrong battlefield position]
+  !!co|y11<0/y11>186;                   [전쟁 기계·언데드 소환의 잘못된 좌표 후보는 다음 후보로 진행][ACM-AUDIT: reject this candidate and try the next one]
 
   !!if|x2=66/x2=67/x2=68/x2=69;         [For a any two hex creature]
     !!BU:Oy11/?y12 Ey11/?y15;           [check battlefield for obstacle]
     !!VRy13&x4=0:Sy11+1;                [get the in front position also for attacker]
     !!VRy13&x4=1:Sy11-1;                [get the in front position also for defender]
-    !!FU|y13<0/y13>189:E;               [Exit if wrong battlefield position]
+    !!co|y13<0/y13>186;                 [전쟁 기계·언데드 소환의 잘못된 좌표 후보는 다음 후보로 진행][ACM-AUDIT: reject this wide-stack candidate]
     !!BU:Oy13/?y14 Ey13/?y16;           [check it too]
     !!if&y12=0/y14=0/y15=-1/y16=-1;     [if there is free space and two free spaces for ballista]
       !!BU:Sx2/1/y11/x4/-1/1;           [summon an undead helper]
@@ -41455,6 +41749,7 @@ x1=position, x2=WM type, x3=kill count, x4=attacking side
     !!br;                               [End loop if valid place to summon has been found]
   !!en;
 !!en;
+!!en;                                  [언데드 함수의 반복문 종료 en 추가][ACM-AUDIT: close the retry loop, not only the size branch]
 
 
 *************************Ancient Commander**********************************************************
@@ -41571,3 +41866,16 @@ kill count you get +4% of a random attribute
 !!FU&y6=0:E;
 !!SN:Ey6/2/y3;                          [thiscall: currentMagicAnim->Dereference()]
 !!UN:Cy2/4/0;                           [currentMagicAnim = 0]
+
+; ============================================================================
+; ACM-CARDINAL-20260913-FINALACTION SNAPSHOT
+; 전투를 실제로 종료시킨 액션 직후, 전투 스택 정보가 아직 유효하고
+; OnAfterBattleUniversal 및 전투 종료 후 병력 증가가 처리되기 전에
+; 생존 병력 수량을 정확히 한 번만 저장한다.
+!?FU(OnAfterBattleAction);
+!!SN:W^Cardinal_recover^/?y1;
+!!FU&y1<>1:E;
+!!BU:C?y2;                              [1 = 이번 액션으로 전투가 종료됨]
+!!FU&y2<>1:E;
+!!DO(ACM_Cardinal_Update_Battle_Stack)/0/6/1:P;
+!!SN:W^Cardinal_BattleEnd_Saved^/1;

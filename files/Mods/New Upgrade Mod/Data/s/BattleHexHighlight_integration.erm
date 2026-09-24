@@ -1,0 +1,360 @@
+ZVSE
+
+* ================================================================
+* BattleHexHighlight.era v2.42 - ERM integration
+* ---------------------------------------------------------------
+* Purpose:
+*   Replace BM:G-87 / BM:G-86 visual hacks with a persistent
+*   translucent dark battle-hex overlay.
+*
+* Requirements:
+*   1) Copy BattleHexHighlight.era to <Game>\EraPlugins\
+*   2) Keep your existing FU(Find_Near2) function.
+*   3) Range display:
+*        Creature 212 : hovered hex + rings 1..3
+*        Creature 214 : hovered hex + rings 1..2; all affected living units get native cyan selection
+*        Creature 215 : ring 1 only; enemy living units get native cyan selection
+*        MA:X flag 1048576 : hovered hex + ring 1; affected living units get native cyan selection
+*          - normally both allies and enemies
+*          - if the attacker is Undead, only Undead targets are selected
+*        Empty hexes are included, so the whole effect area is visible.
+*
+* API is loaded lazily through ERA SN:L / SN:A / SN:E.
+* ================================================================
+
+
+* ----------------------------------------------------------------
+* DLL API loader
+* ----------------------------------------------------------------
+!?FU(BHH_ApiInit);
+!!SN:W^BHH.ApiReady^/?y1;
+!!FU&y1=1:E;
+
+!!SN:L^EraPlugins\BattleHexHighlight.era^/?y10;
+!!FU&y10<=0:E;
+
+!!SN:Ay10/^BHH_Begin^/?y11;
+!!SN:Ay10/^BHH_Add^/?y12;
+!!SN:Ay10/^BHH_Commit^/?y13;
+!!SN:Ay10/^BHH_Clear^/?y14;
+!!SN:Ay10/^BHH_SetMode^/?y15;
+!!SN:Ay10/^BHH_Version^/?y16;
+!!SN:Ay10/^BHH_SelectStack^/?y17;
+!!SN:Ay10/^BHH_ClearSelectedStacks^/?y18;
+
+!!FU|y11<=0/y12<=0/y13<=0/y14<=0/y15<=0/y16<=0/y17<=0/y18<=0:E;
+
+!!SN:W^BHH.Handle^/y10;
+!!SN:W^BHH.FnBegin^/y11;
+!!SN:W^BHH.FnAdd^/y12;
+!!SN:W^BHH.FnCommit^/y13;
+!!SN:W^BHH.FnClear^/y14;
+!!SN:W^BHH.FnSetMode^/y15;
+!!SN:W^BHH.FnVersion^/y16;
+!!SN:W^BHH.FnSelectStack^/y17;
+!!SN:W^BHH.FnClearSelectedStacks^/y18;
+!!SN:W^BHH.ApiReady^/1;
+
+* v2.40: SetMode doubles as opacity control. 0 = default 42%.
+!!SN:Ey15/1/0;
+
+!!SN:W^BHH.LastHex^/-999;
+!!SN:W^BHH.LastType^/-999;
+!!SN:W^BHH.Active^/0;
+
+
+* ----------------------------------------------------------------
+* Thin ERM wrappers around the exported C API
+* ----------------------------------------------------------------
+!?FU(BHH_NativeBegin);
+!!FU(BHH_ApiInit):P;
+!!SN:W^BHH.ApiReady^/?y1;
+!!FU&y1<>1:E;
+!!SN:W^BHH.FnBegin^/?y2;
+!!SN:Ey2/1;
+
+!?FU(BHH_NativeAdd);
+* x1 = battle hex 0..186
+!!FU|x1<0/x1>186:E;
+!!FU(BHH_ApiInit):P;
+!!SN:W^BHH.ApiReady^/?y1;
+!!FU&y1<>1:E;
+!!SN:W^BHH.FnAdd^/?y2;
+!!SN:Ey2/1/x1;
+
+!?FU(BHH_NativeCommit);
+!!FU(BHH_ApiInit):P;
+!!SN:W^BHH.ApiReady^/?y1;
+!!FU&y1<>1:E;
+!!SN:W^BHH.FnCommit^/?y2;
+!!SN:Ey2/1;
+
+!?FU(BHH_NativeClear);
+!!FU(BHH_ApiInit):P;
+!!SN:W^BHH.ApiReady^/?y1;
+!!FU&y1<>1:E;
+!!SN:W^BHH.FnClear^/?y2;
+!!SN:Ey2/1;
+
+!?FU(BHH_NativeSelectStack);
+* x1 = battle stack 0..41; render it with H3's native cyan/blue hover effect.
+!!FU|x1<0/x1>41:E;
+!!FU(BHH_ApiInit):P;
+!!SN:W^BHH.ApiReady^/?y1;
+!!FU&y1<>1:E;
+!!SN:W^BHH.FnSelectStack^/?y2;
+!!SN:Ey2/1/x1;
+
+!?FU(BHH_NativeClearSelectedStacks);
+!!FU(BHH_ApiInit):P;
+!!SN:W^BHH.ApiReady^/?y1;
+!!FU&y1<>1:E;
+!!SN:W^BHH.FnClearSelectedStacks^/?y2;
+!!SN:Ey2/1;
+
+
+* ----------------------------------------------------------------
+* Reset cached hover state and remove our custom shade.
+* ----------------------------------------------------------------
+!?FU(BHH_ClearState);
+!!SN:W^BHH.Active^/?y1;
+!!if&y1=1;
+  !!FU(BHH_NativeClear):P;
+!!en;
+!!SN:W^BHH.Active^/0;
+!!SN:W^BHH.LastHex^/-999;
+!!SN:W^BHH.LastType^/-999;
+
+
+* ----------------------------------------------------------------
+* Add any valid battle hex, occupied or empty.
+* x1 = hex
+* ----------------------------------------------------------------
+!?FU(BHH_MarkHex);
+!!FU|x1<0/x1>186:E;
+!!FU(BHH_NativeAdd):Px1;
+
+
+* ----------------------------------------------------------------
+* Mark a living stack on x1 with the native cyan/blue hover effect.
+* Selection rule is controlled by x2:
+*   x2 = 0 : ANY living stack (ally or enemy)
+*   x2 = 1 : ENEMY only, relative to attacker side x3
+*   x2 = 2 : MAGOG/lich-style rule:
+*            normally ANY living stack; if x4=1 (attacker is Undead),
+*            only Undead targets are selected.
+* x3 = attacker side (0/1) when x2=1; ignored otherwise.
+* x4 = attackerUndead (0/1) when x2=2; ignored otherwise.
+* ----------------------------------------------------------------
+!?FU(BHH_SelectAffectedAtHex);
+!!FU|x1<0/x1>186:E;
+!!BU:Ex1/?y1;
+!!FU|y1<0/y1>41:E;
+!!BMy1:I?y2 N?y3 T?y4;
+!!FU&y3=0:E;
+
+* Enemy-only mode: reject stacks on the attacker's side.
+!!FU&x2=1/y2=x3:E;
+
+* Magog/lich-style mode: an Undead attacker only affects Undead targets.
+!!if&x2=2/x4=1;
+  !!MA:Xy4/?y5;
+  !!VRy5:&262144;
+  !!FU&y5=0:E;
+!!en;
+
+!!FU(BHH_NativeSelectStack):Py1;
+
+
+* ----------------------------------------------------------------
+* Build highlights for creature 212.
+* Same geometry as your current code:
+*   center + ring 1 + ring 2 + ring 3
+* Duplicate hexes are harmless; the plugin stores a 187-bit-style mask.
+* x1 = hovered hex
+* ----------------------------------------------------------------
+
+!?FU(BHH_Build_magog);
+* x1 = hovered hex
+* x2 = attacker side
+* x3 = attackerUndead (0/1)
+* Dark preview: center + ring 1.
+* Cyan preview: normally all living stacks; if attacker is Undead, Undead only.
+!!FU(BHH_MarkHex):Px1;
+!!FU(BHH_SelectAffectedAtHex):Px1/2/x2/x3;
+
+!!re i/0/5;
+  !!FU(Find_Near2):Px1/i/?y12;
+  !!FU(BHH_MarkHex):Py12;
+  !!FU(BHH_SelectAffectedAtHex):Py12/2/x2/x3;
+!!en;
+
+!?FU(BHH_Build212);
+* x1 = hovered hex
+* x2 = attacker side
+* Dark preview: center + rings 1..3.
+* Cyan preview: enemy living stacks only.
+!!FU(BHH_MarkHex):Px1;
+!!FU(BHH_SelectAffectedAtHex):Px1/1/x2/0;
+
+!!re i/0/5;
+  !!FU(Find_Near2):Px1/i/?y12;
+  !!FU(BHH_MarkHex):Py12;
+  !!FU(BHH_SelectAffectedAtHex):Py12/1/x2/0;
+
+  !!if&y12>=0/y12<=186;
+    !!re j/0/5;
+      !!FU(Find_Near2):Py12/j/?y22;
+      !!FU(BHH_MarkHex):Py22;
+      !!FU(BHH_SelectAffectedAtHex):Py22/1/x2/0;
+
+      !!if&y22>=0/y22<=186;
+        !!re k/0/5;
+          !!FU(Find_Near2):Py22/k/?y32;
+          !!FU(BHH_MarkHex):Py32;
+          !!FU(BHH_SelectAffectedAtHex):Py32/1/x2/0;
+        !!en;
+      !!en;
+    !!en;
+  !!en;
+!!en;
+
+
+!?FU(BHH_Build214);
+* x1 = hovered/direct-target hex
+* Dark preview: center + ring 1 + ring 2.
+* Cyan preview: ALL living stacks in the affected area, ally or enemy.
+!!FU(BHH_MarkHex):Px1;
+!!FU(BHH_SelectAffectedAtHex):Px1/0/0/0;
+
+!!re i/0/5;
+  !!FU(Find_Near2):Px1/i/?y12;
+  !!FU(BHH_MarkHex):Py12;
+  !!FU(BHH_SelectAffectedAtHex):Py12/0/0/0;
+
+  !!if&y12>=0/y12<=186;
+    !!re j/0/5;
+      !!FU(Find_Near2):Py12/j/?y22;
+      !!FU(BHH_MarkHex):Py22;
+      !!FU(BHH_SelectAffectedAtHex):Py22/0/0/0;
+    !!en;
+  !!en;
+!!en;
+
+* ----------------------------------------------------------------
+* Build highlights for creature 215.
+* Same as your current code: adjacent ring only, not center.
+* x1 = hovered hex
+* x2 = attacker side
+* Cyan preview: enemy living stacks only.
+* ----------------------------------------------------------------
+!?FU(BHH_Build215);
+!!re i/0/5;
+  !!FU(Find_Near2):Px1/i/?y12;
+  !!FU(BHH_MarkHex):Py12;
+  !!FU(BHH_SelectAffectedAtHex):Py12/1/x2/0;
+!!en;
+
+
+* ----------------------------------------------------------------
+* Rebuild the native shadow for the current mouse hex.
+* ----------------------------------------------------------------
+!?FU(BHH_UpdateFromMouse);
+!!BG:N?y1;
+!!if|y1<0/y1>41;
+  !!FU(BHH_ClearState):P;
+  !!FU:E;
+!!en;
+
+!!BMy1:T?y10;
+
+* Custom display is used by 212/214/215 and by creatures with MA:X bit 1048576.
+* If none of those conditions apply, clear any stale overlay and leave immediately.
+!!MA:Xy10/?y33;
+!!VRy33:&1048576;
+!!if&y33=0/y10<>212/y10<>214/y10<>215;
+  !!FU(BHH_ClearState):P;
+  !!FU:E;
+!!en;
+
+!!CM:D?y11;
+!!if&y11<0;
+  !!FU(BHH_ClearState):P;
+  !!FU:E;
+!!en;
+!!if&y11>186;
+  !!FU(BHH_ClearState):P;
+  !!FU:E;
+!!en;
+
+* Shared attacker metadata for cyan-selection rules.
+* y57 = attacker side (0/1)
+* y60 = 1 if the attacker creature has the Undead flag (MA:X bit 262144)
+!!BMy1:I?y57;
+!!VRy60:S0;
+!!MA:Xy10/?y61;
+!!VRy61:&262144;
+!!VRy60&y61<>0:S1;
+
+* Validate the 212 mouse flag BEFORE the same-hex cache.
+* The original script reset the old visual effect before this early exit.
+* v1.00 returned here without clearing, which could leave blue shades stuck.
+!!if&y10=212;
+  !!CM:F?y55;
+  !!VRy55:&1;
+  !!if&y55>0;
+    !!FU(BHH_ClearState):P;
+    !!FU:E;
+  !!en;
+!!en;
+
+* Do not rebuild while the mouse remains in the same valid hex.
+* BHH_Begin clears the old selected-stack mask whenever a rebuild is required;
+* the plugin then keeps the new mask persistent until the next rebuild/clear.
+!!SN:W^BHH.LastHex^/?y90;
+!!SN:W^BHH.LastType^/?y91;
+!!FU&y90=y11/y91=y10:E;
+
+!!FU(BHH_NativeBegin):P;
+
+!!if&y33>0/y10<>212/y10<>214;
+  !!FU(BHH_Build_magog):Py11/y57/y60;
+!!en;
+
+!!if&y10=212;
+  !!FU(BHH_Build212):Py11/y57;
+!!en;
+
+!!if&y10=214;
+  !!FU(BHH_Build214):Py11;
+!!en;
+
+!!if&y10=215;
+  !!FU(BHH_Build215):Py11/y57;
+!!en;
+
+!!FU(BHH_NativeCommit):P;
+
+!!SN:W^BHH.Active^/1;
+!!SN:W^BHH.LastHex^/y11;
+!!SN:W^BHH.LastType^/y10;
+
+
+* ----------------------------------------------------------------
+* Events
+* ----------------------------------------------------------------
+* Native hover update.
+!?MM0;
+!!FU(BHH_UpdateFromMouse):P;
+
+* Keep your G-key behavior, but now it uses the same native shadow path.
+!?FU(OnKeyPressed_Battle)&i^key^=71;
+!!FU(BHH_UpdateFromMouse):P;
+
+* An action changes stack positions/state; remove stale highlight immediately.
+!?FU(OnAfterBattleAction);
+!!FU(BHH_ClearState):P;
+
+* Also reset state when battle closes.
+!?BA1;
+!!FU(BHH_ClearState):P;
