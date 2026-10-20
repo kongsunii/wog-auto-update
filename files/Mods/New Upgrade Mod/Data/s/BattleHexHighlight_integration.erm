@@ -125,6 +125,11 @@ ZVSE
 !!SN:W^BHH.LastHex^/-999;
 !!SN:W^BHH.LastType^/-999;
 
+!?FU(OnSavegameRead);
+!!SN:W^BHH.ApiReady^/0;
+!!SN:W^BHH.Active^/0;
+!!SN:W^BHH.LastHex^/-999;
+!!SN:W^BHH.LastType^/-999;
 
 * ----------------------------------------------------------------
 * Add any valid battle hex, occupied or empty.
