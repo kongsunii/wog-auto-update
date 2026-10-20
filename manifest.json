@@ -2,10 +2,6 @@
   "version": "21.03",
   "files": [
     {
-      "path": "Credit.txt",
-      "sha256": "336c1a4d45d346de1026d92dfeacbe4fb916071cea5b35ec60e34183fe39ca8c"
-    },
-    {
       "path": "Mods/Advanced Classes Mod/Data/Advanced Class Mod.pac",
       "sha256": "a2de8602bf4272210932ed9d36728ca04f642d253bf22c194f746e3016246cb8"
     },
